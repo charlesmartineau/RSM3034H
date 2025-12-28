@@ -1,0 +1,291 @@
+---
+title: "Lecture 2:<br><span style='color:#045282'>Announcement Risk Premium</span>"
+subtitle: "PhD course in Empirical Asset Pricing"
+author: "Charles Martineau"
+institute: "Rotman | [www.charlesmartineau.com](https://www.charlesmartineau.com)"
+bibliography: ../lit.bib
+
+
+---
+
+## Announcement risk premium
+
+```{=tex}
+\begin{equation*}
+Ret_{t\rightarrow T} = \alpha+\beta News_t + \varepsilon_t
+\end{equation*}
+```
+
+In event studies, we focus on the $\beta$ coefficient. 
+
+In the announcement premium like, we look at the $\alpha$. Premium type:
+
+- Macro announcement premium
+- Earnings announcement premium
+
+---
+
+### Macro announcement premium
+
+Macro announcement premium refers to the fact that a large fraction of the equity
+market risk premium is realized on few trading days with significant macroeconomic
+announcements. 
+
+- Announcements: FOMC, CPI, PPI, GDP, Unemp.
+
+- 1961-2023:  44 days/yr with macro announcements ~71% of the aggregate equity market risk compensation.
+
+- HF-data-based evidence shows that much of this premium is realized within
+hourly windows around announcements, or within a few trading hours prior to the announcements.
+
+
+---
+
+### Why is the macro premium puzzling?
+
+Presents a challenge to standard asset pricing models. 
+
+- Breeden (1979) consumption AP model: Risk evolves slowly as Brownian motions, and as a result, the risk premium investors receive on the market portfolio will be proportional to the holding period of the asset. 
+
+- The data on the macro announcement premium: the risk premium on most trading days is very small and even negligible. Most of the risk premium is realized on a small number of trading days where uncertainty about the macroeconomy is resolved.
+
+---
+
+### Models:
+
+See [Ai and Bansal (2018)](https://onlinelibrary.wiley.com/doi/abs/10.3982/ECTA14607?casa_token=-_Nb1J93qk4AAAAA:SXIO8MhWlDQKkw7q072L6atNqBiz9wvKIhJ2VxF6oj5dMRL1TMg98WbePal-gLtAjyhhX8odxetLjlM6)
+
+- However, hard to read.
+
+See instead:
+
+- [Ai, Bansal, Guo (2023)](https://www.nber.org/system/files/working_papers/w31923/w31923.pdf) for a review.
+- [Ai, Bansal, Guo (2022)](https://www.nber.org/papers/w31087) for an application on identifying preference for early resolution.
+
+---
+
+## Announcement premium stats
+
+![](figures/premium_table.jpg){.absolute width="1000"}
+
+
+---
+
+### Savor and Wilson (2013)
+
+Savor and Wilson (2013) examines the announcement premium for Announcements: PPI/CPI (whichever comes first in the month), FOMC, and Employment from 1958-2009.
+
+---
+
+### Savor and Wilson (2013)
+
+```{=tex}
+\begin{equation*}
+ExRet_{t} = \alpha+\beta Ann_t + Day F.E. + \varepsilon_t
+\end{equation*}
+```
+
+![](figures/sw.jpg){fig-align="center"}
+
+---
+
+### Savor and Wilson (2013)
+
+
+```{=tex}
+\begin{equation*}
+\Delta VIX_{t} = \alpha+\beta Ann_t + Day F.E. + \varepsilon_t
+\end{equation*}
+```
+
+![](figures/vix_sum_table.jpg){fig-align="center"}
+
+
+---
+
+
+### Lucca and Moench (2015)
+Pre-FOMC announcement drift
+
+![](figures/lm.jpg){.absolute width="800"}
+
+
+---
+
+### Lucca and Moench (2015)
+
+This pre-announcement drift is a unresolve puzzle: 
+
+- There is a disconnect between the time when the returns are earned and when the news is revealed.
+
+- Investors may sell out of their positions ahead of the announcement. A larger share of the market risk would be borne by the specialists and would require a higher rate of return.
+
+
+---
+
+### Also a disconnect with realized volatility
+
+![](Figures/ai_1.jpg){fig-align="center"}
+
+
+---
+
+
+
+### FOMC Press conferences
+
+[Boguth et al. (2019)](https://www.cambridge.org/core/journals/journal-of-financial-and-quantitative-analysis/article/abs/shaping-expectations-and-coordinating-attention-the-unintended-consequences-of-fomc-press-conferences/16DDD90630BA52EB81CCD88171998513)
+
+Evidence that indeed risk and expectation drives announcement date returns.
+
+- 2011-2018: FOMC held press conferences after FOMC meetings (4/8 annual meetings). PC were known in advance. PC were introduced to make the Fed more transparent.
+
+- Find that investors anticipate higher likelihood of changes in interest rates, greater surprises on announcement dates, and command more attention from investors for FOMC with PC.
+  
+- PC meetings are perceived by investors more important. Consequently, premium should be high on FOMC with PC.
+
+---
+
+### FOMC Press conferences
+
+![](Figures/bgm.jpg){fig-align="center"}
+
+---
+
+### FOMC Press conferences (Boguth et al. (2019)
+
+![](Figures/bgm2.jpg){fig-align="center"}
+
+---
+
+### Hu, Pan, Wang, and Zhu (2022)
+
+![](Figures/hu_table.jpg){fig-align="center"}
+
+
+---
+
+### Hu, Pan, Wang, and Zhu (2022)
+
+![](Figures/hu_table2.jpg){fig-align="center"}
+
+---
+
+### Leakage...?
+
+![](Figures/nick_wsj1.jpg){fig-align="center"}
+
+
+---
+
+### What about other central banks announcements?
+
+- One central bank to rule them all [(Brusa et al., 2020)](https://academic.oup.com/rof/article/24/2/263/5540330)
+
+![](Figures/brusa.jpg){fig-align="center"}
+
+
+---
+
+### Macro announcement premium and attention
+
+[Fisher et al. (2022)](https://academic.oup.com/rfs/advance-article/doi/10.1093/rfs/hhac011/6535733)
+
+Can investor attention prior to unemployment and FOMC announcement predicts risk premium?
+
+- We argue that attention prior to meetings proxy for investor risk aversion.
+  
+- We measure attention using articles published in WSJ and NYT.
+
+---
+
+### Macro announcement premium and attention
+
+![](Figures/fms1.jpg){fig-align="center"}
+
+---
+
+### Macro announcement premium and attention
+
+![](Figures/fms2.jpg){fig-align="center"}
+
+---
+
+### Noisy FOMC returns
+
+If large premium is realized on FOMC dates, then FOMC returns should be informative about future prices?
+
+- Is this what we observe?
+
+See [Boguth et al 2023](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4131740)
+
+--- 
+
+### Earnings premium
+
+- Stock prices on average rise in the days around earnings announcements.
+- This earnings announcement premium has been known at least since Beaver (1968) and has since
+been studied by Chari et al (1988), Ball and Kothari (1991), and Cohen et al (2005).
+- See also [Lamont and Frazzini (2007)](https://www.nber.org/papers/w13090).
+
+---
+
+### Earnings premium (Lamont and Frazzini, 2007)
+
+![](Figures/lamont.jpg){fig-align="center"}
+
+
+---
+
+### The earnings announcement premium around the globe:  [Barber et al. (2013)](https://www.sciencedirect.com/science/article/pii/S0304405X12002188?casa_token=mAVPH6LE3W8AAAAA:hOGl5dkR1nLeS3jQ1_5IKHO9TX-G2eofOrS8-WpgtBtm7tcKQlwhyYyqDUb8JG4UvxMmxbywMVk1#bib15)
+
+Long-short strategy based on "expected" earnings announcement dates.
+
+![](Figures/barber.jpg){fig-align="center"}
+
+Argue that firm-specific uncertainty is a key driver of the earnings announcement premium.
+
+---
+
+### Earnings premium and uncertainty
+
+[Barth and So (2014)](https://publications.aaahq.org/accounting-review/article-abstract/89/5/1579/3663/Non-Diversifiable-Volatility-Risk-and-Risk)
+
+- They show that investors anticipate some earnings announcements to convey news that increases market return volatility and pay a premium to hedge this non-diversifiable risk. 
+- This is motivated from the findings of [Patton and Verardo (2012)](https://academic.oup.com/rfs/article-abstract/25/9/2789/1589913)
+
+---
+
+### Does beta move with news?: [Patton and Verardo (2012)](https://academic.oup.com/rfs/article-abstract/25/9/2789/1589913)
+
+![](Figures/patton.jpg){fig-align="center"}
+
+---
+
+### Earnings Announcements and Systematic Risk: [Savor and Wilson (2016)](https://www.jstor.org/stable/43869096) 
+
+- Investors use announcements to revise their expectations for nonannouncing firms, but can only do so imperfectly. 
+- The covariance between firm-specific and market cash flow news spikes around announcements, making announcers especially risky.
+- Announcer returns forecast aggregate earnings.
+- The announcement premium is persistent across stocks, and early (late) announcers earn higher (lower) returns. 
+
+---
+
+### The Disappearing Earnings Announcement Premium: [Heitz et al. (2023)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3296537)
+
+- The authors argue that the 2004 Disclosure Regulation, which led to increasingly frequent and more comprehensive filings of material information (Form 8-K), played a role in the disappearance of the earnings premium.
+
+![](Figures/heitz.jpg){fig-align="center"}
+
+---
+
+### It didn't disappear...
+
+![](Figures/heitz_replication1.jpg){fig-align="center"}
+
+---
+
+### It didn't disappear...
+
+![](Figures/heitz_replication2.jpg){fig-align="center"}
+

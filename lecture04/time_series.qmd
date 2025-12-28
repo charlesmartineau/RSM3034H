@@ -1,0 +1,310 @@
+---
+title: "Lecture 2:<br><span style='color:#045282'>Time-series Predictability</span>"
+subtitle: "PhD course in Empirical Asset Pricing"
+author: "Charles Martineau"
+institute: "Rotman | [www.charlesmartineau.com](https://www.charlesmartineau.com)"
+bibliography: ../lit.bib
+
+---
+
+## Outline
+
+
+
+
+1. @fama1988
+2. @welch2008
+3. @campbell2008
+4. @rapach2010
+5. Improvement in Sharpe ratios
+6. @goyal2024
+
+
+
+
+## Fama French (1988)
+
+In-Sample Return Predictability at 1-Month Horizon (1957-1986)
+
+![](figures/ff1988_1.jpg){fig-align="center"}
+
+
+---
+
+
+## Goyal and Welch (2008)
+
+- There have been a lot of papers examining the relationship between future returns and variables such $d/p$, $e/p$, but they argue that most readers are left with the impression that "prediction works"--though it is unclear exactly what works.
+
+- Papers in the past use different samples and methods, and GW comes in and standardizes everything in terms of methodology and sample period and focuses on all the main key variables.
+
+---
+
+## Goyal and Welch (2008)
+
+- They examine the performance of variables that have been suggested by the academic literature to be good predictors of the equity premium.
+ 
+- They find that these models have predicted poorly both in-sample (IS) and out-of-sample (OOS) for 30 years.
+
+- Predictive regressions with historical average returns almost always generate superior
+return forecasts
+
+- These models would not have helped an investor with access only to available information to profitably time the market.
+
+See this [link](http://www.hec.unil.ch/agoyal/) for the data.
+
+---
+
+## What is an out-of-sample regression?
+
+
+Out-of-sample regression:
+
+```{=tex}
+\begin{equation*}
+\mathbb{E}_t(r_{M,t+1})=\widehat{c}_{1t}+\widehat{c}_{2t}\times PRED_t + \epsilon_t,
+\end{equation*}
+```
+
+where $\widehat{c}_{1t}$ and $\widehat{c}_{2t}$ are the estimated intercept and slope obtained by regressing past market returns $\{r_{Mu}\}_{u=2}^{t}$ onto a constant and past lagged predictor $\{PRED_u\}_{u=1}^{t-1}$.  
+
+
+The out-of-sample regressions are commonly estimated using rolling or expanding windows.
+
+---
+
+## OOS-R2 and MSFE 
+```{=tex}
+\begin{align}
+R^2_{OOS} =& 1-\frac{MSFE_i}{MSFE^0_i}
+\end{align}
+```
+where
+```{=tex}
+\begin{align}
+MSFE_i=&\frac{1}{N}\sum^N_{t=1}(r_{i,t+1}-\widehat{r}_{i,t})^2, & MSFE^0_i=&\frac{1}{N}\sum^N_{t=1}(r_{i,t+1}-\overline{r}_{i,t})^2,
+\end{align}
+```
+
+The OOS-R2 measures the model's ability to outperform the benchmark historical mean at predicting returns out-of-sample. A positive (resp., negative) OOS-R2 means that the predictive model performs better (resp., worse) than the historical mean.
+
+---
+
+## Main results (Monthly forecasts)
+
+![](figures/GW1.jpg){fig-align="center"}
+
+---
+
+## Main results (Annual forecasts)
+
+![](figures/GW2.jpg){fig-align="center"}
+
+```{=tex}
+\begin{align}
+CumSum\;SSE =\sum_t MSFE^0_t - \sum_t MSFE^i_t
+\end{align}
+```
+
+---
+
+## Campbell and Thompson (2008) 
+
+A real-world investor would not mechanically forecast using a linear
+regression, but would impose some sensible restrictions on the regression
+coefficients.
+
+They consider two alternative restrictions separately and jointly.
+
+  1. Set the regression coefficient to zero whenever it has the “wrong” sign (different from the theoretically expected sign estimated over the full sample).
+  2. Assume that investors rule out a negative equity premium, and set the forecast to zero whenever it is negative.
+  3. A combination: first the sign restriction on the coefficient, and then the sign restriction on the forecast.
+
+After these restrictions are imposed, predictors that perform well
+in-sample, also perform well out-of-sample
+
+
+---
+
+## Campbell and Thompson (2008)
+
+![](figures/campbell_thompson.jpg){fig-align="center"}
+
+
+---
+
+## Campbell and Thompson (2008)
+
+![](figures/campbell_thompson.png){fig-align="center"}
+
+---
+
+## Rapach, Strauss, and Zhou (2009) 
+
+They show that combining multiple market return forecasts using the same 15 variables as in Goyal and Welch can better forecast market returns. 
+
+  - Their claim is that forecast combination reduces forecast variance and stabilizes the individual forecasts, thereby improving forecasting performance.
+  
+They first calculate for each predictor an expected market return $\hat{r}_{i,t+1}$ based on predictor $x_{i,t}$. Then they simply take a weighted sum of these  $\hat{r}_{i,t+1}$,  $\sum_{i=1}^N \omega_i \hat{r}_{i,t+1}$
+
+  - where the $\omega$ can simply be a naive $1/N$, the median, or other form of weighting as a functions of the historical forecasting performance of the individual models over the holdout out-of-sample period.
+
+---
+
+## Rapach, Strauss, and Zhou (2009) 
+
+![](figures/rsz2009.jpg){fig-align="center" width="500"}
+
+*Note:* They say they get similar improvement for monthly returns in footnote ... I was never able to find this result myself.
+
+---
+
+## Why should we care about an improvement in OOS-R2?
+
+A small increase in OOS-R2 can improve substantially the Sharpe ratios when timing market relative to a simple buy-and-hold strategy. 
+
+How to calculate an improvement in Sharpe ratio?
+```{=tex}
+\begin{equation}
+SR^* =  \sqrt{\frac{SR^2+R_{OOS}^2}{1-R_{OOS}^2}},
+\end{equation}
+```
+
+where $SR$ is the Sharpe ratio of the buy-and-hold strategy. See Campbell and Thompson (2008) for the derivation.
+
+---
+
+## Goyal and Welch (2024) 
+
+Goyal and Welch just recently revisited out-of-sample predictability for a series of new variables. See [paper](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3929119) on SSRN.
+
+They reexamine whether 29 variables from 26 papers published after Goyal and Welch (2008), as well as the original 17 variables, were useful in predicting the equity premium in-sample and out-of-sample.
+
+New variables:
+
+- Investor attention
+- Short interest
+- Variance risk premium
+- etc.
+
+---
+
+## Goyal and Welch (2024) 
+
+  - They extend the samples by a few years, ending with stock market returns in December
+  2020-around 10 extra years.
+  - They find that most variables have lost their predictive ability. 
+  - Of 29 variables, 25 variables show lower in-sample significance when we use our extended sample period instead of
+  the authors' original sample period.
+  - Only four variables predicted about equally well or better.
+
+Main two variables that Goyal and Welch (2021) find to be good predictors are:
+
+  - The Growth Rate in Personal Consumption Expenditures by Møller and Rangvid (2015).
+  - A measure of credit standards derived from the Federal Reserve Board’s Senior Loan Officer Opinion Survey on Bank Lending Practices by Chava, Gallmeyer, and Park (2015).
+
+---
+
+## Python code
+
+see the code `oos_exmkt_vrp.py` for an example of how to do an out-of-sample regression using VRP. 
+
+---
+
+## Cumulative SSE difference
+
+![](figures/sse.jpg){fig-align="center" width="425"}
+
+
+
+---
+
+## Assignment
+
+Objective: Replicate the result of your choice in GW (2007)
+
+  - Pick one predictor variable ($d/p$, $e/p$, etc.)
+  - Test the in-sample and out-of-sample prediction of this variable at the monthly and at annual frequency.
+  - Also, plot the Cumulative SSE difference.
+
+
+---
+
+## Stock return predictability
+
+1. Firm characteristics can predict the XS dispersion in stock returns, e.g., Fama-French factors
+2. Time-series predictability of the aggregate market excess return based on economic and financial variables
+
+Can one use the explanatory variables in (1) to forecast in (2)?
+
+
+---
+
+## @dong2022
+
+[DLRZ](https://onlinelibrary.wiley.com/doi/full/10.1111/jofi.13099?casa_token=8qBT_fhmFhUAAAAA%3Ay377VoR-lW3viKENYkzNP5nsIBxE1hiqsJZUkpfAbYn8simQkr8ivVLNrVVhG_yRyk3NJelnv-kQ4nH2) selects 100 long-short anomaly portfolio returns that are representative of anomalies from the XS literature (accruals, firm age, illiquidity, momentum, bm). 
+
+- Predict market returns for each anomaly separately (using OLS and ML) and then combine the predictor like in Rapach et al. (2009).
+  
+![](figures/dong.jpg){fig-align="center" width="500"}
+
+---
+
+## @engelberg2023
+
+Do XS predictors contain systematic information?
+
+- I.e., if we aggregate a cross-sectional variable, can it predict market returns?
+- Lewellen (2004) finds that if you aggregate a price-to-fundamental ratios based on dividends, BM, earnings, helps to predict market returns.
+- In EMPR, the authors construct 140+ aggregated variables and under the MHT framework, no, such variables can't predict market returns.
+
+---
+
+## @engelberg2023
+
+![](figures/engelberg.jpg){fig-align="center" width="600"}
+
+---
+
+
+## @engelberg2023
+
+Summary of Out-of-Sample Performance, undadjusted p-Values
+
+![](figures/engelberg1.jpg){fig-align="center" width="600"}
+
+---
+
+## @engelberg2023
+
+Summary of Out-of-Sample Performance Using Romano and Wolf p-Values
+
+![](figures/engelberg2.jpg){fig-align="center" width="600"}
+
+See [internet appendix](https://www.cambridge.org/core/journals/journal-of-financial-and-quantitative-analysis/article/do-crosssectional-predictors-contain-systematic-information/C842FFBA1F84B696CDAFCE4F615C7339#supplementary-materials) for the $p$-values computation.
+
+---
+
+## @cakici2024
+
+[Do Anomalies really predict market returns?](https://academic.oup.com/rof/article/28/1/1/7239874)
+
+- Dong et al. (2022) show that anomalies predict market returns, but Engelberg et al. say that aggregated XS predictors do not forecast market returns.
+
+![](figures/cakici.jpg){fig-align="center" width="600"}
+
+---
+
+## @cakici2024
+
+Set of anomalies:
+
+- 100 anomalies from DLRZ (2022)
+- 153 tercile and decile portfolios from [Jensen, Kelly, and Pedersen (2023)](https://github.com/bkelly-lab/ReplicationCrisis/tree/master)^[Construct international portfolios and anomalies using the code of Jensen et al. It is a very well documented SAS code to be run on WRDS. ]
+- 207 anomalies from [Chen and Zimmermann (2023)](https://www.openassetpricing.com/)
+- 188 factors from [Hou, Xue, and Zhang (2023)](https://global-q.org/testingportfolios.html)
+
+---
+
+## References
+
