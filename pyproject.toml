@@ -3,14 +3,26 @@ name = "mgfd40"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12,<3.13"
 dependencies = [
-    "ipykernel>=7.1.0",
+    "wrds>=3.3.0",
+    "dotenv>=0.9.9",
+    "ipykernel>=6.29.5",
     "jupyter>=1.1.1",
-    "matplotlib>=3.10.7",
+    "linearmodels>=6.1",
+    "matplotlib>=3.10.3",
+    "numpy>=2.3.0",
+    "pandas>=2.2.3",
+    "polars>=1.30.0",
+    "pyarrow>=20.0.0",
+    "seaborn>=0.13.2",
+    "statsmodels>=0.14.4",
+    "tqdm>=4.67.1",
+    "fuzzywuzzy>=0.18.0",
+    "pandasql>=0.7.3",
+    "hydra-core>=1.3.2",
+    "omegaconf>=2.3.0",
+    "pystout>=0.0.8",
     "openpyxl>=3.1.5",
-    "pandas>=2.3.3",
-    "pyarrow>=22.0.0",
-    "statsmodels>=0.14.6",
-    "yfinance>=0.2.66",
+    "yfinance>=0.2.65",
 ]
