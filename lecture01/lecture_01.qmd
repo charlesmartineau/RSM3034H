@@ -1,0 +1,244 @@
+---
+title: "Lecture 1:<br><span style='color:#045282'>Introduction to investor psychology and behavioral finance</span>"
+author: "Charles Martineau"
+institute: "UTSC and Rotman | [www.charlesmartineau.com](https://www.charlesmartineau.com)"
+bibliography: ../lit.bib
+---
+
+## Welcome to MGFD40
+
+::: {style="height: 2em;"}
+:::
+
+
+
+- Requirements:
+
+    - MGFC10H3: Intermediate Finance
+    - MGEB12H3: Quantitative Methods in Economics II
+    - Come to every class.
+
+- Programming:
+
+    - Python will be used for coding trading strategies
+    - Can use AI.
+
+- Econometrics:
+
+    - Basic understanding of regression analysis is assumed
+
+
+---
+
+## Instructor
+
+Charles Martineau
+
+- From Montreal
+- Joined UTSC and Rotman in 2017
+- PhD in Finance from UBC.
+  - Specialize in information economics. E.g., how information is produced, disseminated, and used in financial markets.
+  - see [charlesmartineau.com](www.charlesmartineau.com) for research portfolio.
+
+[MGFD40 Course Material](www.charlesmartineau.com/mgfd40)
+
+---
+
+## Objective of this course
+
+::: {style="height: 2em;"}
+:::
+
+::: {.r-fit-text}
+
+**Theoretical component:**
+
+  - The systematic behavioral biases of market participants and its impact on asset pricing and corporate decisions.
+  - The rationality assumption and efficient market hypothesis and know how they are violated in reality.
+  - The types of psychological biases that lead to asset mispricing.
+
+**Practical component:**
+
+  - How to code in Python and develop trading strategies to take advantage of mispricing.
+
+:::
+
+---
+
+## What is Behavioral economics?
+
+::: {style="height: 2em;"}
+:::
+
+When people face complex decisions, individuals often rely on:
+
+- basic judgments  
+- preferences  
+- heuristics 
+
+This simplify the decision-making process rather than acting completely rationally.
+
+::: {style="height: 1em;"}
+:::
+
+Behavioral economics is the study of these "irrational actions" and how it impact financial decisions.
+
+---
+
+## An example of a behavioral heuristic: Availability
+
+::: {style="height: 2em;"}
+:::
+
+You plan to invest money, but you recall a recent stock market crash. 
+
+- This "recall" might affect your decision to invest or not in financial markets despite that crashes do not occur frequently. 
+
+Consequence: you forego a return on your money.
+
+---
+
+## Let’s do an experiment: The ultimatum game
+
+::: {style="height: 1em;"}
+:::
+
+I give your friend $20 in $1 bill. 
+
+- He has to share a portion of his $20 with you and can give you as much as he wants. 
+- If you accept the offer, you get that amount, and he keeps the rest. 
+- If you turn down his offer, both of you get nothing.
+
+::: {style="height: 1em;"}
+:::
+
+Let’s say he offers you $1. Would you take it?
+
+---
+
+## More experiments
+
+::: {.columns}
+::: {.column width="60%"}
+... with the help of Richard Thaler of the University of Chicago, who won the Nobel Prize in Economics in 2017 for his pioneering work in behavioral economics.
+
+First homework: Watch this [video](https://player.pbs.org/viralplayer/2365517540/).
+:::
+
+::: {.column width="40%"}
+![](figures/thaler.png){width=100%}
+:::
+:::
+
+---
+
+## Key behavioral biases
+::: {style="height: 2em;"}
+:::
+
+- Overconfidence
+- Loss aversion
+- Anchoring
+- Representativeness
+- Regret
+- Mental accounting
+- ... and more
+
+---
+
+## Congnitive constraints
+
+::: {style="height: 2em;"}
+:::
+
+We will also discuss various cognitive constraints that affect decision-making.
+
+- A key congnitive constraint we will discuss in class is limited attention, i.e., our inability to pay attention to everything!
+
+---
+
+## A classic example of limited attention
+
+::: {style="height: 2em;"}
+:::
+
+::: {.columns}
+::: {.column width="50%"}
+
+The stock market reaction to earnings announcements.
+
+- Prices reacting slowly to new information (earnings announcement). This figure is from the 1980s. 
+- Do you think pattern is still true today? 
+- We'll discuss more in the next class.
+:::
+
+::: {.column width="50%"}
+![](figures/pead.png){width=100%}
+:::
+:::
+
+---
+
+## Themes of the course
+
+- Introduction to Behavioral Finance & Decision-Making Under Uncertainty (mostly theory)
+- Individual Biases and Retail Trading Behavior
+- CAPM and Cross-Sectional Asset Pricing and violations
+- Liquidity, Transaction Costs, and Limits to Arbitrage
+- Market Efficiency and Event Studies
+- Return Predictability
+- Momentum and Reversal
+
+---
+
+
+## Course syllabus
+
+::: {style="height: 2em;"}
+:::
+
+Available [here](https://www.dropbox.com/scl/fi/bpbmgzatjmjnqw69x10jm/MGFD40H3S-2026_Winter_Syllabus-20251125.pdf?rlkey=imn1hhmnx2dwwn084nyiokanq&dl=0). 
+
+---
+
+## Coding
+
+::: {style="height: 2em;"}
+:::
+
+Coding is an essential part of this course... for your final project. Python will be used. Here are some resources to get you started (YouTube videos by my co-author):
+
+-  Installation for windows users, see [link](https://www.youtube.com/watch?v=uxgkWssqkAU)
+-  Installation for Mac users, see [link](https://www.youtube.com/watch?v=0wj8F_oBYEE)
+-  This installation uses the environment UV (not anaconda). If you already use Anaconda, that's not a problem. 
+-  Now with AI tools, coding is easier than ever! I encourage you to use AI tools to help you code your trading strategies.
+
+
+---
+
+## Policy of reference letters
+
+::: {style="height: 2em;"}
+::: 
+
+A necessary condition: grade **A** or above
+
+What do I need to write your letter:
+
+- Your CV and Personal Statement
+- Your (unofficial) transcript
+- Your scanned UoT ID Card
+- If you want to have an emotional and strong letter instead of a template, do speak up and leave an impression!
+
+Very important:
+
+- I discuss your group project in my letter. It is important that you show leadership and do very well on the group project. It is the best way for me to assess your potential for graduate schools.
+
+
+## Recommended books on behavioral finance
+
+- Thaler, R. H. (2016). *Misbehaving: The making of behavioral economics*. WW Norton & Company.
+- Lewis, M. (2017). *The Undoing Project: A Friendship That Changed Our Minds*. WW Norton & Company.
+- Barberis, N., & Thaler, R. (2003). A survey of behavioral finance. In *Handbook of the Economics of Finance* (Vol. 1, pp. 1052-1121). Elsevier.
+- Shefrin, H. (2002). *Beyond greed and fear: Understanding behavioral finance and the psychology of investing*. Oxford University Press.
+- Kahneman, D. (2011). *Thinking, fast and slow*. Macmillan.

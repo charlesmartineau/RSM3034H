@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="lecture_04_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lecture_04_files/libs/quarto-html/tabby.min.js"></script>
+<script src="lecture_04_files/libs/quarto-html/popper.min.js"></script>
+<script src="lecture_04_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="lecture_04_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="lecture_04_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="lecture_04_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
+<link href="lecture_04_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.5.55">
+
+  <meta name="author" content="Charles Martineau">
+  <title>Lecture 4: Market Efficiency, market frictions, and Event Studies</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="lecture_04_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="lecture_04_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="lecture_04_files/libs/revealjs/dist/theme/quarto.css">
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+  <link href="lecture_04_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="lecture_04_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="lecture_04_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="lecture_04_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="lecture_04_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="lecture_04_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+
+  .callout {
+    margin-top: 1em;
+    margin-bottom: 1em;  
+    border-radius: .25rem;
+  }
+
+  .callout.callout-style-simple { 
+    padding: 0em 0.5em;
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+    display: flex;
+  }
+
+  .callout.callout-style-default {
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+  }
+
+  .callout .callout-body-container {
+    flex-grow: 1;
+  }
+
+  .callout.callout-style-simple .callout-body {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-style-default .callout-body {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-titled.callout-style-simple .callout-body {
+    margin-top: 0.2em;
+  }
+
+  .callout:not(.callout-titled) .callout-body {
+      display: flex;
+  }
+
+  .callout:not(.no-icon).callout-titled.callout-style-simple .callout-content {
+    padding-left: 1.6em;
+  }
+
+  .callout.callout-titled .callout-header {
+    padding-top: 0.2em;
+    margin-bottom: -0.2em;
+  }
+
+  .callout.callout-titled .callout-title  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+    
+  .callout.callout-titled.callout-style-simple .callout-content  p {
+    margin-top: 0;
+  }
+
+  .callout.callout-titled.callout-style-default .callout-content  p {
+    margin-top: 0.7em;
+  }
+
+  .callout.callout-style-simple div.callout-title {
+    border-bottom: none;
+    font-size: .9rem;
+    font-weight: 600;
+    opacity: 75%;
+  }
+
+  .callout.callout-style-default  div.callout-title {
+    border-bottom: none;
+    font-weight: 600;
+    opacity: 85%;
+    font-size: 0.9rem;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-default div.callout-content {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-simple .callout-icon::before {
+    height: 1rem;
+    width: 1rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+  }
+
+  .callout.callout-style-default .callout-icon::before {
+    height: 0.9rem;
+    width: 0.9rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 0.9rem 0.9rem;
+  }
+
+  .callout-title {
+    display: flex
+  }
+    
+  .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  .callout.no-icon::before {
+    display: none !important;
+  }
+
+  .callout.callout-titled .callout-body > .callout-content > :last-child {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .callout.callout-titled .callout-icon::before {
+    margin-top: .5rem;
+    padding-right: .5rem;
+  }
+
+  .callout:not(.callout-titled) .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  /* Callout Types */
+
+  div.callout-note {
+    border-left-color: #4582ec !important;
+  }
+
+  div.callout-note .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
+  }
+
+  div.callout-note.callout-style-default .callout-title {
+    background-color: #dae6fb
+  }
+
+  div.callout-important {
+    border-left-color: #d9534f !important;
+  }
+
+  div.callout-important .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-important.callout-style-default .callout-title {
+    background-color: #f7dddc
+  }
+
+  div.callout-warning {
+    border-left-color: #f0ad4e !important;
+  }
+
+  div.callout-warning .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-warning.callout-style-default .callout-title {
+    background-color: #fcefdc
+  }
+
+  div.callout-tip {
+    border-left-color: #02b875 !important;
+  }
+
+  div.callout-tip .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-tip.callout-style-default .callout-title {
+    background-color: #ccf1e3
+  }
+
+  div.callout-caution {
+    border-left-color: #fd7e14 !important;
+  }
+
+  div.callout-caution .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
+  }
+
+  div.callout-caution.callout-style-default .callout-title {
+    background-color: #ffe5d0
+  }
+
+  </style>
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&amp;family=Noto+Sans:ital,wght@0,100..900;1,100..900&amp;family=Noto+Serif:ital,wght@0,100..900;1,100..900&amp;family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Lecture 4:<br><span style="color:#045282">Market Efficiency, market frictions, and Event Studies</span></h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Charles Martineau 
+</div>
+        <p class="quarto-title-affiliation">
+            UTSC and Rotman | <a href="https://www.charlesmartineau.com">www.charlesmartineau.com</a>
+          </p>
+    </div>
+</div>
+
+</section>
+<section id="outline" class="slide level2">
+<h2>Outline</h2>
+<div style="height: 0.5em;">
+
+</div>
+<ol type="1">
+<li><strong>History of the Efficient Market Hypothesis (EMH)</strong></li>
+<li><strong>Three Forms of Market Efficiency</strong></li>
+<li><strong>Frictions to Market Efficiency</strong>
+<ul>
+<li>Behavioral Biases</li>
+<li>Transaction Costs and Other Market Frictions</li>
+</ul></li>
+<li><strong>Testing Weak Form Market Efficiency</strong>
+<ul>
+<li>Random Walk Tests (Ljung-Box, Variance Ratio)</li>
+<li>Return Predictability (Price-to-Dividend Ratios)</li>
+<li>Contrarian and Momentum Strategies</li>
+</ul></li>
+<li><strong>Testing Semi-Strong Form Market Efficiency</strong>
+<ul>
+<li>Event Studies</li>
+<li>Post-Earnings Announcement Drift (PEAD)</li>
+</ul></li>
+<li><strong>Testing Strong Form Market Efficiency</strong></li>
+<li><strong>Limits to Market Efficiency: Three Pillars</strong>
+<ul>
+<li>Investor Rationality</li>
+<li>Uncorrelated Errors</li>
+<li>Unlimited Arbitrage</li>
+</ul></li>
+</ol>
+</section>
+<section id="history-of-the-efficient-market-hypothesis-emh" class="slide level2">
+<h2>History of the Efficient Market Hypothesis (EMH)</h2>
+<p><img data-src="figures/fama.jpg" class="absolute" style="top: 100px; width: 80%; "></p>
+<div class="absolute" style="font-family: 'Gochi Hand', cursive; font-size: 1.5em; color: black;left: 400px; ">
+<p>Eugene Fama ↓</p>
+</div>
+</section>
+<section id="history-of-the-efficient-market-hypothesis-emh-1" class="slide level2">
+<h2>History of the Efficient Market Hypothesis (EMH)</h2>
+<div style="height: 2em;">
+
+</div>
+<p>Prior to the 1950s it was generally believed among practitioners that the use of fundamental or technical approaches could “beat the market”.</p>
+<p>In the 1950s and 1960s studies (particularly Eugene Fama and Paul Samuelson) began to provide evidence against this view.</p>
+<ul>
+<li>In particular, researchers found that stock returns (not prices themselves) followed a“random walk” and are unpredictable.</li>
+</ul>
+</section>
+<section id="efficient-market-hypothesis-emh" class="slide level2">
+<h2>Efficient Market Hypothesis (EMH)</h2>
+<div style="height: 2em;">
+
+</div>
+<p>Professor Eugene Fama defined market efficiency as follows:</p>
+<blockquote>
+<p>In an efficient market, competition among the many intelligent participants leads to a situation where, at any point in time, actual prices of individual securities already reflect the effects of information based both on events that have already occurred and on events which, as of now, the market expects to take place in the future.</p>
+</blockquote>
+<div style="height: 1em;">
+
+</div>
+<p>I.e., prices of stocks observed at any time are based on “correct” evaluation of all information available. The price of a stock will be a good estimate of its intrinsic value.</p>
+<ul>
+<li><span class="math inline">p_t = \sum_{\tau=1}^{T} \frac{E[d_{t+\tau}]}{1+r_{t+\tau}}</span></li>
+<li>Therefore, prices reflect fundamentals and you can’t make money on forecasting or buying (selling) an undervalued (overvalued) stocks.</li>
+</ul>
+</section>
+<section id="three-forms-of-market-efficiency" class="slide level2">
+<h2>Three Forms of Market Efficiency</h2>
+
+<img data-src="figures/market_efficiency_forms.png" style="width:100.0%" class="r-stretch"></section>
+<section id="frictions-to-market-efficiency" class="slide level2">
+<h2>Frictions to Market Efficiency</h2>
+<div style="height: 2em;">
+
+</div>
+<p>We will now discuss some of the main frictions that can prevent markets from being efficient. We can classify these frictions into two main categories:</p>
+<ol type="1">
+<li>Behavioral biases</li>
+<li>Transaction costs and other market frictions</li>
+</ol>
+</section>
+<section id="behavioral-biases" class="slide level2">
+<h2>Behavioral Biases</h2>
+<div style="height: 2em;">
+
+</div>
+<p><strong>Conservatism (anchoring) bias:</strong> Investors often update their beliefs too slowly when new information arrives. They anchor to prior views and require multiple confirming signals before fully adjusting their valuations. This causes prices to drift gradually toward fundamental values rather than jumping immediately.</p>
+<p><strong>Limited attention:</strong> Investors can’t process all available information simultaneously. They focus on salient news while neglecting subtle signals embedded in financial statements, regulatory filings, or broader market patterns. Information that’s harder to process gets incorporated more slowly.</p>
+<ul>
+<li>More in line with bounded rationality than irrationality.</li>
+</ul>
+<p><strong>Overconfidence and disposition effects:</strong> Some investors hold losing positions too long (unwilling to realize losses) or sell winners too quickly, preventing efficient price discovery. Overconfident traders may also ignore contradictory information, slowing the market’s collective learning process.</p>
+<p><strong>Sentiment and feedback effects:</strong> Positive feedback loops can cause gradual price trends as momentum attracts more buyers, while negative sentiment spreads slowly through social networks and media coverage.</p>
+</section>
+<section id="transaction-costs-and-other-market-frictions" class="slide level2">
+<h2>Transaction Costs and Other Market Frictions</h2>
+<div style="height: 2em;">
+
+</div>
+<p><strong>Transaction costs:</strong> Trading isn’t free. When arbitrage opportunities are small relative to commissions, spreads, and price impact costs, sophisticated traders won’t eliminate mispricings quickly.</p>
+<p><strong>Short-sale constraints:</strong> If a stock is overvalued but hard or expensive to borrow, pessimistic traders can’t easily push prices down. This asymmetry allows overpricing to persist.</p>
+<p><strong>Limits to arbitrage:</strong> Even when mispricings are identified, risk-averse arbitrageurs face constraints. They may lack capital, face margin requirements, or worry about prices moving further against them before converging (noise trader risk). This prevents immediate correction.</p>
+<p><strong>Information costs:</strong> Gathering and analyzing information requires resources. Smaller stocks or less-covered markets may experience slower price discovery simply because fewer professionals find it profitable to research them.</p>
+<p><strong>Institutional constraints:</strong> Regulations, investment mandates, and agency problems can prevent funds from quickly exploiting opportunities, even when they’re aware of them.</p>
+</section>
+<section id="weak-form-market-efficiency" class="slide level2">
+<h2>Weak Form Market Efficiency</h2>
+<div style="height: 2em;">
+
+</div>
+<p>Weak form efficiency states that current prices already reflect all information contained in historical prices and trading volume.</p>
+<p><strong>Implications:</strong></p>
+<ul>
+<li>Past price patterns cannot predict future returns</li>
+<li>Technical analysis should not generate excess returns</li>
+<li>Stock returns should follow a random walk</li>
+</ul>
+<p>Let’s test this empirically using S&amp;P 500 data!</p>
+</section>
+<section id="testing-random-walk-python-example" class="slide level2">
+<h2>Testing Random Walk: Python Example</h2>
+<div style="height: 1em;">
+
+</div>
+<p>We’ll test whether monthly S&amp;P 500 returns follow a random walk by checking for autocorrelation:</p>
+<div id="b95543d9" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="im">import</span> yfinance <span class="im">as</span> yf</span>
+<span id="cb1-2"><a href=""></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href=""></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href=""></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href=""></a><span class="im">from</span> statsmodels.stats.diagnostic <span class="im">import</span> acorr_ljungbox</span>
+<span id="cb1-6"><a href=""></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf</span>
+<span id="cb1-7"><a href=""></a></span>
+<span id="cb1-8"><a href=""></a><span class="co"># Download S&amp;P 500 data (monthly)</span></span>
+<span id="cb1-9"><a href=""></a>sp500 <span class="op">=</span> yf.download(<span class="st">'^GSPC'</span>, start<span class="op">=</span><span class="st">'1990-01-01'</span>, end<span class="op">=</span><span class="st">'2024-12-31'</span>,</span>
+<span id="cb1-10"><a href=""></a>                     interval<span class="op">=</span><span class="st">'1mo'</span>, progress<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-11"><a href=""></a></span>
+<span id="cb1-12"><a href=""></a><span class="co"># Calculate monthly returns</span></span>
+<span id="cb1-13"><a href=""></a>returns <span class="op">=</span> sp500[<span class="st">'Close'</span>].pct_change().dropna()</span>
+<span id="cb1-14"><a href=""></a>returns.name <span class="op">=</span> <span class="st">'Monthly Returns'</span></span>
+<span id="cb1-15"><a href=""></a></span>
+<span id="cb1-16"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Sample period: </span><span class="sc">{</span>returns<span class="sc">.</span>index[<span class="dv">0</span>]<span class="sc">.</span>date()<span class="sc">}</span><span class="ss"> to </span><span class="sc">{</span>returns<span class="sc">.</span>index[<span class="op">-</span><span class="dv">1</span>]<span class="sc">.</span>date()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-17"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Number of observations: </span><span class="sc">{</span><span class="bu">len</span>(returns)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-18"><a href=""></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Descriptive Statistics:"</span>)</span>
+<span id="cb1-19"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Mean return: </span><span class="sc">{</span><span class="bu">float</span>(returns.mean())<span class="sc">:.4f}</span><span class="ss"> (</span><span class="sc">{</span><span class="bu">float</span>(returns.mean())<span class="op">*</span><span class="dv">12</span><span class="sc">:.2%}</span><span class="ss"> annualized)"</span>)</span>
+<span id="cb1-20"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Std deviation: </span><span class="sc">{</span><span class="bu">float</span>(returns.std())<span class="sc">:.4f}</span><span class="ss"> (</span><span class="sc">{</span><span class="bu">float</span>(returns.std())<span class="op">*</span>np<span class="sc">.</span>sqrt(<span class="dv">12</span>)<span class="sc">:.2%}</span><span class="ss"> annualized)"</span>)</span>
+<span id="cb1-21"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Skewness: </span><span class="sc">{</span><span class="bu">float</span>(returns.skew())<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb1-22"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Kurtosis: </span><span class="sc">{</span><span class="bu">float</span>(returns.kurtosis())<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sample period: 1990-02-01 to 2024-12-01
+Number of observations: 419
+
+Descriptive Statistics:
+Mean return: 0.0078 (9.39% annualized)
+Std deviation: 0.0427 (14.78% annualized)
+Skewness: -0.5489
+Kurtosis: 1.0389</code></pre>
+</div>
+</div>
+</section>
+<section id="testing-random-walk-autocorrelation-test" class="slide level2">
+<h2>Testing Random Walk: Autocorrelation Test</h2>
+<div style="height: 1em;">
+
+</div>
+<p><strong>Ljung-Box Test</strong></p>
+<p>The Ljung-Box test is a statistical test that checks whether any of a group of autocorrelations of a time series are different from zero.</p>
+<p><span class="math display">Q(m) = n(n+2) \sum_{k=1}^{m} \frac{\hat{\rho}_k^2}{n-k}</span></p>
+<p>where <span class="math inline">n</span> is the sample size, <span class="math inline">m</span> is the number of lags tested, and <span class="math inline">\hat{\rho}_k</span> is the sample autocorrelation at lag <span class="math inline">k</span>.</p>
+<ul>
+<li><strong>Null Hypothesis (H₀):</strong> No autocorrelation exists in the time series (returns are unpredictable)</li>
+<li><strong>Alternative Hypothesis (H₁):</strong> Autocorrelation exists at one or more lags (returns are predictable)</li>
+<li><strong>Interpretation:</strong> If p-value &gt; 0.05, we fail to reject H₀, suggesting returns follow a random walk</li>
+<li>Under H₀, <span class="math inline">Q(m) \sim \chi^2(m)</span></li>
+</ul>
+</section>
+<section id="testing-random-walk-autocorrelation-test-1" class="slide level2">
+<h2>Testing Random Walk: Autocorrelation Test</h2>
+<div id="b0a97019" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="co"># Test for autocorrelation using Ljung-Box test</span></span>
+<span id="cb3-2"><a href=""></a>lb_test <span class="op">=</span> acorr_ljungbox(returns, lags<span class="op">=</span><span class="dv">12</span>, return_df<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-3"><a href=""></a></span>
+<span id="cb3-4"><a href=""></a><span class="bu">print</span>(<span class="st">"Ljung-Box Test for Autocorrelation (H0: No autocorrelation)"</span>)</span>
+<span id="cb3-5"><a href=""></a><span class="bu">print</span>(lb_test.head(<span class="dv">6</span>))</span>
+<span id="cb3-6"><a href=""></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Interpretation: If p-values &gt; 0.05, we fail to reject H0"</span>)</span>
+<span id="cb3-7"><a href=""></a><span class="bu">print</span>(<span class="ss">f"This suggests returns are NOT predictable (consistent with random walk)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Ljung-Box Test for Autocorrelation (H0: No autocorrelation)
+    lb_stat  lb_pvalue
+1  0.071068   0.789788
+2  0.790338   0.673566
+3  2.087599   0.554426
+4  2.296040   0.681490
+5  2.652196   0.753420
+6  4.762381   0.574631
+
+Interpretation: If p-values &gt; 0.05, we fail to reject H0
+This suggests returns are NOT predictable (consistent with random walk)</code></pre>
+</div>
+</div>
+</section>
+<section id="autocorrelation-test-visualizations" class="slide level2">
+<h2>Autocorrelation Test Visualizations</h2>
+<div id="a71c4d8d" class="cell" data-fig-height="4" data-fig-width="12" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="co"># Visualize autocorrelation</span></span>
+<span id="cb5-2"><a href=""></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
+<span id="cb5-3"><a href=""></a></span>
+<span id="cb5-4"><a href=""></a><span class="co"># ACF plot</span></span>
+<span id="cb5-5"><a href=""></a>plot_acf(returns, lags<span class="op">=</span><span class="dv">24</span>, ax<span class="op">=</span>axes[<span class="dv">0</span>], alpha<span class="op">=</span><span class="fl">0.05</span>)</span>
+<span id="cb5-6"><a href=""></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Autocorrelation Function (ACF)'</span>, fontsize<span class="op">=</span><span class="dv">12</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb5-7"><a href=""></a>axes[<span class="dv">0</span>].set_xlabel(<span class="st">'Lag (months)'</span>)</span>
+<span id="cb5-8"><a href=""></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">'Autocorrelation'</span>)</span>
+<span id="cb5-9"><a href=""></a></span>
+<span id="cb5-10"><a href=""></a><span class="co"># Returns over time</span></span>
+<span id="cb5-11"><a href=""></a>axes[<span class="dv">1</span>].plot(returns.index, returns.values, linewidth<span class="op">=</span><span class="fl">0.8</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb5-12"><a href=""></a>axes[<span class="dv">1</span>].axhline(y<span class="op">=</span><span class="dv">0</span>, color<span class="op">=</span><span class="st">'r'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb5-13"><a href=""></a>axes[<span class="dv">1</span>].set_title(<span class="st">'S&amp;P 500 Monthly Returns'</span>, fontsize<span class="op">=</span><span class="dv">12</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb5-14"><a href=""></a>axes[<span class="dv">1</span>].set_xlabel(<span class="st">'Date'</span>)</span>
+<span id="cb5-15"><a href=""></a>axes[<span class="dv">1</span>].set_ylabel(<span class="st">'Return'</span>)</span>
+<span id="cb5-16"><a href=""></a>axes[<span class="dv">1</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb5-17"><a href=""></a></span>
+<span id="cb5-18"><a href=""></a>plt.tight_layout()</span>
+<span id="cb5-19"><a href=""></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="lecture_04_files/figure-revealjs/cell-4-output-1.png" class="r-stretch"></section>
+<section id="testing-random-walk-variance-ratio-test" class="slide level2">
+<h2>Testing Random Walk: Variance Ratio Test</h2>
+<div style="height: 1em;">
+
+</div>
+<p><strong>Variance Ratio Test</strong></p>
+<p>If returns follow a random walk, variance should scale linearly with time. The variance ratio is defined as:</p>
+<p><span class="math display">VR(q) = \frac{\text{Var}(r_t + r_{t-1} + \ldots + r_{t-q+1})}{q \cdot \text{Var}(r_t)}</span></p>
+<p>where <span class="math inline">r_t</span> is the return at time <span class="math inline">t</span> and <span class="math inline">q</span> is the number of periods.</p>
+<ul>
+<li><strong>Under random walk:</strong> <span class="math inline">VR(q) = 1</span> for all <span class="math inline">q</span></li>
+<li><strong><span class="math inline">VR(q) &gt; 1</span>:</strong> Positive autocorrelation (momentum)</li>
+<li><strong><span class="math inline">VR(q) &lt; 1</span>:</strong> Negative autocorrelation (mean reversion)</li>
+</ul>
+<p>See this <a href="variance_ratio_momentum.html">HTML file</a> for more details on the variance ratio tests.</p>
+</section>
+<section id="testing-random-walk-variance-ratio-test-1" class="slide level2">
+<h2>Testing Random Walk: Variance Ratio Test</h2>
+<div id="f7ee89fb" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a><span class="kw">def</span> variance_ratio(returns, lag<span class="op">=</span><span class="dv">2</span>):</span>
+<span id="cb6-2"><a href=""></a>    <span class="co">"""</span></span>
+<span id="cb6-3"><a href=""></a><span class="co">    Calculate variance ratio test statistic.</span></span>
+<span id="cb6-4"><a href=""></a><span class="co">    Under random walk, VR should be close to 1.</span></span>
+<span id="cb6-5"><a href=""></a><span class="co">    """</span></span>
+<span id="cb6-6"><a href=""></a>    n <span class="op">=</span> <span class="bu">len</span>(returns)</span>
+<span id="cb6-7"><a href=""></a>    <span class="co"># Variance of 1-period returns</span></span>
+<span id="cb6-8"><a href=""></a>    var_1 <span class="op">=</span> np.var(returns, ddof<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-9"><a href=""></a></span>
+<span id="cb6-10"><a href=""></a>    <span class="co"># Variance of k-period returns</span></span>
+<span id="cb6-11"><a href=""></a>    returns_k <span class="op">=</span> returns.rolling(window<span class="op">=</span>lag).<span class="bu">sum</span>().dropna()</span>
+<span id="cb6-12"><a href=""></a>    var_k <span class="op">=</span> np.var(returns_k, ddof<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-13"><a href=""></a></span>
+<span id="cb6-14"><a href=""></a>    <span class="co"># Variance ratio</span></span>
+<span id="cb6-15"><a href=""></a>    vr <span class="op">=</span> var_k <span class="op">/</span> (lag <span class="op">*</span> var_1)</span>
+<span id="cb6-16"><a href=""></a>    <span class="cf">return</span> vr</span>
+<span id="cb6-17"><a href=""></a></span>
+<span id="cb6-18"><a href=""></a><span class="bu">print</span>(<span class="st">"Variance Ratio Test Results:"</span>)</span>
+<span id="cb6-19"><a href=""></a><span class="bu">print</span>(<span class="st">"(Under random walk, VR should be close to 1.0)</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb6-20"><a href=""></a></span>
+<span id="cb6-21"><a href=""></a><span class="cf">for</span> lag <span class="kw">in</span> [<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">12</span>]:</span>
+<span id="cb6-22"><a href=""></a>    vr <span class="op">=</span> variance_ratio(returns, lag)</span>
+<span id="cb6-23"><a href=""></a>    <span class="bu">print</span>(<span class="ss">f"VR(</span><span class="sc">{</span>lag<span class="sc">}</span><span class="ss">):  </span><span class="sc">{</span><span class="bu">float</span>(vr)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb6-24"><a href=""></a></span>
+<span id="cb6-25"><a href=""></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Conclusion: VR close to 1.0 suggests random walk behavior"</span>)</span>
+<span id="cb6-26"><a href=""></a><span class="bu">print</span>(<span class="ss">f"VR &gt; 1 suggests positive autocorrelation (momentum)"</span>)</span>
+<span id="cb6-27"><a href=""></a><span class="bu">print</span>(<span class="ss">f"VR &lt; 1 suggests negative autocorrelation (mean reversion)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Variance Ratio Test Results:
+(Under random walk, VR should be close to 1.0)
+
+VR(2):  0.9887</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>VR(4):  0.9733
+VR(8):  1.0255
+VR(12):  1.0965
+
+Conclusion: VR close to 1.0 suggests random walk behavior
+VR &gt; 1 suggests positive autocorrelation (momentum)
+VR &lt; 1 suggests negative autocorrelation (mean reversion)</code></pre>
+</div>
+</div>
+</section>
+<section id="another-test-for-random-walk" class="slide level2">
+<h2>Another test for random walk</h2>
+<p>In the assignment, I ask you to run a simple OLS regression of the form: <span class="math display">r_t = \alpha + \beta r_{t-1} + \epsilon_t</span></p>
+<ul>
+<li>If returns follow a random walk, we expect <span class="math inline">\beta = 0</span></li>
+<li>If we find <span class="math inline">\beta \neq 0</span>, it suggests returns are predictable and violate weak form market efficiency.</li>
+</ul>
+</section>
+<section id="other-factors-can-predict-market-returns" class="slide level2">
+<h2>Other factors can predict market returns …</h2>
+<p>Price-to-dividend ratios was shown to predict market returns in the long run (Fama and French, 1988). Regression:</p>
+<p><span class="math display">r_{t + T} = \alpha + \beta \log\left(\frac{P_t}{D_{t-1}}\right) + \epsilon_t</span></p>
+
+<img data-src="figures/dP-reg.png" style="width:70.0%" class="r-stretch"><p>But, these results are <strong>in-sample</strong>. Do you know the difference between in- and out-of-sample?</p>
+<ul>
+<li>For those that want to learn more about predictability, see Goyal and Welch (2008) and Goyal, Welch, and Zafirov (2021).</li>
+</ul>
+</section>
+<section id="contrarian-and-momentum-strategies" class="slide level2">
+<h2>Contrarian and Momentum Strategies</h2>
+<div style="height: 1em;">
+
+</div>
+<p>Momentum and contrarian are classic cross-sectional strategies that exploit return predictability.</p>
+<div style="height: 1em;">
+
+</div>
+<p><strong>Contrarian strategies:</strong> Buy the past losers (bottom quintile or decile) and sell the past winner based on past 3-5 year returns (top quintile ordecile) and hold for a period of 3-5 years. You then repeat. See De Bondt and Thaler(1985).</p>
+<div style="height: 1em;">
+
+</div>
+<p><strong>Momentum strategies:</strong> Rank stocks based on past performance, e.g., 3 to 12 month past returns, and buy the past winners (top decile or quintile) and sell the past losers (bottom decile or quintile) and hold your position for a period of 3-12 months (trend). You then repeat.</p>
+</section>
+<section id="de-bondt-and-thaler-contrarian-findings" class="slide level2">
+<h2>De Bondt and Thaler Contrarian Findings</h2>
+<div style="height: 2em;">
+
+</div>
+<p>De Bondt and Thaler (1985) were the first to find evidence of inefficiencies usingcontrarian strategies.</p>
+<ul>
+<li>At each 3-year interval, rank stocks in decile based on their historical 36 monthperformance.</li>
+<li>Buy stocks that did the worst in the last 3 years (bottom decile) and short-sell stocks that did the best in the last 3 years (top decile).</li>
+<li>Hold the portfolio for 3 years.</li>
+</ul>
+</section>
+<section id="de-bondt-and-thaler-findings" class="slide level2">
+<h2>De Bondt and Thaler Findings</h2>
+
+<img data-src="figures/debondt.png" style="width:70.0%" class="r-stretch"></section>
+<section id="de-bondt-and-thaler-findings-1" class="slide level2">
+<h2>De Bondt and Thaler Findings</h2>
+<ul>
+<li><p>Loser portfolios outperform the market by, on average, 19.6%,thirty-six months after portfolio formation. Winner portfolios, on the other hand, earn about 5% less than the market.</p></li>
+<li><p>How do we measure outperformance? Using cumulative average residuals (CAR):</p>
+<p><span class="math display">CAR_{i,t} = \sum_{\tau=1}^{t} (R_{i,\tau} - E[R_{i,\tau}])</span></p>
+<p>OR</p>
+<p><span class="math display">BHAR_{i,t} = \prod_{\tau=1}^{t} (1 + R_{i,\tau}) - \prod_{\tau=1}^{t} (1 + E[R_{i,\tau}])</span></p>
+<p>where <span class="math inline">E[R_{i,\tau}]</span> is the expected return based on a market model. It can also be just the market return.</p></li>
+<li><p>The difference in cumulative average returns (CAR) between the extreme portfolios equals 24.6%.</p></li>
+<li><p>How to compute BHAR or CAR is also part of the assignment!</p></li>
+</ul>
+</section>
+<section id="momentum-strategies" class="slide level2">
+<h2>Momentum Strategies</h2>
+<p>Jegadeesh &amp; Titman (2001) show that momentum profits formed on the basis of buying the top decile and selling the bottom decile ranked on the past 6mth returns is about 1% per mth both before 1990 and after 1990 for a holding period of from 6mth-1yr.</p>
+<ul>
+<li>Small firms have high momentum than large firms (1.42% vs.&nbsp;0.86% per month for the 1965-1998 period.)</li>
+<li>The momentum only appears in non-January months. In January, the momentum profit is actually negative.</li>
+<li>If you go back to the De Bondt and Thaler (1985) figure, you will find evidence of momentum in the first 6 months after portfolio formation.</li>
+<li>The momentum profit cannot be explained by risks such as the CAPM or the Fama-French three-factor model. More explications on this later.</li>
+</ul>
+</section>
+<section id="jegadeesh-titman-findings" class="slide level2">
+<h2>Jegadeesh &amp; Titman Findings</h2>
+
+<img data-src="figures/mom.png" style="width:100.0%" class="r-stretch"><p>Are you able to interpret this table?</p>
+</section>
+<section id="jegadeesh-titman-findings-1" class="slide level2">
+<h2>Jegadeesh &amp; Titman Findings</h2>
+
+<img data-src="figures/mom2.png" style="width:100.0%" class="r-stretch"><p>Notice the <strong>January effect</strong>. Why is P1-P10 negative on January?</p>
+</section>
+<section id="semi-strong-form-market-efficiency" class="slide level2">
+<h2>Semi-strong Form Market Efficiency</h2>
+<div style="height: 2em;">
+
+</div>
+<p>Semi-strong form market efficiency states that <strong>all publicly available information</strong> is already reflected in stock prices.</p>
+<p><strong>Event studies</strong> are commonly used to test semi-strong form efficiency by examining how quickly and accurately stock prices adjust to new public information.</p>
+<p>How are event studies conducted?</p>
+</section>
+<section id="event-studies" class="slide level2">
+<h2>Event Studies</h2>
+<div style="height: 2em;">
+
+</div>
+<p>Event studies analyze how stock prices react to specific events, such as earnings announcements, mergers, or macroeconomic news.</p>
+<ul>
+<li>They measure the abnormal returns around the event date to assess whether prices adjust quickly and accurately.</li>
+</ul>
+<p>The key steps in an event study are:</p>
+<ul>
+<li>Define the event window (e.g., 10 days before and after the event).</li>
+<li>Estimate the expected returns using a market model or other benchmarks.</li>
+<li>Calculate abnormal returns as the difference between actual and expected returns.
+<ul>
+<li>See the BHAR calculations on the prior slides.</li>
+</ul></li>
+<li>Aggregate abnormal returns over the event window (you take an average across all the days) to assess the impact of the event.</li>
+<li>Test for statistical significance of abnormal returns to determine if the event had a significant impact on stock prices.</li>
+</ul>
+</section>
+<section id="early-evidence-of-semi-strong-form-efficiency" class="slide level2">
+<h2>Early evidence of Semi-Strong Form Efficiency</h2>
+<p>In Fama, Fisher, Jensen, and Roll (1969), the authors present the first early evidence of semi-strong by examining price reactions around stock splits.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="figures/ffjr.png" style="width:100.0%"></p>
+</div><div class="column" style="width:50%;">
+<div style="height: 2em;">
+
+</div>
+<ul>
+<li>Note that the x-axis corresponds to months.</li>
+<li>y-axis: cumulative average residuals is an old way of saying “cumulative abnormal returns”.</li>
+<li>Why do splits associated with positive returns? Before announcements, price increases leading to a split, but in FFJR they also show that on the announcement months, returns goes up. Splits are a signal of future dividend increase.</li>
+</ul>
+</div></div>
+</section>
+<section id="evidence-against-of-semi-strong-form-efficiency-pead" class="slide level2">
+<h2>Evidence Against of Semi-Strong Form Efficiency: PEAD</h2>
+
+<img data-src="figures/pead.png" style="width:90.0%" class="r-stretch"><p>This figure plots the Cumulative Abnormal Return (CAR) -60 to +60 days aftere arnings announcements – conditioned on earnings surprises. Foster et al.&nbsp;(1984)</p>
+</section>
+<section id="but-markets-have-become-more-efficient-over-time." class="slide level2">
+<h2>But markets have become more efficient over time.</h2>
+
+<img data-src="figures/pead2.png" style="width:90.0%" class="r-stretch"><p>See Martineau (2022).</p>
+</section>
+<section id="additional-evidence-against-semi-strong-the-no-news-is-news" class="slide level2">
+<h2>Additional evidence against semi-strong: The No-News is News</h2>
+<p>Hubermann and Regev (2001) “Contagious Speculation and a Cure for Cancer”:</p>
+<ul>
+<li>May 3, 1998, NYT reports on a recent breakthrough in cancer research by ENMD, acompany with licensing rights to the breakthrough. The story’s impact on the stock prices was immediate, huge, and to a large extent permanent.</li>
+</ul>
+<p>However:</p>
+<ul>
+<li>The new-news content of NYT was nil because the substance of the story had been published as a scientific piece in Nature and in the popular press more than five months earlier, in November 1997</li>
+</ul>
+</section>
+<section id="huberman-and-regev-2001" class="slide level2">
+<h2>Huberman and Regev (2001)</h2>
+
+<img data-src="figures/hr.png" style="width:90.0%" class="r-stretch"></section>
+<section id="strong-form-market-efficiency" class="slide level2">
+<h2>Strong form market efficiency</h2>
+<p>The strong form says that prices fully reflect ALL information, including public and private information.</p>
+<ul>
+<li>Even the knowledge of material, non-public information cannot be used to earnsuperior results.</li>
+<li>The strong form EMH, if correct, repudiates the need to monitor insider trading.</li>
+</ul>
+</section>
+<section id="evidence-supporting-strong-form-market-efficiency" class="slide level2">
+<h2>Evidence Supporting Strong Form Market Efficiency</h2>
+<p>To test for strong form market efficiency is not trivial.</p>
+<ul>
+<li>You need to have evidence that someone has private information.</li>
+<li>You need to compare the effect of a trade on prices of a stock by someone with private information to another similar stock (size, industry, etc) for which one could have private information but did trade on it.</li>
+<li>This was overcome in Akey, Gregoire, Martineau (2022).</li>
+</ul>
+</section>
+<section id="evidence-supporting-strong-form-market-efficiency-akey-et-al-2022" class="slide level2">
+<h2>Evidence Supporting Strong Form Market Efficiency (Akey et al, 2022)</h2>
+<div style="height: 2em;">
+
+</div>
+<p>Akey et al., 2021 examine how private information illegally acquired through hacking is reflected in stock prices in an event study framework.</p>
+<p>The plot below shows the buy-and-hold cumulative returns for stocks with top quintile and bottom quintile earnings surprises.</p>
+
+<img data-src="figures/hack.png" style="width:90.0%" class="r-stretch"></section>
+<section id="so-what-are-the-forces-limiting-market-efficiency" class="slide level2">
+<h2>So what are the forces limiting market efficiency?</h2>
+<div style="height: 2em;">
+
+</div>
+<p>Limited attention is often the common cause behind “slow price formation”.</p>
+<p>Behavioral explanation to momentum …</p>
+<ul>
+<li>Barberis, Shleifer and Vishny (1998, JFE) suggest the conservatism bias (underreact to information): A “conservatism bias” can lead investors to underreact or underweight new information (related to anchoring bias). That’s related to the “52-week high/low”analogy.</li>
+</ul>
+<p>Behavioral explanation to contrarian …</p>
+<ul>
+<li>The “representative heuristic,” which suggests that investors may overly extrapolate a firm’s past extraordinary earning growths into the future and hence overreact to positive (or negative) information that is preceded by positive (or negative) information. That’s related to the “good company” survey paper discussed in the prior lecture notes.</li>
+</ul>
+</section>
+<section id="but-behavioral-forces-is-only-part-of-the-story" class="slide level2">
+<h2>But behavioral forces is only part of the story…</h2>
+<div style="height: 2em;">
+
+</div>
+<p>Market efficiency theoretically rests on three pillars:</p>
+<ul>
+<li>Investor rationality</li>
+<li>Uncorrelated errors</li>
+<li>Unlimited arbitrage</li>
+</ul>
+<p>Only one of these is actually needed to be true for markets to perfectly efficient. If all three fails, then market efficiency is called into question.</p>
+<p>Let’s look at all three of these pillars into details and when they can “fall”.</p>
+</section>
+<section id="pillar-1-all-investors-are-always-rational" class="slide level2">
+<h2>Pillar 1: All Investors Are Always Rational</h2>
+<div style="height: 2em;">
+
+</div>
+<p>Challenges:</p>
+<ul>
+<li>We have seen in class many examples of irrationality due to behavioral biases.</li>
+<li>Such biases can lead you to trade assets not based on fundamental values but on “noise” (i.e., information that is not relevant for the valuation of the securities.</li>
+<li>Noise is not necessarily a bad thing to the extent that it generates liquidity in financial markets. Without “noise trading”, do you think people would trade? (the no-trade theorem).</li>
+<li>Also, what if investors are bounded rational? In the no-news example of Huberman andRegev, one reason that can explain this is because we cannot process all the news. We arenot mentally capable! We need event that captures our attention to price asset correctly.</li>
+</ul>
+</section>
+<section id="pillar-2-investor-errors-are-uncorrelated" class="slide level2">
+<h2>Pillar 2: Investor Errors are Uncorrelated</h2>
+<p>Challenge:</p>
+<ul>
+<li>Many people trade on noise because they think they have superior information and is often driven by social contexts (e.g., neighbor, social media).</li>
+<li>If such trading by noise traders were random, noise trading wouldn’t be an issue for market efficiency because their trades would cancel out (market clearing).</li>
+<li>But it has been shown that investor sentiments (noise that is correlated among investors) can drive prices.</li>
+</ul>
+</section>
+<section id="evidence-in-line-with-pillars-1-and-2-the-effect-of-social-media-on-stock-prices" class="slide level2">
+<h2>Evidence in line with Pillars 1 and 2: The Effect of Social Media on Stock Prices</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div style="height: 2em;">
+
+</div>
+<p><img data-src="figures/stocktwits1.png" style="width:100.0%"></p>
+</div><div class="column" style="width:50%;">
+<div style="height: 2em;">
+
+</div>
+<ul>
+<li>This figures shows the BHAR differences between stocks with high and low StockTwits attention in the days prior to earnings announcements.</li>
+<li>Stocks with high stocktwits chatter leads to a price run-up and an immediate price reversals on announcement day.</li>
+<li>Retail trading herds on “noise” and markets correct the noise at the time of the announcement.</li>
+</ul>
+</div></div>
+</section>
+<section id="social-media-can-distort-price-formation" class="slide level2">
+<h2>Social Media Can Distort Price Formation</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div style="height: 2em;">
+
+</div>
+<p><img data-src="figures/stocktwits2.png" style="width:100.0%"></p>
+</div><div class="column" style="width:50%;">
+<div style="height: 2em;">
+
+</div>
+<p><img data-src="figures/stocktwits3.png" style="width:100.0%"></p>
+</div></div>
+<ul>
+<li>High attention == Top quintile in StockTwits post activity 5 days before earnings announcement.</li>
+<li>Stocktwits attention leads to price run-up before earnings announcement, for both positive and negative earnings surprises. It distorts price formation for negative earnings surprises.</li>
+</ul>
+</section>
+<section id="pillar-3-unlimited-arbitrage" class="slide level2">
+<h2>Pillar 3: Unlimited arbitrage</h2>
+<p>Challenge:</p>
+<ol type="1">
+<li>Fundamental risk:</li>
+</ol>
+<ul>
+<li>If you want to short-sale an overpriced stock, you are subject to risk, such as new information about the stock pushing the price up (requiring margin payments), pay realized dividends, etc. (This can be overcome, somewhat, with hedging through substitutes).</li>
+</ul>
+<ol start="2" type="1">
+<li>Noise-trader risk:</li>
+</ol>
+<ul>
+<li>Arbitrageurs can have difficulty to arbitrage away mispriced assets if noise trading based on sentiments push assets further away from fundamentals. Noise traders do not disappear even when losing money because “there is a fool born every minute”.</li>
+</ul>
+<ol start="3" type="1">
+<li>Implementation costs:</li>
+</ol>
+<ul>
+<li>Is the stock available to short? Short-sellers can face short-squeeze (buy back assets to the original investor), implementation costs (higher for illiquid assets).</li>
+</ul>
+</section>
+<section id="example-of-limits-to-arb.-froot-and-dabora-1999" class="slide level2">
+<h2>Example of Limits to Arb.: Froot and Dabora (1999)</h2>
+<p>The classical finance paradigm predicts that an asset’s price is unaffected by its location of trade.</p>
+<p><span class="math inline">\Rightarrow</span> If international financial markets are perfectly integrated, then a given set of risky cash flows has the same value and risk characteristics when its trade is redistributed across markets and investors.</p>
+<ul>
+<li>A multinational company that has its shares traded on multiple markets, its twin charters imply that the twins’ stock prices should move in lockstep, in a ratio given by the proportional division of cash flows.</li>
+<li>Froot and Dabora (1999) find that this is not the case for Royal Dutch and Shell, which are independently incorporated in the Netherlands and England, respectively.</li>
+<li>The structure has grown out of a 1907 alliance between Royal Dutch and Shell Transport by which the two companies agreed to merge their interests on a 60:40 basis (parity) while remaining separate and distinct entities.</li>
+</ul>
+</section>
+<section id="example-of-limits-to-arb.-froot-and-dabora-1999-1" class="slide level2">
+<h2>Example of Limits to Arb.: Froot and Dabora (1999)</h2>
+<p><img data-src="figures/royaldutch.png" style="width:100.0%"></p>
+<div class="quarto-auto-generated-content">
+<p><img src="../logos/uoft.png" class="slide-logo"></p>
+<div class="footer footer-default">
+<p>MGFD40</p>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="lecture_04_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="lecture_04_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="lecture_04_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="lecture_04_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="lecture_04_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="lecture_04_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="lecture_04_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="lecture_04_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="lecture_04_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="lecture_04_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        // For code content inside modals, clipBoardJS needs to be initialized with a container option
+        // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

@@ -1,0 +1,53 @@
+meta:
+  name: UTSC
+  link: charlesmartineau.com
+
+logo:
+  small: ../logos/uoft.png
+  medium: ../logos/uoft.png
+  large: ../logos/uoft.png
+
+color:
+  palette:
+    hec-blue: "#002855"
+    dark-grey: "#888b8d"
+    light-grey: "#d9d9d6"
+    dark-blue: "#0072ce"
+    light-blue: "#92c1e9"
+    dark-teal: "#00aec7"
+    light-teal: "#88dbdf"
+    dark-green: "#26d07c"
+    light-green: "#8fe2b0"
+    dark-red: "#ff585d"
+    light-red: "#ffb1bb"
+    dark-magenta: "#eb6fbd"
+    light-magenta: "#eab8e4"
+    dark-yellow: "#f3d03e"
+    light-yellow: "#f2f0a1"
+  background: white
+  foreground: black
+  primary: hec-blue
+  secondary: dark-teal
+  tertiary: dark-magenta
+  success: dark-green
+  warning: dark-red
+  info: light-blue
+
+typography:
+  fonts:
+    - family: Poppins
+      source: google
+    - family: Fira Code
+      source: google
+    - family: Noto Sans
+      source: google
+    - family: Noto Serif
+      source: google
+  base: 
+    family: Noto Serif
+    size: 24px
+  headings: 
+    family: Poppins
+    weight: 300
+    color: dark-blue
+  monospace: Fira Code

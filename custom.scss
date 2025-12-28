@@ -1,0 +1,56 @@
+/*-- scss:defaults --*/
+
+$presentation-font-size-root: 24px;
+$font-family-sans-serif: "Noto Serif"; 
+$font-family-monospace: "Fira Mono", monospace;
+$presentation-heading-font: Poppins, "Noto Sans";
+$presentation-heading-font-weight: 400;
+$presentation-heading-color: #0072ce;
+
+
+.primary-color {
+    color: #055f96;
+}
+
+.hec-dark-blue {
+    color: #002855;
+}
+
+.dark-green {
+    color: #26d07c;
+}
+
+.light-green-bg {
+    background-color: #8fe2b0;
+}
+
+.dark-red {
+    color: #ff585d;
+}
+
+.light-red-bg {
+    background-color: #ffb1bb;
+}
+
+    // dark-grey: "#888b8d"
+    // light-grey: "#d9d9d6"
+    // dark-blue: "#0072ce"
+    // light-blue: "#92c1e9"
+    // dark-teal: "#00aec7"
+    // light-teal: "#88dbdf"
+    // dark-green: "#26d07c"
+    // light-green: "#8fe2b0"
+    // dark-red: "#ff585d"
+    // light-red: "#ffb1bb"
+    // dark-magenta: "#eb6fbd"
+    // light-magenta: "#eab8e4"
+    // dark-yellow: "#f3d03e"
+    // light-yellow: "#f2f0a1"
+
+.reveal .slides section .fragment.blur {
+    filter: blur(5px);
+  }
+  
+  .reveal .slides section .fragment.blur.visible {
+    filter: none
+  }

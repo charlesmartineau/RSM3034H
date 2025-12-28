@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variance Ratio and Momentum</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+        .explanation {
+            background: #e8f4f8;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .formula {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 16px;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Why Variance Ratio > 1 Implies Momentum</h1>
+        
+        <div class="explanation">
+            <strong>The Variance Ratio Test:</strong> Compares the variance of q-period returns to q times the variance of 1-period returns. Under a random walk (no momentum), this ratio should equal 1.
+        </div>
+
+        <div class="formula">
+            VR(q) = Var(r<sub>t</sub> + r<sub>t-1</sub> + ... + r<sub>t-q+1</sub>) / [q × Var(r<sub>t</sub>)]
+        </div>
+
+        <h2>Scenario 1: Random Walk (No Momentum)</h2>
+        <div class="chart-container">
+            <canvas id="randomWalkChart"></canvas>
+        </div>
+        <div class="comparison">
+            <div class="stat-box">
+                <div class="stat-value" id="rwVar1">-</div>
+                <div class="stat-label">1-Period Variance</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="rwVar4">-</div>
+                <div class="stat-label">4-Period Variance</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="rwVR">-</div>
+                <div class="stat-label">Variance Ratio (q=4)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="rwAutoCorr">-</div>
+                <div class="stat-label">Autocorrelation</div>
+            </div>
+        </div>
+
+        <h2>Scenario 2: Positive Momentum</h2>
+        <div class="chart-container">
+            <canvas id="momentumChart"></canvas>
+        </div>
+        <div class="comparison">
+            <div class="stat-box">
+                <div class="stat-value" id="momVar1">-</div>
+                <div class="stat-label">1-Period Variance</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="momVar4">-</div>
+                <div class="stat-label">4-Period Variance</div>
+            </div>
+            <div class="stat-box" style="background: #d4edda;">
+                <div class="stat-value" id="momVR" style="color: #155724;">-</div>
+                <div class="stat-label">Variance Ratio (q=4)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="momAutoCorr">-</div>
+                <div class="stat-label">Autocorrelation</div>
+            </div>
+        </div>
+
+        <button onclick="generateData()">Generate New Data</button>
+
+        <div class="explanation" style="margin-top: 30px;">
+            <h3>Why VR > 1 Indicates Momentum:</h3>
+            <p><strong>Random Walk (VR ≈ 1):</strong> Returns are uncorrelated. When you sum 4 periods, variances simply add up: Var(4-period) = 4 × Var(1-period). This is because <span class="highlight">Var(X + Y) = Var(X) + Var(Y) when X and Y are uncorrelated</span>.</p>
+            
+            <p><strong>Momentum (VR > 1):</strong> Returns are <em>positively correlated</em>. Positive returns tend to follow positive returns. When summing returns, you get: <span class="highlight">Var(X + Y) = Var(X) + Var(Y) + 2×Cov(X,Y)</span>. The positive covariance term makes the 4-period variance <em>larger than expected</em>, pushing VR above 1.</p>
+            
+            <p><strong>Intuition:</strong> With momentum, multi-period returns are more volatile than expected because trends persist. A positive shock doesn't just affect one period—it creates a string of positive returns, amplifying the cumulative volatility.</p>
+        </div>
+
+        <div class="container" style="background: #fff9e6; border: 2px solid #f39c12;">
+            <h3 style="color: #e67e22;">Mathematical Relationship:</h3>
+            <p>For a variance ratio with lag q:</p>
+            <div class="formula">
+                VR(q) ≈ 1 + 2 × Σ(1 - k/q) × ρ<sub>k</sub>
+            </div>
+            <p>where ρ<sub>k</sub> is the autocorrelation at lag k.</p>
+            <p>When autocorrelations are <strong>positive</strong> (momentum), VR > 1<br>
+            When autocorrelations are <strong>negative</strong> (mean reversion), VR < 1</p>
+        </div>
+    </div>
+
+    <script>
+        let rwChart, momChart;
+
+        function calculateStats(returns) {
+            const n = returns.length;
+            const mean = returns.reduce((a, b) => a + b, 0) / n;
+            const variance = returns.reduce((sum, r) => sum + Math.pow(r - mean, 2), 0) / (n - 1);
+            
+            // Calculate autocorrelation at lag 1
+            let autoCorr = 0;
+            for (let i = 1; i < n; i++) {
+                autoCorr += (returns[i] - mean) * (returns[i-1] - mean);
+            }
+            autoCorr = autoCorr / ((n - 1) * variance);
+            
+            return { variance, autoCorr, mean };
+        }
+
+        function calculateMultiPeriodReturns(returns, periods) {
+            const multiReturns = [];
+            for (let i = periods - 1; i < returns.length; i++) {
+                let sum = 0;
+                for (let j = 0; j < periods; j++) {
+                    sum += returns[i - j];
+                }
+                multiReturns.push(sum);
+            }
+            return multiReturns;
+        }
+
+        function generateRandomWalkReturns(n) {
+            const returns = [];
+            for (let i = 0; i < n; i++) {
+                returns.push((Math.random() - 0.5) * 4);
+            }
+            return returns;
+        }
+
+        function generateMomentumReturns(n, persistence = 0.5) {
+            const returns = [];
+            let lastReturn = 0;
+            for (let i = 0; i < n; i++) {
+                const shock = (Math.random() - 0.5) * 4;
+                const newReturn = persistence * lastReturn + (1 - persistence) * shock;
+                returns.push(newReturn);
+                lastReturn = newReturn;
+            }
+            return returns;
+        }
+
+        function createChart(ctx, returns, title, color) {
+            const cumulativeReturns = [0];
+            returns.forEach((r, i) => {
+                cumulativeReturns.push(cumulativeReturns[i] + r);
+            });
+
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: cumulativeReturns.map((_, i) => i),
+                    datasets: [{
+                        label: 'Cumulative Return',
+                        data: cumulativeReturns,
+                        borderColor: color,
+                        backgroundColor: color + '20',
+                        borderWidth: 2,
+                        tension: 0.1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: title,
+                            font: { size: 16 }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Cumulative Return (%)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time Period'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateStats(returns, prefix) {
+            const stats1 = calculateStats(returns);
+            const returns4 = calculateMultiPeriodReturns(returns, 4);
+            const stats4 = calculateStats(returns4);
+            
+            const vr = stats4.variance / (4 * stats1.variance);
+            
+            document.getElementById(prefix + 'Var1').textContent = stats1.variance.toFixed(3);
+            document.getElementById(prefix + 'Var4').textContent = stats4.variance.toFixed(3);
+            document.getElementById(prefix + 'VR').textContent = vr.toFixed(3);
+            document.getElementById(prefix + 'AutoCorr').textContent = stats1.autoCorr.toFixed(3);
+        }
+
+        function generateData() {
+            const n = 100;
+            const rwReturns = generateRandomWalkReturns(n);
+            const momReturns = generateMomentumReturns(n, 0.6);
+
+            if (rwChart) rwChart.destroy();
+            if (momChart) momChart.destroy();
+
+            rwChart = createChart(
+                document.getElementById('randomWalkChart').getContext('2d'),
+                rwReturns,
+                'Independent returns (no autocorrelation)',
+                '#95a5a6'
+            );
+
+            momChart = createChart(
+                document.getElementById('momentumChart').getContext('2d'),
+                momReturns,
+                'Returns with positive autocorrelation (momentum)',
+                '#e74c3c'
+            );
+
+            updateStats(rwReturns, 'rw');
+            updateStats(momReturns, 'mom');
+        }
+
+        // Generate initial data
+        generateData();
+    </script>
+</body>
+</html>
