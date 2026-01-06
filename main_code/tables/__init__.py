@@ -1,3 +1,1 @@
 from .format import regression_table, reorder_reg_output
-from .news_predictor import news_predictor_panel_reg
-from .summary_stats_table import create_summary_stats_table

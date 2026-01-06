@@ -61,30 +61,6 @@ def load_fama_french_me_breakpoints(df: pd.DataFrame, path: Path) -> pd.DataFram
     return df.merge(ff_me.drop(columns="date"), on=["year_month"], how="left")
 
 
-def load_bloomberg_news_count(df, path: Path) -> pd.DataFrame:
-    bml_news = pd.read_parquet(
-        path / "bloomberg/bloomberg_daily_aggregation_crsp_ticker.parquet"
-    )
-
-    bml_news = bml_news.rename(
-        columns={
-            "n_news_post_close": "blm_news_count_post_close",
-            "n_news_pre_open": "blm_news_count_pre_open",
-        }
-    )
-
-    bml_news["date"] = pd.to_datetime(bml_news["date"])
-    bml_news["ticker"] = bml_news["ticker"].astype(str)
-    return df.merge(bml_news, on=["date", "ticker"], how="left")
-
-
-def load_bloomberg_read_count(df, path: Path) -> pd.DataFrame:
-    bml_read = pd.read_parquet(
-        path / "bloomberg/bloomberg_daily_read_count_crsp_ticker_aggregated.parquet"
-    ).rename(columns={"diff_read_count": "blm_read_count"})
-    return df.merge(bml_read, on=["date", "ticker"], how="left")
-
-
 def load_ibes_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
     ibes = pd.read_parquet(path / "ibes/ibes_sue.parquet")
     ibes = ibes[ibes["datetime"] >= "2008-01-01"]  # filter for dates after 2007-01-01
@@ -183,162 +159,6 @@ def load_gic(df, path: Path) -> pd.DataFrame:
     return df.drop(columns=["indfrom", "indthru"])
 
 
-def load_ravenpack_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
-    """
-    Loads the Ravenpack dataset.
-    """
-    ravenpack = pd.read_parquet(path / "ravenpack/ravenpack_us_news_aggregated.parquet")
-
-    ravenpack = ravenpack.rename(
-        columns={
-            "most_frequent_newstype": "most_frequent_rp_newstype",
-            "rp_story_count": "rp_news_count",
-            "rp_story_count_post_close": "rp_news_count_post_close",
-            "rp_story_count_pre_open": "rp_news_count_pre_open",
-            "rp_story_count_full_article": "rp_news_count_full_article",
-            "rp_story_count_tabular": "rp_news_count_tabular",
-            "rp_story_count_news_flash": "rp_news_count_news_flash",
-            "rp_story_count_press_release": "rp_news_count_press_release",
-            "rp_story_count_sec": "rp_news_count_sec",
-        }
-    )
-
-    ravenpack["date"] = pd.to_datetime(ravenpack["date"])
-
-    # load the link table
-    rp_link = pd.read_parquet(path / "ravenpack/rpa_entity_mappings.parquet")
-    rp_link = rp_link[rp_link["data_type"] == "CUSIP"]
-    rp_link["range_end"] = rp_link["range_end"].fillna(CRSP_END_DATE)
-    rp_link["range_start"] = pd.to_datetime(rp_link["range_start"])
-    rp_link["range_end"] = pd.to_datetime(rp_link["range_end"])
-
-    rp_link = rp_link.rename(columns={"data_value": "cusip"})
-    rp_link = rp_link.drop(columns=["entity_type", "data_type"])
-
-    rp_link = rp_link[rp_link["cusip"].notna()]
-
-    rp_link["cusip"] = rp_link["cusip"].astype(str).str[:8]
-
-    ravenpack = ravenpack.merge(rp_link, on=["rp_entity_id"], how="left")
-
-    ravenpack = ravenpack[ravenpack["date"] >= ravenpack["range_start"]]
-    ravenpack = ravenpack[ravenpack["date"] <= ravenpack["range_end"]]
-
-    ravenpack = ravenpack[
-        [
-            "date",
-            "cusip",
-            "rp_news_count",
-            "rp_news_count_full_article",
-            "rp_news_count_tabular",
-            "rp_news_count_news_flash",
-            "rp_news_count_press_release",
-            "rp_news_count_sec",
-            "rp_news_count_post_close",
-            "rp_news_count_pre_open",
-            "average_rp_sent",
-            "most_frequent_rp_newstype",
-        ]
-    ]
-
-    # There about 20 obs link the for the same date and cusip, take the first one
-    ravenpack = ravenpack.groupby(["date", "cusip"]).first()
-
-    return df.merge(ravenpack, on=["date", "cusip"], how="left")
-
-
-def load_wsj_full_articles(df: pd.DataFrame, path: Path) -> pd.DataFrame:
-    """
-    Loads the WSJ full articles data.
-    Data is constructed using the code in main_code/data/ravenpack/ravenpack_full_article.py
-    which is not part of main. Run before main.py
-    """
-    eq = pd.read_parquet(path / "ravenpack/rpa_djpr_equities_full_articles.parquet")
-
-    macro = pd.read_parquet(
-        path / "ravenpack/rpa_djpr_global_macro_full_articles.parquet"
-    )
-
-    eq["date"] = pd.to_datetime(eq["timestamp_est"]).dt.date
-    macro["date"] = pd.to_datetime(macro["timestamp_est"]).dt.date
-
-    # news filtering
-    for col in [
-        "wsj_blog",
-        "live_blog",
-        "wsj_com",
-        "wsje",
-        "awsj",
-        "barrons_blog",
-        "web_video",
-        "update",
-        "all_things_digital",
-        "test_message",
-    ]:
-        eq = eq[eq[col] == 0]
-        macro = macro[macro[col] == 0]
-
-    # compute the number of unique news stories per day (not the number of firms covered)
-    n_unique_firm_news = eq.groupby(["rp_story_id"]).first().reset_index()
-    n_unique_firm_news = (
-        n_unique_firm_news.groupby(["date"])[["rp_story_id"]].count().reset_index()
-    )
-    n_unique_firm_news = n_unique_firm_news.rename(
-        columns={"rp_story_id": "total_wsj_firm_full_article"}
-    )
-
-    # compute the number of unique macro news stories per day
-    n_unique_macro_news = macro.groupby(["rp_story_id"]).first().reset_index()
-    n_unique_macro_news = (
-        n_unique_macro_news.groupby(["date"])[["rp_story_id"]].count().reset_index()
-    )
-    n_unique_macro_news = n_unique_macro_news.rename(
-        columns={"rp_story_id": "total_wsj_macro_full_article"}
-    )
-    n_unique_macro_news["date"] = pd.to_datetime(n_unique_macro_news["date"])
-    n_unique_firm_news["date"] = pd.to_datetime(n_unique_firm_news["date"])
-
-    # merge to panel
-    df = df.merge(n_unique_macro_news, on="date", how="left")
-    df = df.merge(n_unique_firm_news, on="date", how="left")
-
-    # compute the number of stories a firm has per day
-    eq = eq.groupby(["rp_entity_id", "date"])[["rp_story_id"]].count().reset_index()
-    eq = eq.rename(columns={"rp_story_id": "n_wsj_full_article"})
-    eq = eq[eq["rp_entity_id"].notna()]
-
-    # load the link table
-    rp_link = pd.read_parquet(path / "ravenpack/rpa_entity_mappings.parquet")
-    rp_link = rp_link[rp_link["data_type"] == "CUSIP"]
-    rp_link["range_end"] = rp_link["range_end"].fillna(CRSP_END_DATE)
-    rp_link["range_start"] = pd.to_datetime(rp_link["range_start"])
-    rp_link["range_end"] = pd.to_datetime(rp_link["range_end"])
-
-    rp_link = rp_link.rename(columns={"data_value": "cusip"})
-    rp_link = rp_link.drop(columns=["entity_type", "data_type"])
-
-    rp_link = rp_link[rp_link["cusip"].notna()]
-
-    rp_link["cusip"] = rp_link["cusip"].astype(str).str[:8]
-
-    eq = eq.merge(rp_link, on=["rp_entity_id"], how="left")
-
-    eq = eq[eq["date"] >= eq["range_start"]]
-    eq = eq[eq["date"] <= eq["range_end"]]
-
-    eq["date"] = pd.to_datetime(eq["date"])
-
-    eq = eq[
-        [
-            "date",
-            "cusip",
-            "n_wsj_full_article",
-        ]
-    ]
-
-    return df.merge(eq, on=["date", "cusip"], how="left")
-
-
 def load_macro_ann_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
     """
     Loads the macro announcement data.
@@ -372,40 +192,6 @@ def clean_panel_data(df: pd.DataFrame, path: Path) -> None:
 
     # Convert date to end of month
     df["year_month"] = df["date"] + pd.offsets.MonthEnd(0)
-
-    # abnormal read count
-
-    df["blm_read_count"] = df["blm_read_count"].fillna(0)
-    # groupby permno, take a 3 month rolling average of blm_read_count
-    df["blm_read_count_60d"] = (
-        df.groupby("permno")["blm_read_count"].rolling(60).mean().reset_index(drop=True)
-    )
-    df["delta_blm_read_count"] = df["blm_read_count"] - df["blm_read_count_60d"]
-    df["log_delta_blm_read_count"] = np.log(1 + df["blm_read_count"]) - np.log(
-        1 + df["blm_read_count_60d"]
-    )
-
-    # abnormal news count
-    for news in ["blm", "rp"]:
-        df[f"{news}_news_count"] = df[f"{news}_news_count"].fillna(0)
-
-        # groupby permno, take a 3 month rolling average of blm_news_count
-        df[f"{news}_news_count_60d"] = (
-            df.groupby("permno")[f"{news}_news_count"]
-            .rolling(60)
-            .mean()
-            .reset_index(drop=True)
-        )
-
-        # compute the delta between the current and the 3 month rolling average
-        df[f"delta_{news}_news_count"] = (
-            df[f"{news}_news_count"] - df[f"{news}_news_count_60d"]
-        )
-
-        # compute the log delta
-        df[f"log_delta_{news}_news_count"] = np.log(
-            1 + df[f"{news}_news_count"]
-        ) - np.log(1 + df[f"{news}_news_count_60d"])
 
     # remove obs with no returns
     df = df[df["ret"].notna()]
@@ -445,18 +231,6 @@ def clean_panel_data(df: pd.DataFrame, path: Path) -> None:
     df = df.sort_values(["permno", "date"])
     df["ln_ret"] = np.log(1 + df["ret"])
 
-    df["cum_ret_5d"] = (
-        df.groupby("permno")["ln_ret"].rolling(5).sum().reset_index(drop=True)
-    )
-    df["cum_ret_5d"] = np.exp(df["cum_ret_5d"]) - 1
-    df["cum_ret_5d_m1"] = df.groupby("permno")["cum_ret_5d"].shift(1)
-
-    df["cum_ret_20d"] = (
-        df.groupby("permno")["ln_ret"].rolling(20).sum().reset_index(drop=True)
-    )
-    df["cum_ret_20d"] = np.exp(df["cum_ret_20d"]) - 1
-    df["cum_ret_20d_m6"] = df.groupby("permno")["cum_ret_20d"].shift(6)
-
     return df
 
 
@@ -469,14 +243,10 @@ def build_panel(
 
     df = load_crsp_file(download_dir)
     df = load_gic(df, download_dir)
-    df = load_ravenpack_data(df, restricted_dir)
     print(len(df), "rows after loading ravenpack data")
-    df = load_wsj_full_articles(df, restricted_dir)
     print(len(df), "rows after loading wsj full articles")
     df = load_fama_french_returns_data(df, open_dir)
     df = load_fama_french_me_breakpoints(df, open_dir)
-    df = load_bloomberg_news_count(df, restricted_dir)
-    df = load_bloomberg_read_count(df, restricted_dir)
     df = load_ibes_data(df, restricted_dir)
     df = load_ibes_analyst_coverage_data(df, restricted_dir)
     df = load_macro_ann_data(df, open_dir)
