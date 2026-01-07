@@ -9,7 +9,9 @@ import pandas as pd
 from dotenv import load_dotenv
 from omegaconf import DictConfig
 
-from main_code.data import build_panel, download_files
+from main_code.data import build_panel, compute_earning_surprises, download_files
+from main_code.figures import plot_n_stocks_per_year
+from main_code.tables import create_ea_regression_table
 from main_code.utils import configure_pyplot, get_latest_file, timestamp_file
 
 load_dotenv()
@@ -35,6 +37,10 @@ def get_directories() -> Tuple[Path, Path, Path, Path, Path, Path, Path]:
     fig_dir.mkdir(parents=True, exist_ok=True)
     tab_dir.mkdir(parents=True, exist_ok=True)
     download_dir.mkdir(parents=True, exist_ok=True)
+    open_dir.mkdir(parents=True, exist_ok=True)
+    clean_dir.mkdir(parents=True, exist_ok=True)
+    restricted_dir.mkdir(parents=True, exist_ok=True)
+    preprocess_dir.mkdir(parents=True, exist_ok=True)
     tmp_dir.mkdir(parents=True, exist_ok=True)
 
     return (
@@ -96,14 +102,20 @@ def my_app(cfg: DictConfig):
             wrds_password=wrds_password,
         )
 
+    if cfg.preprocess.compute_earning_surprises:
+        logging.info("Computing earning surprises...")
+        ea_surprises = compute_earning_surprises(download_dir, restricted_dir)
+        ea_surprises_path = preprocess_dir / "ibes_sue.parquet"
+        ea_surprises.to_parquet(
+            timestamp_file(ea_surprises_path), index=False, engine="pyarrow"
+        )
+        logging.info(f"Earning surprises saved to {ea_surprises_path}")
+
     if cfg.tasks.build_panel:
         # build panel data
         logging.info("Building panel data...")
         panel = build_panel(
-            download_dir,
-            open_dir,
-            restricted_dir,
-            clean_dir,
+            download_dir, open_dir, restricted_dir, clean_dir, preprocess_dir
         )
         logging.info(f"Panel built. Shape: {panel.shape}")
 
@@ -113,19 +125,22 @@ def my_app(cfg: DictConfig):
             panel.to_parquet(timestamp_file(panel_path), index=False, engine="pyarrow")
             logging.info(f"Panel data saved to {panel_path}")
 
-    else:
+    elif cfg.tasks.load_panel:
         # load existing panel data
         panel = pd.read_parquet(get_latest_file(panel_path))
         logging.info(f"Loaded existing panel data from {panel_path}")
+    else:
+        raise ValueError("No panel data task specified in the configuration.")
 
     # Figure
-    if cfg.analysis.summary_figures:
-        create_analysis_summary_figures(panel, fig_dir)
+    if cfg.figures.n_stocks_per_year:
+        logging.info("Creating figure: Number of stocks per year...")
+        plot_n_stocks_per_year(panel, fig_dir)
 
     # Regression
-    if cfg.analysis.news_predictor_reg:
-        news_predictor_panel_reg(panel, tab_dir, abn_ret=False)
-
+    if cfg.tables.ea_regression:
+        logging.info("Creating regression table: EA effect on excess returns...")
+        create_ea_regression_table(panel, tab_dir)
 
     logging.info(f"Complete. Total runtime: {time.time() - start_time:.2f} seconds")
 

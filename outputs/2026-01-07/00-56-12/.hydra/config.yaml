@@ -1,0 +1,22 @@
+logging_level: 20
+matplotlib:
+  font:
+    family: serif
+    sans_serif:
+    - Helvetica
+    serif:
+    - Computer Modern Roman
+data:
+  download: false
+  ignore_download_cache: false
+preprocess:
+  compute_earning_surprises: false
+tasks:
+  build_panel: false
+  save_panel: false
+  load_panel: false
+analysis:
+  summary_figures: false
+  news_predictor_abn_ret_reg: false
+  news_predictor_reg: false
+  summary_stats_table: false

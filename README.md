@@ -65,12 +65,23 @@ python main.py
 
 **Configuration Options** (edit [conf/config.yaml](conf/config.yaml)):
 
-- `data.download`: Download data from WRDS and FRED (default: `true`)
-- `data.ignore_download_cache`: Force re-download even if cached (default: `false`)
-- `tasks.build_panel`: Build the panel dataset from raw data (default: `false`)
-- `tasks.save_panel`: Save the built panel to disk (default: `false`)
-- `analysis.summary_figures`: Generate summary figures (default: `false`)
-- `analysis.news_predictor_reg`: Run news predictor regressions (default: `false`)
+- **Data Download:**
+  - `data.download`: Download data from WRDS and FRED (default: `false`)
+  - `data.ignore_download_cache`: Force re-download even if cached (default: `false`)
+
+- **Preprocessing:**
+  - `preprocess.compute_earning_surprises`: Compute IBES earnings surprises (default: `false`)
+
+- **Tasks:**
+  - `tasks.build_panel`: Build the panel dataset from raw data (default: `false`)
+  - `tasks.save_panel`: Save the built panel to disk (default: `false`)
+  - `tasks.load_panel`: Load existing panel data (default: `true`)
+
+- **Figures:**
+  - `figures.n_stocks_per_year`: Generate plot showing number of stocks per year (default: `false`)
+
+- **Tables:**
+  - `tables.ea_regression`: Run earnings announcement regression analysis (default: `true`)
 
 ## Directory Structure
 
@@ -87,20 +98,42 @@ python main.py
 
 - [main_code/](main_code/) - Main Python code directory
   - [data/](main_code/data/) - Data processing and loading utilities
+    - [download/](main_code/data/download/) - Data download modules (CRSP, Compustat, IBES, Fama-French, etc.)
+    - [earnings/](main_code/data/earnings/) - Earnings-related data processing (IBES surprises, ICLINK)
+    - [panel_data.py](main_code/data/panel_data.py) - Panel dataset construction
+    - [download_data.py](main_code/data/download_data.py) - Main data download orchestration
   - [figures/](main_code/figures/) - Figure generation code
+    - [n_stocks_per_year.py](main_code/figures/n_stocks_per_year.py) - Plot number of stocks over time
   - [tables/](main_code/tables/) - Table generation code
+    - [ea_regression.py](main_code/tables/ea_regression.py) - Earnings announcement regression tables
+    - [format.py](main_code/tables/format.py) - Table formatting utilities
   - [utils/](main_code/utils/) - Utility functions
+    - [panel_ols_reg.py](main_code/utils/panel_ols_reg.py) - Panel OLS regression utilities
+    - [files.py](main_code/utils/files.py) - File handling utilities
+    - [pyplot_config.py](main_code/utils/pyplot_config.py) - Matplotlib configuration
 
 ### Configuration & Output
 
 - [conf/](conf/) - Configuration files
+  - [config.yaml](conf/config.yaml) - Main configuration file for pipeline control
 - [latex/](latex/) - LaTeX templates and styling
-- [outputs/](outputs/) - Generated outputs
-- [results_figures/](results_figures/) - Output figures
-- [results_tables/](results_tables/) - Output tables
+- [outputs/](outputs/) - Timestamped execution outputs (organized by date and time)
+- [results_figures/](results_figures/) - Output figures (configured via `FIGDIR` environment variable)
+- [results_tables/](results_tables/) - Output tables (configured via `TBLDIR` environment variable)
+- [tmp/](tmp/) - Temporary files directory
+
+### Data Directory Structure
+
+The data directory (configured via `DATADIR` environment variable) should contain:
+
+- `download_cache/` - Cached downloaded files from WRDS and FRED
+- `open/` - Open-access datasets
+- `clean/` - Cleaned and processed datasets (includes `panel_data.parquet`)
+- `restricted/` - Restricted-access datasets
+- `preprocess_cache/` - Preprocessed data files (e.g., earnings surprises)
 
 ### Other
 
 - [logos/](logos/) - University and course branding
-- [main.py](main.py) - Main execution script
+- [main.py](main.py) - Main execution script orchestrating the entire pipeline
 

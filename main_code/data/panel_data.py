@@ -37,7 +37,7 @@ def load_crsp_file(path: Path) -> pd.DataFrame:
 
 
 def load_fama_french_returns_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
-    ff = pd.read_parquet(get_latest_file(path / "ff5.parquet"))
+    ff = pd.read_parquet(get_latest_file(path / "ff5_daily.parquet"))
     ff["date"] = pd.to_datetime(ff["date"])
     ff["mkt"] = ff["mkt_rf"] + ff["rf"]
 
@@ -62,7 +62,7 @@ def load_fama_french_me_breakpoints(df: pd.DataFrame, path: Path) -> pd.DataFram
 
 
 def load_ibes_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
-    ibes = pd.read_parquet(path / "ibes/ibes_sue.parquet")
+    ibes = pd.read_parquet(get_latest_file(path / "ibes_sue.parquet"))
     ibes = ibes[ibes["datetime"] >= "2008-01-01"]  # filter for dates after 2007-01-01
     ibes = ibes[ibes["datetime"] <= "2024-12-31"]  # filter for dates after 2007-01-01
     ibes["ea_date"] = pd.to_datetime(ibes["datetime"].dt.date)
@@ -94,7 +94,7 @@ def load_ibes_analyst_coverage_data(df: pd.DataFrame, path: Path) -> pd.DataFram
     """
     Loads the IBES analyst coverage data.
     """
-    ibes = pd.read_parquet(path / "ibes/ibes_sue.parquet")
+    ibes = pd.read_parquet(get_latest_file(path / "ibes_sue.parquet"))
     ibes = ibes[ibes["datetime"] >= "2008-01-01"]  # filter for dates after 2007-01-01
     ibes = ibes[["permno", "datetime", "numest"]]
     ibes = ibes.rename(columns={"numest": "n_analysts"})
@@ -159,26 +159,6 @@ def load_gic(df, path: Path) -> pd.DataFrame:
     return df.drop(columns=["indfrom", "indthru"])
 
 
-def load_macro_ann_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
-    """
-    Loads the macro announcement data.
-    """
-    macro_ann = pd.read_excel(path / "macro_announcement_dates.xlsx")
-    macro_ann = macro_ann.drop(columns="pre_94_fomc")
-
-    for ann in macro_ann.columns:
-        ann_date = macro_ann[[ann]].dropna()
-        ann_date[ann] = pd.to_datetime(ann_date[ann], format="%m/%d/%Y")
-        ann_date = ann_date.rename(columns={ann: "date"})
-        ann_date[ann] = 1
-
-        # merge on date
-        df = df.merge(ann_date, on="date", how="left")
-        df[ann] = df[ann].fillna(0)
-
-    return df
-
-
 def load_vix_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
     vix = pd.read_parquet(get_latest_file(path / "vix_daily.parquet"))
     vix["delta_vix"] = vix["vix"].diff()
@@ -235,7 +215,11 @@ def clean_panel_data(df: pd.DataFrame, path: Path) -> None:
 
 
 def build_panel(
-    download_dir: Path, open_dir: Path, restricted_dir: Path, clean_dir: Path
+    download_dir: Path,
+    open_dir: Path,
+    restricted_dir: Path,
+    clean_dir: Path,
+    preprocess_dir: Path,
 ) -> None:
     """
     Main function to process the panel data.
@@ -243,13 +227,10 @@ def build_panel(
 
     df = load_crsp_file(download_dir)
     df = load_gic(df, download_dir)
-    print(len(df), "rows after loading ravenpack data")
-    print(len(df), "rows after loading wsj full articles")
-    df = load_fama_french_returns_data(df, open_dir)
-    df = load_fama_french_me_breakpoints(df, open_dir)
-    df = load_ibes_data(df, restricted_dir)
-    df = load_ibes_analyst_coverage_data(df, restricted_dir)
-    df = load_macro_ann_data(df, open_dir)
+    df = load_fama_french_returns_data(df, download_dir)
+    df = load_fama_french_me_breakpoints(df, download_dir)
+    df = load_ibes_data(df, preprocess_dir)
+    df = load_ibes_analyst_coverage_data(df, preprocess_dir)
     df = load_vix_data(df, download_dir)
 
     return clean_panel_data(df, clean_dir)

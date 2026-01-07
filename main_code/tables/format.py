@@ -201,8 +201,10 @@ def regression_table_footer(
     if include_fixed_effects:
         if include_time_effects_only:
             fe_name = "Date FE"
+        if include_fixed_effects and not include_time_effects_only:
+            fe_name = "Firm FE"
         else:
-            fe_name = "Ind \& Yr-mth FE"
+            fe_name = "Firm \& Yr-mth FE"
         table += (
             f"{fe_name} & "
             + " & ".join(

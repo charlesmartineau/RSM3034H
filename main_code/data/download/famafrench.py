@@ -14,7 +14,7 @@ def get_ff_size_bp() -> pd.DataFrame:
     response = requests.get(ff_url)
 
     with zipfile.ZipFile(io.BytesIO(response.content)) as zip_file:
-        with zip_file.open("ME_Breakpoints.CSV") as csv_file:
+        with zip_file.open("ME_Breakpoints.csv") as csv_file:
             bp = pd.read_csv(csv_file, skiprows=1, header=None)
             bp = bp[:-1]
             bp.columns = ["date", "n"] + [f"size_bp{i}" for i in range(1, 21)]
@@ -37,7 +37,7 @@ def get_ff5_factors() -> pd.DataFrame:
     response = requests.get(ff_url)
     with zipfile.ZipFile(io.BytesIO(response.content)) as zip_file:
         with zip_file.open("F-F_Research_Data_5_Factors_2x3_daily.csv") as csv_file:
-            ff5 = pd.read_csv(csv_file, skiprows=2)
+            ff5 = pd.read_csv(csv_file, skiprows=4)
             ff5 = ff5.rename(
                 columns={
                     "Unnamed: 0": "date",
@@ -67,7 +67,7 @@ def get_ff5_factors_monthly() -> pd.DataFrame:
     response = requests.get(ff_url)
     with zipfile.ZipFile(io.BytesIO(response.content)) as zip_file:
         with zip_file.open("F-F_Research_Data_5_Factors_2x3.csv") as csv_file:
-            ff5 = pd.read_csv(csv_file, skiprows=2)
+            ff5 = pd.read_csv(csv_file, skiprows=4)
             ff5 = ff5.rename(
                 columns={
                     "Unnamed: 0": "date",

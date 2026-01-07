@@ -16,7 +16,7 @@
 \geometry{margin=1in}
 \onehalfspacing
 
-\title{Bloomberg News Supply Analysis Results}
+\title{Sample}
 \date{\today}
 
 \begin{document}
@@ -27,108 +27,22 @@
 
 \begin{figure}[H]
     \label{fig:news_trends}
-    \caption{News Trends}
-    This figure shows the average number of news articles per month news coverage in Panel A and average number of news articles per month outside regular trading hours for Bloomberg and Ravenpack.
+    \caption{Number of firms}
 
     \begin{center}
     Panel A. Average Number of News Articles per Month
-    \includegraphics[width=0.6\textwidth]{../results_figures/news_trends_regular.pdf}
+    \includegraphics[width=0.6\textwidth]{../results_figures/n_stocks_per_year.pdf}
     \end{center}
-    \begin{center}
-    Panel B. Average Number of News Articles per Month Outside Regular Trading Hours
-    \includegraphics[width=0.6\textwidth]{../results_figures/news_trends_after_hours.pdf}
-    \end{center}
+
 \end{figure}
 
 \newpage
 
-\section{Tables}
-
 \begin{table}[H]
-\caption{Summary Statistics of News Count}
-\label{tab:summary_stats}
-\begin{center}
-\resizebox{.7\textwidth}{!}{%
-\input{../results_tables/summary_stats_table.tex}
-}
-\end{center}
-\end{table}
-
-\newpage
-
-\begin{equation}
-    \Delta Log(News\;count)_{i,t} = \beta_0 + \beta_1 1_{Ret<0, i,t} + \Gamma^{\prime}Controls_{i,t} + FE_{i,t} + \epsilon_{i,t}
-\end{equation}
-\begin{equation}
-    \Delta Log(News\;count)_{i,t} = \beta_0 + \beta_1 Ret^e_{i,t} + \beta_2 |Ret^e|_{i,t} + \Gamma^{\prime}Controls_{i,t} + FE_{i,t} + \epsilon_{i,t}
-\end{equation}
-
-\noindent $\Delta Log(News\;count)_{i,t}$ is the log change in the total number of news reported on time $t$ minus the rolling 60-day average of news for stock $i$ on date $t$. $Ret^e$ is the abnormal return, defined as the return minus the market return. $1_{Ret<0, i,t}$ is a dummy equal to 0 if $Ret^e<0$. $|Ret^e|$ is the absolute value of the abnormal return.  
-
-$FE$ corresponds to industry, year-month fixed effects. I also incldue day of week FE.
-
-The regression results presented below are reported for News count at time $t$ and $t+1$ (forecasting specifications).
-
-% \begin{table}[H]
-% \caption{News Count Regression Results: Full Sample}
-% \label{tab:reversals}
-
-% \resizebox{1\textwidth}{!}{%
-% \input{../results_tables/news_predictor_results.tex}
-% }
-% \end{table}
-
-% \begin{table}[H]
-% \caption{News Count Regression Results: Large Stocks}
-% Large stocks are defined as those with a market capitalization in the top two Fama-French market cap breakpoint quintiles.
-% \label{tab:reversals_large_stocks}
-
-% \resizebox{1\textwidth}{!}{%
-% \input{../results_tables/news_predictor_large_stocks_results.tex}
-% }
-% \end{table}
-
-% \begin{table}[H]
-% \caption{News Count Regression Results: Small Stocks}
-% Small stocks are defined as those with a market capitalization in the bottom three Fama-French market cap breakpoint quintiles.
-% \label{tab:reversals_small_stocks}
-
-% \resizebox{1\textwidth}{!}{%
-% \input{../results_tables/news_predictor_small_stocks_results.tex}
-% }
-% \end{table}
-
-\newpage
-
-
-\begin{table}[H]
-\caption{News Count Regression Results: Full Sample (Raw Returns)}
-\label{tab:reversals_raw}
+\label{tab}
 \resizebox{1\textwidth}{!}{%
-\input{../results_tables/news_predictor_raw_ret_results.tex}
+\input{../results_tables/ea_regression.tex}
 } 
-\end{table}
-
-\begin{table}[H]
-\caption{News Count Regression Results: Large Stocks (Raw Returns)}
-
-Large stocks are defined as those with a market capitalization in the top two Fama-French market cap breakpoint quintiles.
-
-\label{tab:reversals_large_stocks_raw}  
-\resizebox{1\textwidth}{!}{%
-\input{../results_tables/news_predictor_large_stocks_raw_ret_results.tex}
-}
-\end{table}
-
-\begin{table}[H]
-\caption{News Count Regression Results: Small Stocks (Raw Returns)}
-
-Small stocks are defined as those with a market capitalization in the top two Fama-French market cap breakpoint quintiles.
-
-\label{tab:reversals_small_stocks_raw}  
-\resizebox{1\textwidth}{!}{%
-\input{../results_tables/news_predictor_small_stocks_raw_ret_results.tex}
-}
 \end{table}
 
 \end{document}

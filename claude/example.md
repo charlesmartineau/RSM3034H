@@ -1,0 +1,3 @@
+under the folder main_code/figures create a .py file called "n_stocks_per_year.py". In the code, that you call in main.py (make sure to add it in config.yaml) as well, using the panel dataset, make a simple plot that plots the number of unique firms per year. The firm id is the PERMNO column and the panel data is at the daily frequency. Make sure you take the unique PERMNO per year.
+
+now, another tasks, I want to create a regression table calling the panel_ols_reg.py in the utils folder where I regress stocks daily returns minus the risk free rate on the a dummy equal to one if EA (earnings ann) is equal to one. Make sure to save the regression output in latex using the regression_table function in format.py

@@ -18,8 +18,6 @@ PREFIX_MAP = {
     "ln_n_analysts": r"$ln(N analysts)$",
     "delta_vix": r"$\Delta VIX$",
     "mkt_rf": r"$Ret^M$",
-    "cum_ret_5d_m1": r"$Cum ret_{[-6,-1]}$",
-    "cum_ret_20d_m6": r"$Cum ret_{[-25,-6]}$",
     "day_mon": r"$1_{Mon}$",
     "day_tue": r"$1_{Tue}$",
     "day_wed": r"$1_{Wed}$",
