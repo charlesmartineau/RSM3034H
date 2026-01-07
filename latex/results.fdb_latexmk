@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1767769278.75616 "/Users/charles.martineau/Dropbox/Github/RSM3034H/latex/results.tex" "results.pdf" "results" 1767769279.33651 0
+["pdflatex"] 1767769516.21177 "/Users/charles.martineau/Dropbox/Github/RSM3034H/latex/results.tex" "results.pdf" "results" 1767769516.77287 0
   "../results_figures/n_stocks_per_year.pdf" 1767767746.06822 68195 16e363c71e0a79dae4e2482c9739c7eb ""
-  "../results_tables/ea_regression.tex" 1767769278.04557 425 ff4df6129950599d790802e4ef28cc43 ""
+  "../results_tables/ea_regression.tex" 1767769515.54108 424 857ba5f7ee0511a74cbe1ad6f410c061 ""
   "/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecbx1440.tfm" 1762123153.1965 3196 0b37fa3083e15c57cfa8c4ff52f2807a ""
   "/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecrm1095.tfm" 1762123153.2326 3172 eb6efaa83c6c52473a1c403f376eab0f ""
   "/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecrm1200.tfm" 1762123153.23323 3152 4850ff0163852b7fab34bd55e1197f28 ""
@@ -53,7 +53,7 @@
   "/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/trig.sty" 1762123154.22464 4023 e66acf578d6b564c4670fb57ff336a7a ""
   "/Library/Application Support/MiKTeX/texmfs/install/tex/latex/l3backend/l3backend-pdftex.def" 1762123155.33883 30662 bfd6e864f4ffc5018b0e2b6260c3181c ""
   "/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/array.sty" 1762123155.66022 15698 f5f20b24886bb50156054c53e19b13fd ""
-  "/Users/charles.martineau/Dropbox/Github/RSM3034H/latex/results.tex" 1767769062.28394 854 2e780383fdebe6b7df8dd3a1aeffdc30 ""
+  "/Users/charles.martineau/Dropbox/Github/RSM3034H/latex/results.tex" 1767769331.48655 854 2e780383fdebe6b7df8dd3a1aeffdc30 ""
   "/Users/charles.martineau/Library/Application Support/MiKTeX/texmfs/data/fonts/map/pdftex/pdftex.map" 1766161486.63863 279970 77b8a84306938996d7d7c497e6e1b714 ""
   "/Users/charles.martineau/Library/Application Support/MiKTeX/texmfs/data/miktex/data/le/pdftex/pdflatex.fmt" 1762123383.18197 10123771 18e87e4a363d110c0a80113a34232947 ""
   "/Users/charles.martineau/Library/Application Support/MiKTeX/texmfs/install/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1762269492.75336 2971 def0b6c1f0b107b3b936def894055589 ""
@@ -73,8 +73,8 @@
   "/Users/charles.martineau/Library/Application Support/MiKTeX/texmfs/install/tex/latex/geometry/geometry.cfg" 1762123242.66993 1104 d237cad3f14be9fd91fe1f904d051a01 ""
   "/Users/charles.martineau/Library/Application Support/MiKTeX/texmfs/install/tex/latex/geometry/geometry.sty" 1762123242.67031 42759 e63af52ccddba7489ac0e17d6a3344bd ""
   "/Users/charles.martineau/Library/Application Support/MiKTeX/texmfs/install/tex/latex/setspace/setspace.sty" 1762123243.7226 22490 8cac309b79a4c53a4ffce4b1b07aead0 ""
-  "results.aux" 1767769279.21604 482 c11aa11b75efc5fb5a80f1a6988c05f4 "pdflatex"
-  "results.tex" 1767769062.28394 854 2e780383fdebe6b7df8dd3a1aeffdc30 ""
+  "results.aux" 1767769516.66295 482 c11aa11b75efc5fb5a80f1a6988c05f4 "pdflatex"
+  "results.tex" 1767769331.48655 854 2e780383fdebe6b7df8dd3a1aeffdc30 ""
   (generated)
   "results.aux"
   "results.log"
