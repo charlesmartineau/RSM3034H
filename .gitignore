@@ -6,16 +6,16 @@ __pycache__/
 # C extensions
 *.so
 
-# Allow RevealJS dist folders
-!_output/**/revealjs/dist/
-!lecture_slides/_output/**/revealjs/dist/
-
 # Distribution / packaging
 .Python
 build/
 develop-eggs/
 dist/
 downloads/
+
+# Allow RevealJS dist folders (must come AFTER the dist/ ignore rule)
+!lecture_slides/_output/**/revealjs/dist/
+!lecture_slides/_output/**/revealjs/dist/**
 eggs/
 .eggs/
 lib/
