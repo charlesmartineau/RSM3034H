@@ -3,15 +3,13 @@ matplotlib:
   font:
     family: serif
     sans_serif:
-      - Helvetica
+    - Helvetica
     serif:
-      - "Computer Modern Roman"
-
+    - Computer Modern Roman
 data:
   download: true
   ignore_download_cache: false
-preprocess:
-
+preprocess: null
 tasks:
   build_panel: false
   save_panel: false

@@ -10,8 +10,6 @@ from dotenv import load_dotenv
 from omegaconf import DictConfig
 
 from main_code.data import build_panel, download_files
-from main_code.figures import create_analysis_summary_figures
-from main_code.tables import create_summary_stats_table, news_predictor_panel_reg
 from main_code.utils import configure_pyplot, get_latest_file, timestamp_file
 
 load_dotenv()
@@ -120,21 +118,14 @@ def my_app(cfg: DictConfig):
         panel = pd.read_parquet(get_latest_file(panel_path))
         logging.info(f"Loaded existing panel data from {panel_path}")
 
-    # Create summary figures
+    # Figure
     if cfg.analysis.summary_figures:
         create_analysis_summary_figures(panel, fig_dir)
 
-    # Run news predictor regression with abnormal returns
-    if cfg.analysis.news_predictor_abn_ret_reg:
-        news_predictor_panel_reg(panel, tab_dir, abn_ret=True)
-
-    # Run news predictor regression with raw returns
+    # Regression
     if cfg.analysis.news_predictor_reg:
         news_predictor_panel_reg(panel, tab_dir, abn_ret=False)
 
-    # Create summary statistics table
-    if cfg.analysis.summary_stats_table:
-        create_summary_stats_table(panel, tab_dir)
 
     logging.info(f"Complete. Total runtime: {time.time() - start_time:.2f} seconds")
 
