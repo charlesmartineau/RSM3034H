@@ -18,7 +18,7 @@ format:
       theme: whiteboard
       buttons: false
     slide-number: true
-    footer: "MGFD40"
+    footer: "RSM3034"
     logo: "logos/uoft.png"
     transition: slide
     background-transition: fade
@@ -27,5 +27,4 @@ format:
 
 author:
   - name: Charles Martineau
-    affiliation: "UTSC"
     url: "www.charlesmartineau.com"

@@ -960,57 +960,6 @@ wheels = [
 ]
 
 [[package]]
-name = "mgfd40"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "dotenv" },
-    { name = "fuzzywuzzy" },
-    { name = "hydra-core" },
-    { name = "ipykernel" },
-    { name = "jupyter" },
-    { name = "linearmodels" },
-    { name = "matplotlib" },
-    { name = "numpy" },
-    { name = "omegaconf" },
-    { name = "openpyxl" },
-    { name = "pandas" },
-    { name = "pandasql" },
-    { name = "polars" },
-    { name = "pyarrow" },
-    { name = "pystout" },
-    { name = "seaborn" },
-    { name = "statsmodels" },
-    { name = "tqdm" },
-    { name = "wrds" },
-    { name = "yfinance" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "dotenv", specifier = ">=0.9.9" },
-    { name = "fuzzywuzzy", specifier = ">=0.18.0" },
-    { name = "hydra-core", specifier = ">=1.3.2" },
-    { name = "ipykernel", specifier = ">=6.29.5" },
-    { name = "jupyter", specifier = ">=1.1.1" },
-    { name = "linearmodels", specifier = ">=6.1" },
-    { name = "matplotlib", specifier = ">=3.10.3" },
-    { name = "numpy", specifier = ">=2.3.0" },
-    { name = "omegaconf", specifier = ">=2.3.0" },
-    { name = "openpyxl", specifier = ">=3.1.5" },
-    { name = "pandas", specifier = ">=2.2.3" },
-    { name = "pandasql", specifier = ">=0.7.3" },
-    { name = "polars", specifier = ">=1.30.0" },
-    { name = "pyarrow", specifier = ">=20.0.0" },
-    { name = "pystout", specifier = ">=0.0.8" },
-    { name = "seaborn", specifier = ">=0.13.2" },
-    { name = "statsmodels", specifier = ">=0.14.4" },
-    { name = "tqdm", specifier = ">=4.67.1" },
-    { name = "wrds", specifier = ">=3.3.0" },
-    { name = "yfinance", specifier = ">=0.2.65" },
-]
-
-[[package]]
 name = "mistune"
 version = "3.1.4"
 source = { registry = "https://pypi.org/simple" }
@@ -1624,6 +1573,57 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/2c/06/37c1a5557acf449e8e406a830a05bf885ac47d33270aec454ef78675008d/rfc3987_syntax-1.1.0.tar.gz", hash = "sha256:717a62cbf33cffdd16dfa3a497d81ce48a660ea691b1ddd7be710c22f00b4a0d", size = 14239 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7e/71/44ce230e1b7fadd372515a97e32a83011f906ddded8d03e3c6aafbdedbb7/rfc3987_syntax-1.1.0-py3-none-any.whl", hash = "sha256:6c3d97604e4c5ce9f714898e05401a0445a641cfa276432b0a648c80856f6a3f", size = 8046 },
+]
+
+[[package]]
+name = "rm3034h"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "dotenv" },
+    { name = "fuzzywuzzy" },
+    { name = "hydra-core" },
+    { name = "ipykernel" },
+    { name = "jupyter" },
+    { name = "linearmodels" },
+    { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "omegaconf" },
+    { name = "openpyxl" },
+    { name = "pandas" },
+    { name = "pandasql" },
+    { name = "polars" },
+    { name = "pyarrow" },
+    { name = "pystout" },
+    { name = "seaborn" },
+    { name = "statsmodels" },
+    { name = "tqdm" },
+    { name = "wrds" },
+    { name = "yfinance" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "dotenv", specifier = ">=0.9.9" },
+    { name = "fuzzywuzzy", specifier = ">=0.18.0" },
+    { name = "hydra-core", specifier = ">=1.3.2" },
+    { name = "ipykernel", specifier = ">=6.29.5" },
+    { name = "jupyter", specifier = ">=1.1.1" },
+    { name = "linearmodels", specifier = ">=6.1" },
+    { name = "matplotlib", specifier = ">=3.10.3" },
+    { name = "numpy", specifier = ">=2.3.0" },
+    { name = "omegaconf", specifier = ">=2.3.0" },
+    { name = "openpyxl", specifier = ">=3.1.5" },
+    { name = "pandas", specifier = ">=2.2.3" },
+    { name = "pandasql", specifier = ">=0.7.3" },
+    { name = "polars", specifier = ">=1.30.0" },
+    { name = "pyarrow", specifier = ">=20.0.0" },
+    { name = "pystout", specifier = ">=0.0.8" },
+    { name = "seaborn", specifier = ">=0.13.2" },
+    { name = "statsmodels", specifier = ">=0.14.4" },
+    { name = "tqdm", specifier = ">=4.67.1" },
+    { name = "wrds", specifier = ">=3.3.0" },
+    { name = "yfinance", specifier = ">=0.2.65" },
 ]
 
 [[package]]

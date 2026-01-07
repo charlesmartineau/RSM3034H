@@ -33,7 +33,9 @@ where $r_f$ is the risk-free rate, $r_m$ is the market return, and $\beta_i$ is 
 
 ## Empirical tests of the CAPM
 
-Despite its popularity in the industry, the CAPM has been subject to criticism in asset pricing research. For example, [Black, Jensen, and Scholes (1972)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=908569) and Fama and French (1992) among others document that market betas do not explain average asset returns in the cross-section.
+Despite its popularity in the industry, the CAPM has been subject to criticism in asset pricing research. 
+
+- For example, [Black, Jensen, and Scholes (1972)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=908569) and Fama and French (1992) among others document that market betas do not explain average asset returns in the cross-section.
 
 ---
 
@@ -69,6 +71,164 @@ Use 25 size-and-beta sorted portfolios as test assets.
   
 ---
 
+
+## CAPM Test: French Beta Portfolios
+
+```{python}
+# | echo: true
+# | output: false
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+
+# Load Fama-French factors data (contains RF and Mkt-RF)
+ff_factors = pd.read_excel("data_sample/ff_portfolios.xlsx")
+ff_factors["date"] = pd.to_datetime(ff_factors["date"], format="%Y%m")
+ff_factors = ff_factors.set_index("date")
+
+# Load 10 beta-sorted portfolios
+beta_portfolios = pd.read_excel("data_sample/ff_beta_sorted_portfolios.xlsx")
+beta_portfolios["date"] = pd.to_datetime(beta_portfolios["date"], format="%Y%m")
+beta_portfolios = beta_portfolios.set_index("date")
+
+# Align dates between the two datasets
+common_dates = beta_portfolios.index.intersection(ff_factors.index)
+beta_portfolios = beta_portfolios.loc[common_dates]
+ff_factors = ff_factors.loc[common_dates]
+
+# Get portfolio column names (excluding date if present)
+portfolio_cols = [col for col in beta_portfolios.columns if col not in ["date"]]
+
+# Calculate betas for each portfolio using OLS regression
+betas = []
+for col in portfolio_cols:
+    # Portfolio excess returns
+    portfolio_excess = beta_portfolios[col] - ff_factors["RF"]
+    market_excess = ff_factors["MKT_RF"]
+
+    # Run OLS regression: portfolio_excess = alpha + beta * market_excess
+    X = sm.add_constant(market_excess)
+    model = sm.OLS(portfolio_excess, X)
+    results = model.fit()
+    beta = results.params[1]  # Beta is the slope coefficient
+    betas.append(beta)
+
+# Calculate average returns for each portfolio (annualized)
+avg_returns = beta_portfolios[portfolio_cols].mean() * 12
+
+# Get risk-free rate and market return (annualized)
+rf_rate = ff_factors["RF"].mean() * 12
+market_return = (ff_factors["MKT_RF"].mean() + ff_factors["RF"].mean()) * 12
+
+# Create results DataFrame
+results_df = pd.DataFrame(
+    {
+        "Portfolio": [f"Beta {i + 1}" for i in range(len(portfolio_cols))],
+        "Beta": betas,
+        "Avg Return (%)": avg_returns.values,
+    }
+)
+
+print("Beta-Sorted Portfolios (Kenneth French Data):")
+print(results_df.round(3))
+print(f"\nRisk-free rate: {rf_rate:.2f}%")
+print(f"Market return: {market_return:.2f}%")
+print(f"Market risk premium: {(market_return - rf_rate):.2f}%")
+```
+
+## CAPM Test: Does It Hold?
+
+```{python}
+#| echo: false
+#| fig-align: center
+
+# Plot the Security Market Line with real data
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Plot theoretical SML (CAPM prediction)
+beta_line = np.linspace(min(betas) - 0.1, max(betas) + 0.1, 100)
+sml_line = rf_rate + beta_line * (market_return - rf_rate)
+ax.plot(beta_line, sml_line, 'r-', linewidth=2, label='Theoretical SML (CAPM)', alpha=0.7)
+
+# Fit a line through the actual portfolio data (Empirical SML)
+from numpy.polynomial import Polynomial
+p = Polynomial.fit(betas, avg_returns.values, 1)
+empirical_sml = p(beta_line)
+
+# Plot empirical SML (best fit line through portfolios)
+ax.plot(beta_line, empirical_sml, 'g--', linewidth=2, label='Empirical SML (Best Fit)', alpha=0.7)
+
+# Plot the actual portfolios
+ax.scatter(betas, avg_returns.values, s=150, alpha=0.6, c='blue',
+           edgecolors='navy', linewidth=2, label='Beta-Sorted Portfolios', zorder=5)
+
+# Add portfolio labels
+for i, (beta, ret) in enumerate(zip(betas, avg_returns.values)):
+    ax.annotate(f'P{i+1}', (beta, ret), xytext=(5, 5),
+                textcoords='offset points', fontsize=9, fontweight='bold')
+
+ax.set_xlabel('Beta (β)', fontsize=12, fontweight='bold')
+ax.set_ylabel('Average Annual Return (%)', fontsize=12, fontweight='bold')
+ax.set_title('Security Market Line: Theory vs. Reality (1963-Present)',
+             fontsize=14, fontweight='bold')
+ax.legend(loc='upper left', fontsize=10)
+ax.grid(True, alpha=0.3, linestyle='--')
+
+plt.tight_layout()
+plt.show()
+
+# Calculate and display alpha for each portfolio
+print("\nCAPM Prediction vs. Actual Returns:")
+print("Portfolio | Beta  | Predicted Return | Actual Return | Alpha")
+print("-" * 70)
+for i, (beta, actual_ret) in enumerate(zip(betas, avg_returns.values)):
+    predicted = rf_rate + beta * (market_return - rf_rate)
+    alpha = actual_ret - predicted
+    print(f"Beta {i+1:2d}   | {beta:.3f} | {predicted:6.2f}% | {actual_ret:6.2f}% | {alpha:+6.2f}%")
+```
+
+---
+
+## Buy-and-Hold Returns
+
+```{python}
+#| echo: false
+#| fig-align: center
+
+# Calculate cumulative buy-and-hold returns for each portfolio
+fig, ax = plt.subplots(figsize=(12, 7))
+
+# Color palette for portfolios
+colors = plt.cm.RdYlBu_r(np.linspace(0.1, 0.9, len(portfolio_cols)))
+
+for idx, col in enumerate(portfolio_cols):
+    # Calculate cumulative returns from raw returns
+    cumulative_returns = (1 + beta_portfolios[col] / 100).cumprod()
+
+    # Plot
+    ax.plot(cumulative_returns.index, cumulative_returns,
+            linewidth=2, label=f'Portfolio {idx+1} (β={betas[idx]:.2f})',
+            color=colors[idx], alpha=0.8)
+
+ax.set_xlabel('Date', fontsize=12, fontweight='bold')
+ax.set_ylabel('Cumulative Return (%)', fontsize=12, fontweight='bold')
+ax.set_title('Buy-and-Hold Returns: Beta-Sorted Portfolios',
+             fontsize=14, fontweight='bold')
+ax.legend(loc='best', fontsize=9, ncol=2)
+ax.grid(True, alpha=0.3, linestyle='--')
+
+plt.tight_layout()
+plt.show()
+```
+
+- High-$\beta$ stocks earn less than predicted
+- Low-$\beta$ stocks earn more than predicted
+
+
+---
+
 ## Other empirical contradictions to the CAPM
 
 - [Rosenberg, Reid, and Lanstein (1985)](https://www.degruyter.com/document/doi/10.1515/9781400829408-007/html), and [Chan, Hamao, and Lakonishok (1991)](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1540-6261.1991.tb04642.x) find that book-to-market equity, BE/ME, also explains the cross-section of average returns. 
@@ -84,7 +244,7 @@ Use 25 size-and-beta sorted portfolios as test assets.
 
 ---
 
-## Fama and MacBeth (1973) two-pass cross-sectional regression {.smaller}
+## Fama and MacBeth (1973) two-pass cross-sectional regression
 
 ```{=tex}
 \begin{align}
@@ -177,7 +337,7 @@ How to proceed? Broad steps:
 
 ---
 
-## Fama-French 1993 {.smaller}
+## Fama-French 1993
 [Common risk factors in the returns on stocks and bonds](https://www.sciencedirect.com/science/article/abs/pii/0304405X93900235)
 
 FF92 shows that size and book-to-market do a good job of explaining the cross-section of stock returns. 
@@ -207,11 +367,10 @@ Main finding:
 
 ## Fama-French 1993
 
-You can always use firm-level variables such as size and book-to-market to explain the cross-section. But what if the premium on size and book-to-market captures systematic risk (e.g., default) and you want to use these "risk factors" to explain other asset returns (e.g., bonds) or portfolio returns?
+You can always use firm-level variables such as size and book-to-market to explain the cross-section. 
 
-. . . 
-
-- Solution: Factor mimicking portfolios.
+- But what if the premium on size and book-to-market captures systematic risk (e.g., default) and you want to use these "risk factors" to explain other asset returns (e.g., bonds) or portfolio returns?
+  - Solution: Factor mimicking portfolios.
 
 
 ---
@@ -220,14 +379,11 @@ You can always use firm-level variables such as size and book-to-market to expla
 
 Data requirements
 
-::: {.smaller}
-
-
 - CRSP stock prices for December of t-1 and June of t
 - Compustat book common equity for t-1
 - Do not include firms until they have appeared on COMPUSTAT for two years, to address potential survivor bias (backfilling)
 - Ordinary common equity included (exclude ADRs, REITs, and units of beneficial interest)
-::: 
+
 
 ---
 
@@ -261,7 +417,7 @@ Construct six double-sorted portfolios of Size and B/M sorts: S/L, S/M, S/H, B/L
 
 ---
 
-## Factor mimicking portfolios {.smaller}
+## Factor mimicking portfolios 
 
 
 Size (SMB)
@@ -302,7 +458,7 @@ Value (HML)
 ## Concerns with GRS tests
 
 - The GRS test's results depend heavily on the chosen set of test portfolios.
-- If portfolios are tailored to the factors (e.g., size and value factors for the Fama-French model), the test might favor the model even if it fails in a broader context, i.e.g., including industry portfolios.
+- If portfolios are tailored to the factors (e.g., size and value factors for the Fama-French model), the test might favor the model even if it fails in a broader context, e.g., including industry portfolios.
 - Other issues include GRS test assumes that factor returns and residuals are stationary over the sample period. See Harvey and Liu, 2021.
 
 ---
