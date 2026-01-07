@@ -8,6 +8,7 @@ __pycache__/
 
 # Allow RevealJS dist folders
 !_output/**/revealjs/dist/
+!lecture_slides/_output/**/revealjs/dist/
 
 # Distribution / packaging
 .Python
