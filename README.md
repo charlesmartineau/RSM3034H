@@ -60,7 +60,7 @@ The main analysis pipeline is controlled by [main.py](main.py) and configured vi
 Run the analysis:
 
 ```bash
-python main.py
+uv run main.py
 ```
 
 Make sure to add this file [iclink](https://www.dropbox.com/scl/fi/katqy80qbake4rfohxv53/iclink.parquet?rlkey=21p75far2r27rz57gew5cuwx1&dl=0) to your `DATADIR/restricted/` directory before running the code.

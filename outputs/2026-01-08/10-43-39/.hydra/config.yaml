@@ -3,24 +3,19 @@ matplotlib:
   font:
     family: serif
     sans_serif:
-      - Helvetica
+    - Helvetica
     serif:
-      - "Computer Modern Roman"
-
+    - Computer Modern Roman
 data:
-  download: false
+  download: true
   ignore_download_cache: false
-
 preprocess:
   compute_earning_surprises: false
-
 tasks:
   build_panel: false
   save_panel: false
-  load_panel: true
-
+  load_panel: false
 figures:
-  n_stocks_per_year: true
-
+  n_stocks_per_year: false
 tables:
-  ea_regression: true
+  ea_regression: false
