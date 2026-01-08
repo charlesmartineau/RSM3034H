@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from omegaconf import DictConfig
 
 from main_code.data import build_panel, compute_earning_surprises, download_files
-from main_code.figures import plot_n_stocks_per_year
+from main_code.figures import plot_n_earnings_per_year, plot_n_stocks_per_year
 from main_code.tables import create_ea_regression_table
 from main_code.utils import configure_pyplot, get_latest_file, timestamp_file
 
@@ -136,6 +136,10 @@ def my_app(cfg: DictConfig):
     if cfg.figures.n_stocks_per_year:
         logging.info("Creating figure: Number of stocks per year...")
         plot_n_stocks_per_year(panel, fig_dir)
+
+    if cfg.figures.n_earnings_per_year:
+        logging.info("Creating figure: Number of earnings per year...")
+        plot_n_earnings_per_year(panel, fig_dir)
 
     # Regression
     if cfg.tables.ea_regression:
