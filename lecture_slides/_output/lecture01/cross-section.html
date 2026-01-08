@@ -477,7 +477,7 @@ E[r_i] = r_f + \beta_i E[r_m - r_f],
 </section>
 <section id="capm-test-french-beta-portfolios" class="slide level2">
 <h2>CAPM Test: French Beta Portfolios</h2>
-<div id="f41a28d1" class="cell" data-execution_count="1">
+<div id="f4414bc9" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href=""></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href=""></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -487,76 +487,78 @@ E[r_i] = r_f + \beta_i E[r_m - r_f],
 <span id="cb1-7"><a href=""></a>ff_factors <span class="op">=</span> pd.read_excel(<span class="st">"data_sample/ff_portfolios.xlsx"</span>)</span>
 <span id="cb1-8"><a href=""></a>ff_factors[<span class="st">"date"</span>] <span class="op">=</span> pd.to_datetime(ff_factors[<span class="st">"date"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m"</span>)</span>
 <span id="cb1-9"><a href=""></a>ff_factors <span class="op">=</span> ff_factors.set_index(<span class="st">"date"</span>)</span>
-<span id="cb1-10"><a href=""></a></span>
-<span id="cb1-11"><a href=""></a><span class="co"># Load 10 beta-sorted portfolios</span></span>
-<span id="cb1-12"><a href=""></a>beta_portfolios <span class="op">=</span> pd.read_excel(<span class="st">"data_sample/ff_beta_sorted_portfolios.xlsx"</span>)</span>
-<span id="cb1-13"><a href=""></a>beta_portfolios[<span class="st">"date"</span>] <span class="op">=</span> pd.to_datetime(beta_portfolios[<span class="st">"date"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m"</span>)</span>
-<span id="cb1-14"><a href=""></a>beta_portfolios <span class="op">=</span> beta_portfolios.set_index(<span class="st">"date"</span>)</span>
-<span id="cb1-15"><a href=""></a></span>
-<span id="cb1-16"><a href=""></a><span class="co"># Align dates between the two datasets</span></span>
-<span id="cb1-17"><a href=""></a>common_dates <span class="op">=</span> beta_portfolios.index.intersection(ff_factors.index)</span>
-<span id="cb1-18"><a href=""></a>beta_portfolios <span class="op">=</span> beta_portfolios.loc[common_dates]</span>
-<span id="cb1-19"><a href=""></a>ff_factors <span class="op">=</span> ff_factors.loc[common_dates]</span>
-<span id="cb1-20"><a href=""></a></span>
-<span id="cb1-21"><a href=""></a><span class="co"># Get portfolio column names (excluding date if present)</span></span>
-<span id="cb1-22"><a href=""></a>portfolio_cols <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> beta_portfolios.columns <span class="cf">if</span> col <span class="kw">not</span> <span class="kw">in</span> [<span class="st">"date"</span>]]</span>
-<span id="cb1-23"><a href=""></a></span>
-<span id="cb1-24"><a href=""></a><span class="co"># Calculate betas for each portfolio using OLS regression</span></span>
-<span id="cb1-25"><a href=""></a>betas <span class="op">=</span> []</span>
-<span id="cb1-26"><a href=""></a><span class="cf">for</span> col <span class="kw">in</span> portfolio_cols:</span>
-<span id="cb1-27"><a href=""></a>    <span class="co"># Portfolio excess returns</span></span>
-<span id="cb1-28"><a href=""></a>    portfolio_excess <span class="op">=</span> beta_portfolios[col] <span class="op">-</span> ff_factors[<span class="st">"RF"</span>]</span>
-<span id="cb1-29"><a href=""></a>    market_excess <span class="op">=</span> ff_factors[<span class="st">"MKT_RF"</span>]</span>
-<span id="cb1-30"><a href=""></a></span>
-<span id="cb1-31"><a href=""></a>    <span class="co"># Run OLS regression: portfolio_excess = alpha + beta * market_excess</span></span>
-<span id="cb1-32"><a href=""></a>    X <span class="op">=</span> sm.add_constant(market_excess)</span>
-<span id="cb1-33"><a href=""></a>    model <span class="op">=</span> sm.OLS(portfolio_excess, X)</span>
-<span id="cb1-34"><a href=""></a>    results <span class="op">=</span> model.fit()</span>
-<span id="cb1-35"><a href=""></a>    beta <span class="op">=</span> results.params[<span class="dv">1</span>]  <span class="co"># Beta is the slope coefficient</span></span>
-<span id="cb1-36"><a href=""></a>    betas.append(beta)</span>
-<span id="cb1-37"><a href=""></a></span>
-<span id="cb1-38"><a href=""></a><span class="co"># Calculate average returns for each portfolio (annualized)</span></span>
-<span id="cb1-39"><a href=""></a>avg_returns <span class="op">=</span> beta_portfolios[portfolio_cols].mean() <span class="op">*</span> <span class="dv">12</span></span>
-<span id="cb1-40"><a href=""></a></span>
-<span id="cb1-41"><a href=""></a><span class="co"># Get risk-free rate and market return (annualized)</span></span>
-<span id="cb1-42"><a href=""></a>rf_rate <span class="op">=</span> ff_factors[<span class="st">"RF"</span>].mean() <span class="op">*</span> <span class="dv">12</span></span>
-<span id="cb1-43"><a href=""></a>market_return <span class="op">=</span> (ff_factors[<span class="st">"MKT_RF"</span>].mean() <span class="op">+</span> ff_factors[<span class="st">"RF"</span>].mean()) <span class="op">*</span> <span class="dv">12</span></span>
-<span id="cb1-44"><a href=""></a></span>
-<span id="cb1-45"><a href=""></a><span class="co"># Create results DataFrame</span></span>
-<span id="cb1-46"><a href=""></a>results_df <span class="op">=</span> pd.DataFrame(</span>
-<span id="cb1-47"><a href=""></a>    {</span>
-<span id="cb1-48"><a href=""></a>        <span class="st">"Portfolio"</span>: [<span class="ss">f"Beta </span><span class="sc">{</span>i <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(portfolio_cols))],</span>
-<span id="cb1-49"><a href=""></a>        <span class="st">"Beta"</span>: betas,</span>
-<span id="cb1-50"><a href=""></a>        <span class="st">"Avg Return (%)"</span>: avg_returns.values,</span>
-<span id="cb1-51"><a href=""></a>    }</span>
-<span id="cb1-52"><a href=""></a>)</span>
-<span id="cb1-53"><a href=""></a></span>
-<span id="cb1-54"><a href=""></a><span class="bu">print</span>(<span class="st">"Beta-Sorted Portfolios (Kenneth French Data):"</span>)</span>
-<span id="cb1-55"><a href=""></a><span class="bu">print</span>(results_df.<span class="bu">round</span>(<span class="dv">3</span>))</span>
-<span id="cb1-56"><a href=""></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Risk-free rate: </span><span class="sc">{</span>rf_rate<span class="sc">:.2f}</span><span class="ss">%"</span>)</span>
-<span id="cb1-57"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Market return: </span><span class="sc">{</span>market_return<span class="sc">:.2f}</span><span class="ss">%"</span>)</span>
-<span id="cb1-58"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Market risk premium: </span><span class="sc">{</span>(market_return <span class="op">-</span> rf_rate)<span class="sc">:.2f}</span><span class="ss">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-10"><a href=""></a>ff_factors <span class="op">=</span> ff_factors<span class="op">/</span><span class="dv">100</span></span>
+<span id="cb1-11"><a href=""></a></span>
+<span id="cb1-12"><a href=""></a><span class="co"># Load 10 beta-sorted portfolios</span></span>
+<span id="cb1-13"><a href=""></a>beta_portfolios <span class="op">=</span> pd.read_excel(<span class="st">"data_sample/ff_beta_sorted_portfolios.xlsx"</span>)</span>
+<span id="cb1-14"><a href=""></a>beta_portfolios[<span class="st">"date"</span>] <span class="op">=</span> pd.to_datetime(beta_portfolios[<span class="st">"date"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m"</span>)</span>
+<span id="cb1-15"><a href=""></a>beta_portfolios <span class="op">=</span> beta_portfolios.set_index(<span class="st">"date"</span>)</span>
+<span id="cb1-16"><a href=""></a>beta_portfolios <span class="op">=</span> beta_portfolios<span class="op">/</span><span class="dv">100</span>  <span class="co"># Convert to decimal returns</span></span>
+<span id="cb1-17"><a href=""></a></span>
+<span id="cb1-18"><a href=""></a><span class="co"># Align dates between the two datasets</span></span>
+<span id="cb1-19"><a href=""></a>common_dates <span class="op">=</span> beta_portfolios.index.intersection(ff_factors.index)</span>
+<span id="cb1-20"><a href=""></a>beta_portfolios <span class="op">=</span> beta_portfolios.loc[common_dates]</span>
+<span id="cb1-21"><a href=""></a>ff_factors <span class="op">=</span> ff_factors.loc[common_dates]</span>
+<span id="cb1-22"><a href=""></a></span>
+<span id="cb1-23"><a href=""></a><span class="co"># Get portfolio column names (excluding date if present)</span></span>
+<span id="cb1-24"><a href=""></a>portfolio_cols <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> beta_portfolios.columns <span class="cf">if</span> col <span class="kw">not</span> <span class="kw">in</span> [<span class="st">"date"</span>]]</span>
+<span id="cb1-25"><a href=""></a></span>
+<span id="cb1-26"><a href=""></a><span class="co"># Calculate betas for each portfolio using OLS regression</span></span>
+<span id="cb1-27"><a href=""></a>betas <span class="op">=</span> []</span>
+<span id="cb1-28"><a href=""></a><span class="cf">for</span> col <span class="kw">in</span> portfolio_cols:</span>
+<span id="cb1-29"><a href=""></a>    <span class="co"># Portfolio excess returns</span></span>
+<span id="cb1-30"><a href=""></a>    portfolio_excess <span class="op">=</span> beta_portfolios[col] <span class="op">-</span> ff_factors[<span class="st">"RF"</span>]</span>
+<span id="cb1-31"><a href=""></a>    market_excess <span class="op">=</span> ff_factors[<span class="st">"MKT_RF"</span>]</span>
+<span id="cb1-32"><a href=""></a></span>
+<span id="cb1-33"><a href=""></a>    <span class="co"># Run OLS regression: portfolio_excess = alpha + beta * market_excess</span></span>
+<span id="cb1-34"><a href=""></a>    X <span class="op">=</span> sm.add_constant(market_excess)</span>
+<span id="cb1-35"><a href=""></a>    model <span class="op">=</span> sm.OLS(portfolio_excess, X)</span>
+<span id="cb1-36"><a href=""></a>    results <span class="op">=</span> model.fit()</span>
+<span id="cb1-37"><a href=""></a>    beta <span class="op">=</span> results.params[<span class="dv">1</span>]  <span class="co"># Beta is the slope coefficient</span></span>
+<span id="cb1-38"><a href=""></a>    betas.append(beta)</span>
+<span id="cb1-39"><a href=""></a></span>
+<span id="cb1-40"><a href=""></a><span class="co"># Calculate average returns for each portfolio (annualized)</span></span>
+<span id="cb1-41"><a href=""></a>avg_returns <span class="op">=</span> beta_portfolios[portfolio_cols].mean()</span>
+<span id="cb1-42"><a href=""></a></span>
+<span id="cb1-43"><a href=""></a><span class="co"># Get risk-free rate and market return (annualized)</span></span>
+<span id="cb1-44"><a href=""></a>rf_rate <span class="op">=</span> ff_factors[<span class="st">"RF"</span>].mean() </span>
+<span id="cb1-45"><a href=""></a>market_return <span class="op">=</span> (ff_factors[<span class="st">"MKT_RF"</span>].mean() <span class="op">+</span> ff_factors[<span class="st">"RF"</span>].mean()) </span>
+<span id="cb1-46"><a href=""></a></span>
+<span id="cb1-47"><a href=""></a><span class="co"># Create results DataFrame</span></span>
+<span id="cb1-48"><a href=""></a>results_df <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb1-49"><a href=""></a>    {</span>
+<span id="cb1-50"><a href=""></a>        <span class="st">"Portfolio"</span>: [<span class="ss">f"Beta </span><span class="sc">{</span>i <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(portfolio_cols))],</span>
+<span id="cb1-51"><a href=""></a>        <span class="st">"Beta"</span>: betas,</span>
+<span id="cb1-52"><a href=""></a>        <span class="st">"Avg Return (%)"</span>: avg_returns.values,</span>
+<span id="cb1-53"><a href=""></a>    }</span>
+<span id="cb1-54"><a href=""></a>)</span>
+<span id="cb1-55"><a href=""></a></span>
+<span id="cb1-56"><a href=""></a><span class="bu">print</span>(<span class="st">"Beta-Sorted Portfolios (Kenneth French Data):"</span>)</span>
+<span id="cb1-57"><a href=""></a><span class="bu">print</span>(results_df.<span class="bu">round</span>(<span class="dv">3</span>))</span>
+<span id="cb1-58"><a href=""></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Risk-free rate: </span><span class="sc">{</span>rf_rate<span class="sc">:.2f}</span><span class="ss">%"</span>)</span>
+<span id="cb1-59"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Market return: </span><span class="sc">{</span>market_return<span class="sc">:.2f}</span><span class="ss">%"</span>)</span>
+<span id="cb1-60"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Market risk premium: </span><span class="sc">{</span>(market_return <span class="op">-</span> rf_rate)<span class="sc">:.2f}</span><span class="ss">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="capm-test-does-it-hold" class="slide level2">
 <h2>CAPM Test: Does It Hold?</h2>
-<div id="7f0ea472" class="cell" data-execution_count="2">
+<div id="28a30c96" class="cell" data-execution_count="2">
 
 <div class="cell-output cell-output-stdout">
 <pre><code>
 CAPM Prediction vs. Actual Returns:
 Portfolio | Beta  | Predicted Return | Actual Return | Alpha
 ----------------------------------------------------------------------
-Beta  1   | 0.599 |   8.65% |  10.90% |  +2.24%
-Beta  2   | 0.728 |   9.57% |  10.56% |  +0.99%
-Beta  3   | 0.848 |  10.43% |  11.79% |  +1.36%
-Beta  4   | 0.972 |  11.32% |  12.68% |  +1.36%
-Beta  5   | 1.019 |  11.65% |  12.03% |  +0.38%
-Beta  6   | 1.099 |  12.23% |  12.26% |  +0.03%
-Beta  7   | 1.175 |  12.77% |  12.26% |  -0.51%
-Beta  8   | 1.275 |  13.49% |  13.98% |  +0.49%
-Beta  9   | 1.407 |  14.44% |  14.93% |  +0.49%
-Beta 10   | 1.604 |  15.85% |  13.15% |  -2.70%</code></pre>
+Beta  1   | 0.599 |   0.01% |   0.01% |  +0.00%
+Beta  2   | 0.728 |   0.01% |   0.01% |  +0.00%
+Beta  3   | 0.848 |   0.01% |   0.01% |  +0.00%
+Beta  4   | 0.972 |   0.01% |   0.01% |  +0.00%
+Beta  5   | 1.019 |   0.01% |   0.01% |  +0.00%
+Beta  6   | 1.099 |   0.01% |   0.01% |  +0.00%
+Beta  7   | 1.175 |   0.01% |   0.01% |  -0.00%
+Beta  8   | 1.275 |   0.01% |   0.01% |  +0.00%
+Beta  9   | 1.407 |   0.01% |   0.01% |  +0.00%
+Beta 10   | 1.604 |   0.01% |   0.01% |  -0.00%</code></pre>
 </div>
 </div>
 <img data-src="cross-section_files/figure-revealjs/cell-3-output-1.png" class="quarto-figure quarto-figure-center r-stretch"></section>
@@ -746,7 +748,7 @@ r_{i,t} - r_{f,t} = \alpha_i + \lambda_{1} \beta_{i,t} + \lambda_{2} size_{i,t} 
 <section id="fama-french-1993-grs-test" class="slide level2">
 <h2>Fama-French 1993 GRS test</h2>
 <ul>
-<li><p>Fama and French use the GRS test statistic to jointly test whether the alphas (αiαi​) of all the test portfolios are zero.</p></li>
+<li><p>Fama and French use the GRS test statistic to jointly test whether the alphas (<span class="math inline">\alpha_i</span>​) of all the test portfolios are zero.</p></li>
 <li><p>The GRS test is designed to assess whether the factors adequately explain the cross-sectional variation in returns across the test portfolios.</p>
 <ul>
 <li><span class="math inline">\text{GRS} = \frac{T - N - K}{N} \cdot \frac{\alpha' \Sigma^{-1} \alpha}{1 + \bar{f}' \Sigma_f^{-1} \bar{f}}</span></li>

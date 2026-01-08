@@ -87,11 +87,13 @@ import statsmodels.api as sm
 ff_factors = pd.read_excel("data_sample/ff_portfolios.xlsx")
 ff_factors["date"] = pd.to_datetime(ff_factors["date"], format="%Y%m")
 ff_factors = ff_factors.set_index("date")
+ff_factors = ff_factors/100
 
 # Load 10 beta-sorted portfolios
 beta_portfolios = pd.read_excel("data_sample/ff_beta_sorted_portfolios.xlsx")
 beta_portfolios["date"] = pd.to_datetime(beta_portfolios["date"], format="%Y%m")
 beta_portfolios = beta_portfolios.set_index("date")
+beta_portfolios = beta_portfolios/100  # Convert to decimal returns
 
 # Align dates between the two datasets
 common_dates = beta_portfolios.index.intersection(ff_factors.index)
@@ -116,11 +118,11 @@ for col in portfolio_cols:
     betas.append(beta)
 
 # Calculate average returns for each portfolio (annualized)
-avg_returns = beta_portfolios[portfolio_cols].mean() * 12
+avg_returns = beta_portfolios[portfolio_cols].mean()
 
 # Get risk-free rate and market return (annualized)
-rf_rate = ff_factors["RF"].mean() * 12
-market_return = (ff_factors["MKT_RF"].mean() + ff_factors["RF"].mean()) * 12
+rf_rate = ff_factors["RF"].mean() 
+market_return = (ff_factors["MKT_RF"].mean() + ff_factors["RF"].mean()) 
 
 # Create results DataFrame
 results_df = pd.DataFrame(
@@ -194,8 +196,8 @@ for i, (beta, actual_ret) in enumerate(zip(betas, avg_returns.values)):
 ## Buy-and-Hold Returns
 
 ```{python}
-#| echo: false
-#| fig-align: center
+# | echo: false
+# | fig-align: center
 
 # Calculate cumulative buy-and-hold returns for each portfolio
 fig, ax = plt.subplots(figsize=(12, 7))
@@ -205,19 +207,25 @@ colors = plt.cm.RdYlBu_r(np.linspace(0.1, 0.9, len(portfolio_cols)))
 
 for idx, col in enumerate(portfolio_cols):
     # Calculate cumulative returns from raw returns
-    cumulative_returns = (1 + beta_portfolios[col] / 100).cumprod()
+    cumulative_returns = (1 + beta_portfolios[col]).cumprod()
 
     # Plot
-    ax.plot(cumulative_returns.index, cumulative_returns,
-            linewidth=2, label=f'Portfolio {idx+1} (β={betas[idx]:.2f})',
-            color=colors[idx], alpha=0.8)
+    ax.plot(
+        cumulative_returns.index,
+        cumulative_returns,
+        linewidth=2,
+        label=f"Portfolio {idx+1} (β={betas[idx]:.2f})",
+        color=colors[idx],
+        alpha=0.8,
+    )
 
-ax.set_xlabel('Date', fontsize=12, fontweight='bold')
-ax.set_ylabel('Cumulative Return (%)', fontsize=12, fontweight='bold')
-ax.set_title('Buy-and-Hold Returns: Beta-Sorted Portfolios',
-             fontsize=14, fontweight='bold')
-ax.legend(loc='best', fontsize=9, ncol=2)
-ax.grid(True, alpha=0.3, linestyle='--')
+ax.set_xlabel("Date", fontsize=12, fontweight="bold")
+ax.set_ylabel("Cumulative Return", fontsize=12, fontweight="bold")
+ax.set_title(
+    "Buy-and-Hold Returns: Beta-Sorted Portfolios", fontsize=14, fontweight="bold"
+)
+ax.legend(loc="best", fontsize=9, ncol=2)
+ax.grid(True, alpha=0.3, linestyle="--")
 
 plt.tight_layout()
 plt.show()
@@ -448,7 +456,7 @@ Value (HML)
 
 ## Fama-French 1993 GRS test
 
-- Fama and French use the GRS test statistic to jointly test whether the alphas (αiαi​) of all the test portfolios are zero.
+- Fama and French use the GRS test statistic to jointly test whether the alphas ($\alpha_i$​) of all the test portfolios are zero.
 - The GRS test is designed to assess whether the factors  adequately explain the cross-sectional variation in returns across the test portfolios.
 
   - $\text{GRS} = \frac{T - N - K}{N} \cdot \frac{\alpha' \Sigma^{-1} \alpha}{1 + \bar{f}' \Sigma_f^{-1} \bar{f}}$ 
