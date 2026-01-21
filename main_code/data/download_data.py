@@ -23,6 +23,7 @@ from .download import (
     get_ibes_actuals,
     get_ibes_estimates,
     get_vix_daily,
+    get_vrp_monthly,
 )
 
 
@@ -110,6 +111,12 @@ def download_files(
             "file": cache_dir / "vix_daily.parquet",
             "name": "VIX Daily Data",
             "download_func": get_vix_daily,
+        },
+        # VRP tasks
+        {
+            "file": cache_dir / "vrp_monthly.parquet",
+            "name": "VRP Monthly Data",
+            "download_func": get_vrp_monthly,
         },
         # Compustat tasks
         {

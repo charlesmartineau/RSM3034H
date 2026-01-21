@@ -1,6 +1,7 @@
 import logging
 
 import pandas as pd
+import statsmodels.formula.api as smf
 from linearmodels import PanelOLS
 
 PREFIX_MAP = {
@@ -60,3 +61,49 @@ def panel_ols(df, model):
             ).T
         ]
     )
+
+
+def ols_reg(df: pd.DataFrame, formula: str) -> pd.DataFrame:
+    """
+    Run OLS regression and return coefficients with standard errors and p-values.
+
+    Args:
+        df: DataFrame with regression data
+        formula: statsmodels formula (e.g., "y~1+x")
+
+    Returns:
+        DataFrame with coefficients, standard errors, t-stats, and p-values
+    """
+    reg = smf.ols(formula, data=df).fit(cov_type="HC1")
+
+    output = []
+    for param in reg.params.index:
+        # Map parameter names to display names (capitalize vrp -> VRP)
+        # Handle both "vrp" and "vrp_h1", "vrp_h3", etc.
+        if param.startswith("vrp"):
+            display_name = "VRP"
+        else:
+            display_name = param
+        output.append(
+            pd.DataFrame(
+                {
+                    f"{display_name}_coef": reg.params[param],
+                    f"{display_name}_tstat": reg.tvalues[param],
+                    f"{display_name}_bse": reg.bse[param],
+                    f"{display_name}_pval": reg.pvalues[param],
+                },
+                index=[0],
+            ).T
+        )
+
+    output.append(
+        pd.DataFrame(
+            {
+                "rsquared": reg.rsquared,
+                "nobs": int(reg.nobs),
+            },
+            index=[0],
+        ).T
+    )
+
+    return pd.concat(output)

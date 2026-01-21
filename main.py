@@ -11,7 +11,7 @@ from omegaconf import DictConfig
 
 from main_code.data import build_panel, compute_earning_surprises, download_files
 from main_code.figures import plot_n_earnings_per_year, plot_n_stocks_per_year
-from main_code.tables import create_ea_regression_table
+from main_code.tables import create_ea_regression_table, oos_regression_example
 from main_code.utils import configure_pyplot, get_latest_file, timestamp_file
 
 load_dotenv()
@@ -130,21 +130,32 @@ def my_app(cfg: DictConfig):
         panel = pd.read_parquet(get_latest_file(panel_path))
         logging.info(f"Loaded existing panel data from {panel_path}")
     else:
-        raise ValueError("No panel data task specified in the configuration.")
+        panel = None
 
-    # Figure
+    # Figure (requires panel)
     if cfg.figures.n_stocks_per_year:
+        if panel is None:
+            raise ValueError("Panel data required for n_stocks_per_year figure")
         logging.info("Creating figure: Number of stocks per year...")
         plot_n_stocks_per_year(panel, fig_dir)
 
     if cfg.figures.n_earnings_per_year:
+        if panel is None:
+            raise ValueError("Panel data required for n_earnings_per_year figure")
         logging.info("Creating figure: Number of earnings per year...")
         plot_n_earnings_per_year(panel, fig_dir)
 
-    # Regression
+    # Regression (requires panel)
     if cfg.tables.ea_regression:
+        if panel is None:
+            raise ValueError("Panel data required for ea_regression table")
         logging.info("Creating regression table: EA effect on excess returns...")
         create_ea_regression_table(panel, tab_dir)
+
+    # OOS regression (uses download_cache, no panel required)
+    if cfg.tables.oos_exmkt_vrp:
+        logging.info("Creating OOS regression tables: Forecasting excess market returns using VRP...")
+        oos_regression_example(download_dir, tab_dir, fig_dir)
 
     logging.info(f"Complete. Total runtime: {time.time() - start_time:.2f} seconds")
 
