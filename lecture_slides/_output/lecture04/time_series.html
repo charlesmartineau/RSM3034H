@@ -29,7 +29,27 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+      margin-bottom: 0em;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <link rel="stylesheet" href="time_series_files/libs/revealjs/dist/theme/quarto.css">
   <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
   <script>document.addEventListener("DOMContentLoaded", function () {
@@ -363,19 +383,31 @@ Charles Martineau
 <section id="outline" class="slide level2">
 <h2>Outline</h2>
 <ol type="1">
-<li><span class="citation" data-cites="fama1988">(<a href="" role="doc-biblioref" onclick="return false;"><strong>fama1988?</strong></a>)</span></li>
-<li><span class="citation" data-cites="welch2008">(<a href="" role="doc-biblioref" onclick="return false;"><strong>welch2008?</strong></a>)</span></li>
-<li><span class="citation" data-cites="campbell2008">(<a href="" role="doc-biblioref" onclick="return false;"><strong>campbell2008?</strong></a>)</span></li>
-<li><span class="citation" data-cites="rapach2010">(<a href="" role="doc-biblioref" onclick="return false;"><strong>rapach2010?</strong></a>)</span></li>
+<li><span class="citation" data-cites="fama1988">Fama and French (<a href="#/references" role="doc-biblioref" onclick="">1988</a>)</span></li>
+<li><span class="citation" data-cites="welch2008">Welch and Goyal (<a href="#/references" role="doc-biblioref" onclick="">2008</a>)</span></li>
+<li><span class="citation" data-cites="campbell2008">Campbell and Thompson (<a href="#/references" role="doc-biblioref" onclick="">2008</a>)</span></li>
+<li><span class="citation" data-cites="rapach2010">Rapach, Strauss, and Zhou (<a href="#/references" role="doc-biblioref" onclick="">2010</a>)</span></li>
 <li>Improvement in Sharpe ratios</li>
-<li><span class="citation" data-cites="goyal2024">(<a href="" role="doc-biblioref" onclick="return false;"><strong>goyal2024?</strong></a>)</span></li>
+<li><span class="citation" data-cites="goyal2024">Goyal, Welch, and Zafirov (<a href="#/references" role="doc-biblioref" onclick="">2024</a>)</span></li>
 </ol>
 </section>
 <section id="fama-french-1988" class="slide level2">
 <h2>Fama French (1988)</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/ff1988_1.jpg" class="quarto-figure quarto-figure-center" width="400"></p>
+</figure>
+</div>
+</div><div class="column" style="width:50%;">
 <p>In-Sample Return Predictability at 1-Month Horizon (1957-1986)</p>
-
-<img data-src="figures/ff1988_1.jpg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<p><strong>Campbell &amp; Shiller (1988)</strong> - “The Dividend-Price Ratio and Expectations of Future Dividends and Discount Rates” (RFS)</p>
+<ul>
+<li>Establishes dividend yield as predictor of long-horizon returns</li>
+</ul>
+</div></div>
+</section>
 <section id="goyal-and-welch-2008" class="slide level2">
 <h2>Goyal and Welch (2008)</h2>
 <ul>
@@ -520,7 +552,7 @@ SR^* =  \sqrt{\frac{SR^2+R_{OOS}^2}{1-R_{OOS}^2}},
 <p>Can one use the explanatory variables in (1) to forecast in (2)?</p>
 </section>
 <section id="dong2022" class="slide level2">
-<h2><span class="citation" data-cites="dong2022">(<a href="" role="doc-biblioref" onclick="return false;"><strong>dong2022?</strong></a>)</span></h2>
+<h2><span class="citation" data-cites="dong2022">Dong et al. (<a href="#/references" role="doc-biblioref" onclick="">2022</a>)</span></h2>
 <p><a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jofi.13099?casa_token=8qBT_fhmFhUAAAAA%3Ay377VoR-lW3viKENYkzNP5nsIBxE1hiqsJZUkpfAbYn8simQkr8ivVLNrVVhG_yRyk3NJelnv-kQ4nH2">DLRZ</a> selects 100 long-short anomaly portfolio returns that are representative of anomalies from the XS literature (accruals, firm age, illiquidity, momentum, bm).</p>
 <ul>
 <li>Predict market returns for each anomaly separately (using OLS and ML) and then combine the predictor like in Rapach et al.&nbsp;(2009).</li>
@@ -528,7 +560,7 @@ SR^* =  \sqrt{\frac{SR^2+R_{OOS}^2}{1-R_{OOS}^2}},
 
 <img data-src="figures/dong.jpg" class="quarto-figure quarto-figure-center r-stretch" width="500"></section>
 <section id="engelberg2023" class="slide level2">
-<h2><span class="citation" data-cites="engelberg2023">(<a href="" role="doc-biblioref" onclick="return false;"><strong>engelberg2023?</strong></a>)</span></h2>
+<h2><span class="citation" data-cites="engelberg2023">Engelberg et al. (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span></h2>
 <p>Do XS predictors contain systematic information?</p>
 <ul>
 <li>I.e., if we aggregate a cross-sectional variable, can it predict market returns?</li>
@@ -537,22 +569,22 @@ SR^* =  \sqrt{\frac{SR^2+R_{OOS}^2}{1-R_{OOS}^2}},
 </ul>
 </section>
 <section id="engelberg2023-1" class="slide level2">
-<h2><span class="citation" data-cites="engelberg2023">(<a href="" role="doc-biblioref" onclick="return false;"><strong>engelberg2023?</strong></a>)</span></h2>
+<h2><span class="citation" data-cites="engelberg2023">Engelberg et al. (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span></h2>
 
 <img data-src="figures/engelberg.jpg" class="quarto-figure quarto-figure-center r-stretch" width="600"></section>
 <section id="engelberg2023-2" class="slide level2">
-<h2><span class="citation" data-cites="engelberg2023">(<a href="" role="doc-biblioref" onclick="return false;"><strong>engelberg2023?</strong></a>)</span></h2>
+<h2><span class="citation" data-cites="engelberg2023">Engelberg et al. (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span></h2>
 <p>Summary of Out-of-Sample Performance, undadjusted p-Values</p>
 
 <img data-src="figures/engelberg1.jpg" class="quarto-figure quarto-figure-center r-stretch" width="600"></section>
 <section id="engelberg2023-3" class="slide level2">
-<h2><span class="citation" data-cites="engelberg2023">(<a href="" role="doc-biblioref" onclick="return false;"><strong>engelberg2023?</strong></a>)</span></h2>
+<h2><span class="citation" data-cites="engelberg2023">Engelberg et al. (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span></h2>
 <p>Summary of Out-of-Sample Performance Using Romano and Wolf p-Values</p>
 
 <img data-src="figures/engelberg2.jpg" class="quarto-figure quarto-figure-center r-stretch" width="600"><p>See <a href="https://www.cambridge.org/core/journals/journal-of-financial-and-quantitative-analysis/article/do-crosssectional-predictors-contain-systematic-information/C842FFBA1F84B696CDAFCE4F615C7339#supplementary-materials">internet appendix</a> for the <span class="math inline">p</span>-values computation.</p>
 </section>
 <section id="cakici2024" class="slide level2">
-<h2><span class="citation" data-cites="cakici2024">(<a href="" role="doc-biblioref" onclick="return false;"><strong>cakici2024?</strong></a>)</span></h2>
+<h2><span class="citation" data-cites="cakici2024">Cakici et al. (<a href="#/references" role="doc-biblioref" onclick="">2024</a>)</span></h2>
 <p><a href="https://academic.oup.com/rof/article/28/1/1/7239874">Do Anomalies really predict market returns?</a></p>
 <ul>
 <li>Dong et al.&nbsp;(2022) show that anomalies predict market returns, but Engelberg et al.&nbsp;say that aggregated XS predictors do not forecast market returns.</li>
@@ -560,7 +592,7 @@ SR^* =  \sqrt{\frac{SR^2+R_{OOS}^2}{1-R_{OOS}^2}},
 
 <img data-src="figures/cakici.jpg" class="quarto-figure quarto-figure-center r-stretch" width="600"></section>
 <section id="cakici2024-1" class="slide level2">
-<h2><span class="citation" data-cites="cakici2024">(<a href="" role="doc-biblioref" onclick="return false;"><strong>cakici2024?</strong></a>)</span></h2>
+<h2><span class="citation" data-cites="cakici2024">Cakici et al. (<a href="#/references" role="doc-biblioref" onclick="">2024</a>)</span></h2>
 <p>Set of anomalies:</p>
 <ul>
 <li>100 anomalies from DLRZ (2022)</li>
@@ -569,12 +601,38 @@ SR^* =  \sqrt{\frac{SR^2+R_{OOS}^2}{1-R_{OOS}^2}},
 <li>188 factors from <a href="https://global-q.org/testingportfolios.html">Hou, Xue, and Zhang (2023)</a></li>
 </ul>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>Construct international portfolios and anomalies using the code of Jensen et al.&nbsp;It is a very well documented SAS code to be run on WRDS. </p></li></ol></aside></section>
-<section id="references" class="slide level2">
+<section id="references" class="slide level2 smaller scrollable">
 <h2>References</h2>
 <div class="quarto-auto-generated-content">
 <p><img src="../logos/uoft.png" class="slide-logo"></p>
 <div class="footer footer-default">
-<p>MGFD40</p>
+<p>RSM3034</p>
+</div>
+</div>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-cakici2024" class="csl-entry" role="listitem">
+Cakici, Nusret, Christian Fieberg, Daniel Metko, and Adam Zaremba. 2024. <span>“Do Anomalies Really Predict Market Returns? New Data and New Evidence.”</span> <em>Review of Finance</em> 28 (1): 1–44.
+</div>
+<div id="ref-campbell2008" class="csl-entry" role="listitem">
+Campbell, John Y, and Samuel B Thompson. 2008. <span>“Predicting Excess Stock Returns Out of Sample: Can Anything Beat the Historical Average?”</span> <em>The Review of Financial Studies</em> 21 (4): 1509–31.
+</div>
+<div id="ref-dong2022" class="csl-entry" role="listitem">
+Dong, Xi, Yan Li, David E Rapach, and Guofu Zhou. 2022. <span>“Anomalies and the Expected Market Return.”</span> <em>The Journal of Finance</em> 77 (1): 639–81.
+</div>
+<div id="ref-engelberg2023" class="csl-entry" role="listitem">
+Engelberg, Joseph, R David McLean, Jeffrey Pontiff, and Matthew C Ringgenberg. 2023. <span>“Do Cross-Sectional Predictors Contain Systematic Information?”</span> <em>Journal of Financial and Quantitative Analysis</em> 58 (3): 1172–1201.
+</div>
+<div id="ref-fama1988" class="csl-entry" role="listitem">
+Fama, Eugene F, and Kenneth R French. 1988. <span>“Dividend Yields and Expected Stock Returns.”</span> <em>Journal of Financial Economics</em> 22 (1): 3–25.
+</div>
+<div id="ref-goyal2024" class="csl-entry" role="listitem">
+Goyal, Amit, Ivo Welch, and Athanasse Zafirov. 2024. <span>“A Comprehensive 2022 Look at the Empirical Performance of Equity Premium Prediction.”</span> <em>The Review of Financial Studies</em> 37 (11): 3490–3557.
+</div>
+<div id="ref-rapach2010" class="csl-entry" role="listitem">
+Rapach, David E, Jack K Strauss, and Guofu Zhou. 2010. <span>“Out-of-Sample Equity Premium Prediction: Combination Forecasts and Links to the Real Economy.”</span> <em>The Review of Financial Studies</em> 23 (2): 821–62.
+</div>
+<div id="ref-welch2008" class="csl-entry" role="listitem">
+Welch, Ivo, and Amit Goyal. 2008. <span>“A Comprehensive Look at the Empirical Performance of Equity Premium Prediction.”</span> <em>The Review of Financial Studies</em> 21 (4): 1455–1508.
 </div>
 </div>
 </section>

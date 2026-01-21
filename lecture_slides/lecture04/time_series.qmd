@@ -24,9 +24,21 @@ bibliography: ../lit.bib
 
 ## Fama French (1988)
 
+:::: {.columns}
+
+::: {.column width="50%"}
+![](figures/ff1988_1.jpg){fig-align="center" width="400"}
+:::
+
+::: {.column width="50%"}
 In-Sample Return Predictability at 1-Month Horizon (1957-1986)
 
-![](figures/ff1988_1.jpg){fig-align="center"}
+**Campbell & Shiller (1988)** - "The Dividend-Price Ratio and Expectations of Future Dividends and Discount Rates" (RFS)
+
+- Establishes dividend yield as predictor of long-horizon returns
+:::
+
+::::
 
 
 ---

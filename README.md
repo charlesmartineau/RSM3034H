@@ -14,7 +14,7 @@ This repository contains course materials for RSM3034H - PhD Empirical Asset Pri
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/RSM3034H.git
+   git clone https://github.com/charlesmartineau/RSM3034H.git
    cd RSM3034H
    ```
 
