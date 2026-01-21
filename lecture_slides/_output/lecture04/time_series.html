@@ -423,7 +423,7 @@ Charles Martineau
 <li><p>Predictive regressions with historical average returns almost always generate superior return forecasts</p></li>
 <li><p>These models would not have helped an investor with access only to available information to profitably time the market.</p></li>
 </ul>
-<p>See this <a href="http://www.hec.unil.ch/agoyal/">link</a> for the data.</p>
+<p>See this <a href="https://docs.google.com/spreadsheets/d/1OIZg6htTK60wtnCVXvxAujvG1aKEOVYv/edit?usp=sharing&amp;ouid=113571510202500088860&amp;rtpof=true&amp;sd=true">link</a> for the data.</p>
 </section>
 <section id="what-is-an-out-of-sample-regression" class="slide level2">
 <h2>What is an out-of-sample regression?</h2>
@@ -509,6 +509,7 @@ SR^* =  \sqrt{\frac{SR^2+R_{OOS}^2}{1-R_{OOS}^2}},
 <li>Investor attention</li>
 <li>Short interest</li>
 <li>Variance risk premium</li>
+<li>The slope of the term structure of corporate bonds (see <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4374753">Li, Yuan, and Zhou (2025)</a>)</li>
 <li>etc.</li>
 </ul>
 </section>
@@ -522,8 +523,8 @@ SR^* =  \sqrt{\frac{SR^2+R_{OOS}^2}{1-R_{OOS}^2}},
 </ul>
 <p>Main two variables that Goyal and Welch (2021) find to be good predictors are:</p>
 <ul>
-<li>The Growth Rate in Personal Consumption Expenditures by Møller and Rangvid (2015).</li>
-<li>A measure of credit standards derived from the Federal Reserve Board’s Senior Loan Officer Opinion Survey on Bank Lending Practices by Chava, Gallmeyer, and Park (2015).</li>
+<li>The Growth Rate in Personal Consumption Expenditures by <a href="https://www.sciencedirect.com/science/article/abs/pii/S0304405X14001810">Møller and Rangvid (2015)</a>.</li>
+<li>A measure of credit standards derived from the Federal Reserve Board’s Senior Loan Officer Opinion Survey on Bank Lending Practices by <a href="https://www.sciencedirect.com/science/article/abs/pii/S0304393215000653">Chava, Gallmeyer, and Park (2015)</a>.</li>
 </ul>
 </section>
 <section id="python-code" class="slide level2">
@@ -541,6 +542,7 @@ SR^* =  \sqrt{\frac{SR^2+R_{OOS}^2}{1-R_{OOS}^2}},
 <li>Pick one predictor variable (<span class="math inline">d/p</span>, <span class="math inline">e/p</span>, etc.)</li>
 <li>Test the in-sample and out-of-sample prediction of this variable at the monthly and at annual frequency.</li>
 <li>Also, plot the Cumulative SSE difference.</li>
+<li>Bonus: implement the Campbell and Thompson (2008) restrictions and see if it improves the OOS performance.</li>
 </ul>
 </section>
 <section id="stock-return-predictability" class="slide level2">
@@ -601,6 +603,116 @@ SR^* =  \sqrt{\frac{SR^2+R_{OOS}^2}{1-R_{OOS}^2}},
 <li>188 factors from <a href="https://global-q.org/testingportfolios.html">Hou, Xue, and Zhang (2023)</a></li>
 </ul>
 <aside><ol class="aside-footnotes"><li id="fn1"><p>Construct international portfolios and anomalies using the code of Jensen et al.&nbsp;It is a very well documented SAS code to be run on WRDS. </p></li></ol></aside></section>
+<section id="text-based-return-prediction" class="slide level2">
+<h2>Text-Based Return Prediction</h2>
+<p>Using text data from news sources (e.g., Wall Street Journal) to forecast stock returns:</p>
+<ol type="1">
+<li><p><strong>Data Collection</strong>: Gather article text from WSJ or other financial news sources</p></li>
+<li><p><strong>Text Embeddings</strong>: Convert articles into numerical vectors using NLP models</p>
+<ul>
+<li>Word2Vec, GloVe, or transformer-based models (BERT, GPT)</li>
+<li>Each article becomes a high-dimensional vector capturing semantic meaning</li>
+</ul></li>
+<li><p><strong>Dimensionality Reduction</strong>: Embeddings are high-dimensional (hundreds to thousands of features)</p>
+<ul>
+<li>Ridge regression handles multicollinearity and prevents overfitting</li>
+<li>Penalizes large coefficients: <span class="math inline">\min_\beta \|y - X\beta\|^2 + \lambda\|\beta\|^2</span></li>
+</ul></li>
+<li><p><strong>Forecasting</strong>: Use lagged embeddings to predict future returns out-of-sample</p></li>
+</ol>
+<p>See <span class="citation" data-cites="ke2019">Ke, Kelly, and Xiu (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span> for an application using WSJ articles and ridge regression.</p>
+</section>
+<section id="text-embeddings-example" class="slide level2">
+<h2>Text Embeddings: Example</h2>
+<p><strong>Sentence 1</strong> (associated with positive returns):</p>
+<blockquote>
+<p>“Consumer spending surged as unemployment fell to historic lows.”</p>
+</blockquote>
+<p><strong>Sentence 2</strong> (associated with negative returns):</p>
+<blockquote>
+<p>“Credit markets froze amid fears of widespread bank failures.”</p>
+</blockquote>
+<p>Each sentence is converted to a vector (e.g., 300 dimensions):</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Sentence</th>
+<th><span class="math inline">e_1</span></th>
+<th><span class="math inline">e_2</span></th>
+<th><span class="math inline">e_3</span></th>
+<th>…</th>
+<th><span class="math inline">e_{300}</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sentence 1</td>
+<td>0.42</td>
+<td>-0.18</td>
+<td>0.73</td>
+<td>…</td>
+<td>0.05</td>
+</tr>
+<tr class="even">
+<td>Sentence 2</td>
+<td>-0.31</td>
+<td>0.55</td>
+<td>-0.62</td>
+<td>…</td>
+<td>-0.12</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>These values are determined by a pre-trained NLP model (e.g., Word2Vec, BERT).</li>
+<li>Each dimension captures some semantic aspect of the sentence.</li>
+<li>Similar sentences have similar embeddings (e.g., cosine similarity).</li>
+</ul>
+</section>
+<section id="text-embeddings-example-1" class="slide level2">
+<h2>Text Embeddings: Example</h2>
+<p>Ridge regression learns which embedding dimensions correlate with future returns: <span class="math display">\hat{r}_{t+1} = \sum_{j=1}^{300} \hat{\beta}_j \cdot e_{j,t}</span></p>
+</section>
+<section id="bert-vs.-finbert" class="slide level2">
+<h2>BERT vs.&nbsp;FinBERT</h2>
+<p><strong>BERT</strong> (Bidirectional Encoder Representations from Transformers):</p>
+<ul>
+<li>Trained on general text (Wikipedia, BookCorpus)</li>
+<li>Words like “bull,” “bear,” “spread” have general meanings</li>
+</ul>
+<p><strong>FinBERT</strong>:</p>
+<ul>
+<li>BERT fine-tuned on financial text (news, SEC filings, analyst reports)</li>
+<li>Learns finance-specific semantics</li>
+</ul>
+<table class="caption-top">
+<colgroup>
+<col style="width: 40%">
+<col style="width: 24%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Sentence</th>
+<th>BERT</th>
+<th>FinBERT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>“The market is bearish”</td>
+<td>General negativity</td>
+<td>Price decline expectation</td>
+</tr>
+<tr class="even">
+<td>“Spreads widened sharply”</td>
+<td>Something got wider</td>
+<td>Credit risk increased</td>
+</tr>
+</tbody>
+</table>
+<p>Domain-specific models like FinBERT produce embeddings where financially relevant concepts cluster more meaningfully, potentially improving return forecasts.</p>
+</section>
 <section id="references" class="slide level2 smaller scrollable">
 <h2>References</h2>
 <div class="quarto-auto-generated-content">
@@ -627,6 +739,9 @@ Fama, Eugene F, and Kenneth R French. 1988. <span>“Dividend Yields and Expecte
 </div>
 <div id="ref-goyal2024" class="csl-entry" role="listitem">
 Goyal, Amit, Ivo Welch, and Athanasse Zafirov. 2024. <span>“A Comprehensive 2022 Look at the Empirical Performance of Equity Premium Prediction.”</span> <em>The Review of Financial Studies</em> 37 (11): 3490–3557.
+</div>
+<div id="ref-ke2019" class="csl-entry" role="listitem">
+Ke, Zheng Tracy, Bryan T Kelly, and Dacheng Xiu. 2019. <span>“Predicting Returns with Text Data.”</span> National Bureau of Economic Research.
 </div>
 <div id="ref-rapach2010" class="csl-entry" role="listitem">
 Rapach, David E, Jack K Strauss, and Guofu Zhou. 2010. <span>“Out-of-Sample Equity Premium Prediction: Combination Forecasts and Links to the Real Economy.”</span> <em>The Review of Financial Studies</em> 23 (2): 821–62.

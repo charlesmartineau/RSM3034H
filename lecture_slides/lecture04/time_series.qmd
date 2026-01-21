@@ -63,7 +63,7 @@ return forecasts
 
 - These models would not have helped an investor with access only to available information to profitably time the market.
 
-See this [link](http://www.hec.unil.ch/agoyal/) for the data.
+See this [link](https://docs.google.com/spreadsheets/d/1OIZg6htTK60wtnCVXvxAujvG1aKEOVYv/edit?usp=sharing&ouid=113571510202500088860&rtpof=true&sd=true) for the data.
 
 ---
 
@@ -197,6 +197,7 @@ New variables:
 - Investor attention
 - Short interest
 - Variance risk premium
+- The slope of the term structure of corporate bonds (see [Li, Yuan, and Zhou (2025)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4374753))
 - etc.
 
 ---
@@ -212,8 +213,8 @@ New variables:
 
 Main two variables that Goyal and Welch (2021) find to be good predictors are:
 
-  - The Growth Rate in Personal Consumption Expenditures by Møller and Rangvid (2015).
-  - A measure of credit standards derived from the Federal Reserve Board’s Senior Loan Officer Opinion Survey on Bank Lending Practices by Chava, Gallmeyer, and Park (2015).
+  - The Growth Rate in Personal Consumption Expenditures by [Møller and Rangvid (2015)](https://www.sciencedirect.com/science/article/abs/pii/S0304405X14001810).
+  - A measure of credit standards derived from the Federal Reserve Board’s Senior Loan Officer Opinion Survey on Bank Lending Practices by [Chava, Gallmeyer, and Park (2015)](https://www.sciencedirect.com/science/article/abs/pii/S0304393215000653).
 
 ---
 
@@ -238,6 +239,7 @@ Objective: Replicate the result of your choice in GW (2007)
   - Pick one predictor variable ($d/p$, $e/p$, etc.)
   - Test the in-sample and out-of-sample prediction of this variable at the monthly and at annual frequency.
   - Also, plot the Cumulative SSE difference.
+  - Bonus: implement the Campbell and Thompson (2008) restrictions and see if it improves the OOS performance.
 
 
 ---
@@ -315,6 +317,78 @@ Set of anomalies:
 - 153 tercile and decile portfolios from [Jensen, Kelly, and Pedersen (2023)](https://github.com/bkelly-lab/ReplicationCrisis/tree/master)^[Construct international portfolios and anomalies using the code of Jensen et al. It is a very well documented SAS code to be run on WRDS. ]
 - 207 anomalies from [Chen and Zimmermann (2023)](https://www.openassetpricing.com/)
 - 188 factors from [Hou, Xue, and Zhang (2023)](https://global-q.org/testingportfolios.html)
+
+---
+
+## Text-Based Return Prediction
+
+Using text data from news sources (e.g., Wall Street Journal) to forecast stock returns:
+
+1. **Data Collection**: Gather article text from WSJ or other financial news sources
+
+2. **Text Embeddings**: Convert articles into numerical vectors using NLP models
+   - Word2Vec, GloVe, or transformer-based models (BERT, GPT)
+   - Each article becomes a high-dimensional vector capturing semantic meaning
+
+3. **Dimensionality Reduction**: Embeddings are high-dimensional (hundreds to thousands of features)
+   - Ridge regression handles multicollinearity and prevents overfitting
+   - Penalizes large coefficients: $\min_\beta \|y - X\beta\|^2 + \lambda\|\beta\|^2$
+
+4. **Forecasting**: Use lagged embeddings to predict future returns out-of-sample
+
+See @ke2019 for an application using WSJ articles and ridge regression.
+
+---
+
+## Text Embeddings: Example
+
+**Sentence 1** (associated with positive returns):
+
+> "Consumer spending surged as unemployment fell to historic lows."
+
+**Sentence 2** (associated with negative returns):
+
+> "Credit markets froze amid fears of widespread bank failures."
+
+Each sentence is converted to a vector (e.g., 300 dimensions):
+
+| Sentence | $e_1$ | $e_2$ | $e_3$ | ... | $e_{300}$ |
+|----------|-------|-------|-------|-----|-----------|
+| Sentence 1 | 0.42 | -0.18 | 0.73 | ... | 0.05 |
+| Sentence 2 | -0.31 | 0.55 | -0.62 | ... | -0.12 |
+
+- These values are determined by a pre-trained NLP model (e.g., Word2Vec, BERT).
+- Each dimension captures some semantic aspect of the sentence.
+- Similar sentences have similar embeddings (e.g., cosine similarity).
+
+---
+
+## Text Embeddings: Example
+
+
+Ridge regression learns which embedding dimensions correlate with future returns:
+$$\hat{r}_{t+1} = \sum_{j=1}^{300} \hat{\beta}_j \cdot e_{j,t}$$
+
+---
+
+## BERT vs. FinBERT
+
+**BERT** (Bidirectional Encoder Representations from Transformers):
+
+- Trained on general text (Wikipedia, BookCorpus)
+- Words like "bull," "bear," "spread" have general meanings
+
+**FinBERT**:
+
+- BERT fine-tuned on financial text (news, SEC filings, analyst reports)
+- Learns finance-specific semantics
+
+| Sentence | BERT | FinBERT |
+|----------|------|---------|
+| "The market is bearish" | General negativity | Price decline expectation |
+| "Spreads widened sharply" | Something got wider | Credit risk increased |
+
+Domain-specific models like FinBERT produce embeddings where financially relevant concepts cluster more meaningfully, potentially improving return forecasts.
 
 ---
 
