@@ -29,7 +29,27 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-  </style>
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+      margin-bottom: 0em;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
   <link rel="stylesheet" href="event_studies_files/libs/revealjs/dist/theme/quarto.css">
   <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
   <script>document.addEventListener("DOMContentLoaded", function () {
@@ -430,9 +450,8 @@ Ret_{t\rightarrow T} = \alpha+\beta News_t + \varepsilon_t
 
 <img data-src="Figures/FFJR.png" class="quarto-figure quarto-figure-center r-stretch"><p>“Market’s judgments concerning the information implications of a split are fully reflected by the end of the split <strong>month</strong> but most probably almost immediately after the announcement date.” <span class="math inline">\Rightarrow</span> semi-strong.</p>
 </section>
-<section class="slide level2">
-
-<h3 id="how-do-you-compute-abnormal-returns">How do you compute abnormal returns?</h3>
+<section id="how-do-you-compute-abnormal-returns" class="slide level2 smaller">
+<h2>How do you compute abnormal returns?</h2>
 <p><span class="math display">\begin{align*}
 \text{Cumulative Abnormal Returns (CAR)} &amp;= \sum_{t=T_1}^{T_2} (r_t - r_t^b) \\
 \text{Buy-and-Hold Abnormal Returns (BHAR)} &amp;= \prod_{t=T_1}^{T_2} (1 + r_t) - \prod_{t=T_1}^{T_2} (1 + r_t^b)
@@ -445,10 +464,10 @@ Ret_{t\rightarrow T} = \alpha+\beta News_t + \varepsilon_t
 <li>Factor models.</li>
 </ol>
 <ul>
-<li>There are limited gains in using more complex models like factor models because the marginal explanatory power of additional factors on top of the market model is small. The variance reduction in abnormal return is the greatest in cases where the sample of firms has a common characteristic <span class="citation" data-cites="mackinlay1997event">(<a href="" role="doc-biblioref" onclick="return false;"><strong>mackinlay1997event?</strong></a>)</span>.</li>
+<li>There are limited gains in using more complex models like factor models because the marginal explanatory power of additional factors on top of the market model is small. The variance reduction in abnormal return is the greatest in cases where the sample of firms has a common characteristic <span class="citation" data-cites="mackinlay1997event">(<a href="#/reference" role="doc-biblioref" onclick="">MacKinlay 1997</a>)</span>.</li>
 </ul>
 <ol start="4" type="1">
-<li>Characteristic-based benchmark returns <span class="citation" data-cites="bessembinder2019characteristic">(<a href="" role="doc-biblioref" onclick="return false;"><strong>bessembinder2019characteristic?</strong></a>)</span></li>
+<li>Characteristic-based benchmark returns <span class="citation" data-cites="bessembinder2019characteristic">(<a href="#/reference" role="doc-biblioref" onclick="">Bessembinder, Cooper, and Zhang 2019</a>)</span></li>
 </ol>
 </section>
 <section class="slide level2">
@@ -614,6 +633,22 @@ Ret_{t\rightarrow T} = \alpha+\beta News_t + \varepsilon_t
 <li>One can still provide evidence of PEAD by choosing random-walk surprises over a long sample.</li>
 </ul>
 </section>
+<section id="event-study" class="slide level2">
+<h2>Event study</h2>
+<p>See in Github, the function <code>plot_event_study_earnings.py</code> that I use to plot event studies around earnings announcements.</p>
+</section>
+<section id="average-returns-around-earnings---full-sample-stocks-2020-2024" class="slide level2">
+<h2>Average returns around earnings - Full sample stocks 2020-2024</h2>
+
+<img data-src="figures/avg_bhar_around_earnings.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="average-returns-around-earnings---large-sample-stocks-2020-2024" class="slide level2">
+<h2>Average returns around earnings - Large sample stocks 2020-2024</h2>
+
+<img data-src="figures/avg_bhar_around_earnings_large.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="average-returns-around-earnings---small-sample-stocks-2020-2024" class="slide level2">
+<h2>Average returns around earnings - Small sample stocks 2020-2024</h2>
+
+<img data-src="figures/avg_bhar_around_earnings_small.png" class="quarto-figure quarto-figure-center r-stretch"></section>
 <section id="mechanism-to-price-discovery" class="slide level2">
 <h2>Mechanism to price discovery</h2>
 <p>If price discovery occurs all on announcement day, does trading plays a role?</p>
@@ -656,7 +691,7 @@ Ret_{t\rightarrow T} = \alpha+\beta News_t + \varepsilon_t
 
 <img data-src="Figures/jar3.jpg" class="quarto-figure quarto-figure-center r-stretch"></section>
 <section id="around-analyst-recommendations-li2015analyst" class="slide level2">
-<h2>Around analyst recommendations… <span class="citation" data-cites="li2015analyst">(<a href="" role="doc-biblioref" onclick="return false;"><strong>li2015analyst?</strong></a>)</span></h2>
+<h2>Around analyst recommendations… <span class="citation" data-cites="li2015analyst">Li et al. (<a href="#/reference" role="doc-biblioref" onclick="">2015</a>)</span></h2>
 
 <img data-src="Figures/wu1.png" class="quarto-figure quarto-figure-center r-stretch"></section>
 <section class="slide level2">
@@ -664,7 +699,7 @@ Ret_{t\rightarrow T} = \alpha+\beta News_t + \varepsilon_t
 
 <img data-src="Figures/wu2.png" class="quarto-figure quarto-figure-center r-stretch"></section>
 <section id="replicating-li2015analyst" class="slide level2">
-<h2>Replicating <span class="citation" data-cites="li2015analyst">(<a href="" role="doc-biblioref" onclick="return false;"><strong>li2015analyst?</strong></a>)</span></h2>
+<h2>Replicating <span class="citation" data-cites="li2015analyst">Li et al. (<a href="#/reference" role="doc-biblioref" onclick="">2015</a>)</span></h2>
 
 <img data-src="Figures/martineau_analyst.png" class="quarto-figure quarto-figure-center r-stretch"><ul>
 <li>Minutes since announcement: Since anlayst coverage announcement.</li>
@@ -800,15 +835,54 @@ Ret_{t\rightarrow T} = \alpha+\beta News_t + \varepsilon_t
 <h2>StockTwits</h2>
 <h3 id="conditioning-on-earnings-surprises-1">Conditioning on earnings surprises</h3>
 <h4 id="negative-surprises">Negative surprises</h4>
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="Figures/high_low_attention_bhar_bottom_two_sue_qnt.png" class="quarto-figure quarto-figure-center"></p>
-</figure>
-</div>
+
+<img data-src="Figures/high_low_attention_bhar_bottom_two_sue_qnt.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="characteristic-based-benchmark-returns-and-corporate-events" class="slide level2">
+<h2>Characteristic-Based Benchmark Returns and Corporate Events</h2>
+<p>In a recent paper, <a href="https://academic.oup.com/rfs/article-abstract/32/1/75/4962208">Bessembinder, Hao, and Zhang (2018)</a> show that using characteristic-based benchmark returns significantly reduces the magnitude and statistical significance of abnormal returns around corporate events.</p>
+</section>
+<section id="characteristic-based-benchmark-returns-and-corporate-events-1" class="slide level2">
+<h2>Characteristic-Based Benchmark Returns and Corporate Events</h2>
+
+<img data-src="figures/hank1.png" class="quarto-figure quarto-figure-center r-stretch" width="200"></section>
+<section id="characteristic-based-benchmark-returns-and-corporate-events-2" class="slide level2">
+<h2>Characteristic-Based Benchmark Returns and Corporate Events</h2>
+<p>What the authors suggest is that using characteristic-based benchmark returns helps better control for risk factors that are not captured by traditional factor models.</p>
+<p>Methodology:</p>
+<ol type="1">
+<li><p>Run the folloowing regression each month on all stocks:</p>
+<p><span class="math display">\begin{equation*}
+r_{i,t} = \alpha_t + \beta_{t} X_{i,t-1} + \varepsilon_{i,t}
+\end{equation*}</span></p></li>
+<li><p>Where <span class="math inline">X_{i,t-1}</span> are characteristics like size, book-to-market, momentum, etc.</p></li>
+<li><p>Compute predicted returns for month <span class="math inline">t</span> is the average intercept over the prior 12 months plus the sum of the products of average slope coefficients over the prior 12 months and the characteristics of stock <span class="math inline">i</span> at the end of month <span class="math inline">t-1</span>.</p>
+<p><span class="math display">\begin{equation*}
+E[R_{i,t}|I_{i,t-1}] = \frac{1}{12}\sum_{k=1}^{12} \hat{\alpha}_{t-k} + \sum_{j=1}^{N} \left( \frac{1}{12}\sum_{k=1}^{12} \hat{\beta}_{j,t-k} \right) X_{i,j,t-1}
+\end{equation*}</span></p></li>
+<li><p>In the second stage, regress using all stocks, the difference between realized and predicted returns on event dummies.</p></li>
+</ol>
+</section>
+<section id="characteristic-based-benchmark-returns-and-corporate-events-3" class="slide level2">
+<h2>Characteristic-Based Benchmark Returns and Corporate Events</h2>
+
+<img data-src="figures/hank_result.png" class="quarto-figure quarto-figure-center r-stretch" width="200"></section>
+<section id="reference" class="slide level2 smaller scrollable">
+<h2>Reference</h2>
 <div class="quarto-auto-generated-content">
 <p><img src="../logos/uoft.png" class="slide-logo"></p>
 <div class="footer footer-default">
-<p>MGFD40</p>
+<p>RSM3034</p>
+</div>
+</div>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-bessembinder2019characteristic" class="csl-entry" role="listitem">
+Bessembinder, Hendrik, Michael J Cooper, and Feng Zhang. 2019. <span>“Characteristic-Based Benchmark Returns and Corporate Events.”</span> <em>The Review of Financial Studies</em> 32 (1): 75–125.
+</div>
+<div id="ref-li2015analyst" class="csl-entry" role="listitem">
+Li, Edward Xuejun, K Ramesh, Min Shen, and Joanna Shuang Wu. 2015. <span>“Do Analyst Stock Recommendations Piggyback on Recent Corporate News? An Analysis of Regular-Hour and After-Hours Revisions.”</span> <em>Journal of Accounting Research</em> 53 (4): 821–61.
+</div>
+<div id="ref-mackinlay1997event" class="csl-entry" role="listitem">
+MacKinlay, A Craig. 1997. <span>“Event Studies in Economics and Finance.”</span> <em>Journal of Economic Literature</em> 35 (1): 13–39.
 </div>
 </div>
 </section>

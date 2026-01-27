@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from omegaconf import DictConfig
 
 from main_code.data import build_panel, compute_earning_surprises, download_files
-from main_code.figures import plot_n_earnings_per_year, plot_n_stocks_per_year
+from main_code.figures import plot_event_study_earnings, plot_n_earnings_per_year, plot_n_stocks_per_year
 from main_code.tables import create_ea_regression_table, oos_regression_example
 from main_code.utils import configure_pyplot, get_latest_file, timestamp_file
 
@@ -144,6 +144,12 @@ def my_app(cfg: DictConfig):
             raise ValueError("Panel data required for n_earnings_per_year figure")
         logging.info("Creating figure: Number of earnings per year...")
         plot_n_earnings_per_year(panel, fig_dir)
+
+    if cfg.figures.event_study_earnings:
+        if panel is None:
+            raise ValueError("Panel data required for event_study_earnings figure")
+        logging.info("Creating figure: Event study around earnings announcements...")
+        plot_event_study_earnings(panel, fig_dir)
 
     # Regression (requires panel)
     if cfg.tables.ea_regression:

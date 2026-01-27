@@ -89,7 +89,7 @@ Classic event study ... [Fama, Fisher, Jensen, and Roll (1969)](https://www.degr
 
 ---
 
-### How do you compute abnormal returns?
+## How do you compute abnormal returns? {.smaller}
 
 \begin{align*}
 \text{Cumulative Abnormal Returns (CAR)} &= \sum_{t=T_1}^{T_2} (r_t - r_t^b) \\
@@ -295,6 +295,29 @@ Markets have become [more efficient](https://cfr.pub/forthcoming/papers/martinea
 
 
 ---
+
+## Event study 
+
+See in Github, the function `plot_event_study_earnings.py` that I use to plot event studies around earnings announcements.
+
+---
+
+## Average returns around earnings - Full sample stocks 2020-2024
+
+![](figures/avg_bhar_around_earnings.png){fig-align="center"}
+
+## Average returns around earnings - Large sample stocks 2020-2024
+
+![](figures/avg_bhar_around_earnings_large.png){fig-align="center"}
+
+## Average returns around earnings - Small sample stocks 2020-2024
+
+![](figures/avg_bhar_around_earnings_small.png){fig-align="center"}
+
+
+
+---
+
 
 ## Mechanism to price discovery 
 
@@ -524,3 +547,41 @@ BHAR for high vs low attention (matched) stocks (large vs small)
 #### Negative surprises
 
 ![](Figures/high_low_attention_bhar_bottom_two_sue_qnt.png){fig-align="center"}
+
+---
+
+## Characteristic-Based Benchmark Returns and Corporate Events
+
+In a recent paper, [Bessembinder, Hao, and Zhang (2018)](https://academic.oup.com/rfs/article-abstract/32/1/75/4962208) show that using characteristic-based benchmark returns significantly reduces the magnitude and statistical significance of abnormal returns around corporate events.
+
+## Characteristic-Based Benchmark Returns and Corporate Events
+
+![](figures/hank1.png){width="200px" fig-align="center"}
+
+## Characteristic-Based Benchmark Returns and Corporate Events
+
+What the authors suggest is that using characteristic-based benchmark returns helps better control for risk factors that are not captured by traditional factor models.
+
+Methodology:
+
+1. Run the folloowing regression each month on all stocks:
+   
+   \begin{equation*}
+   r_{i,t} = \alpha_t + \beta_{t} X_{i,t-1} + \varepsilon_{i,t}
+   \end{equation*}
+
+2. Where $X_{i,t-1}$ are characteristics like size, book-to-market, momentum, etc.
+3. Compute predicted returns for month $t$ is the average intercept over the prior 12 months plus the sum of the products of average slope coefficients over the prior 12 months and the characteristics of stock $i$ at the end of month $t-1$.
+
+   \begin{equation*}
+   E[R_{i,t}|I_{i,t-1}] = \frac{1}{12}\sum_{k=1}^{12} \hat{\alpha}_{t-k} + \sum_{j=1}^{N} \left( \frac{1}{12}\sum_{k=1}^{12} \hat{\beta}_{j,t-k} \right) X_{i,j,t-1}
+   \end{equation*}
+
+4. In the second stage, regress using all stocks, the difference between realized and predicted returns on event dummies.
+
+## Characteristic-Based Benchmark Returns and Corporate Events
+
+![](figures/hank_result.png){width="200px" fig-align="center"}
+
+
+## Reference
