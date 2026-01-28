@@ -478,6 +478,8 @@ Understanding the causal effect of insider trading on prices and liquidity is ch
 - A [study](https://www.sciencedirect.com/science/article/abs/pii/S0304405X21005237) with Pat Akey and Vincent Gregoire, we have access to a unique setting where from 2010 to 2015, a group of traders illegally accessed earnings information before their public release by hacking several newswire services.
 - We use this scheme as a natural experiment to investigate how informed investors select among private signals and how efficiently financial markets incorporate private information contained in trades into prices.
 
+See this [paper](https://dl.acm.org/doi/10.1145/3768292.3770344) for different ML approach to capture soft news from press releases. 
+
 ---
 
 ### Hacking of corporate press releases
