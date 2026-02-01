@@ -18,6 +18,7 @@ from .download import (
     get_crsp_monthly,
     get_ff5_factors,
     get_ff5_factors_monthly,
+    get_ff_bm_bp,
     get_ff_size_bp,
     get_ff_umd_factor_monthly,
     get_ibes_actuals,
@@ -90,6 +91,11 @@ def download_files(
             "file": cache_dir / "ff_size_breakpoints.parquet",
             "name": "Fama-French Size Breakpoints",
             "download_func": get_ff_size_bp,
+        },
+        {
+            "file": cache_dir / "ff_bm_breakpoints.parquet",
+            "name": "Fama-French B/M Breakpoints",
+            "download_func": get_ff_bm_bp,
         },
         {
             "file": cache_dir / "ff5_daily.parquet",

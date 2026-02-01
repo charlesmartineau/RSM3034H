@@ -26,8 +26,31 @@ def get_ff_size_bp() -> pd.DataFrame:
             bp = bp.drop(columns=["n"])
             # multiply by 1,000,000 since the breakpoints are in millions of dollars
             bp[bp.columns[1:]] = bp[bp.columns[1:]] * 1000000
+
             return bp
 
+
+def get_ff_bm_bp() -> pd.DataFrame:
+    """
+    Download the NYSE B/M breakpoints data from Kenneth R. French's website and return a DataFrame.
+    """
+    ff_url = "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/BE-ME_Breakpoints_CSV.zip"
+
+    response = requests.get(ff_url)
+
+    with zipfile.ZipFile(io.BytesIO(response.content)) as zip_file:
+        with zip_file.open("BE-ME_Breakpoints.csv") as csv_file:
+            bp = pd.read_csv(csv_file, skiprows=3, header=None)
+            #bp = bp[:-1] # remove row with the copyright info
+            # remove the columns with the counts of obs which are column # 1 # 2 and # 3
+            bp = bp.drop(columns=[1, 2])
+            bp.columns = ["date"] + [f"bm_bp{i}" for i in range(1, 21)]
+            bp = bp[~bp["date"].str.startswith("Copyright")]
+            
+            bp["date"] = pd.to_datetime(
+                bp["date"], format="%Y"
+            )
+            return bp
 
 def get_ff5_factors() -> pd.DataFrame:
     """
