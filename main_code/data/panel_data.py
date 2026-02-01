@@ -19,6 +19,7 @@ def load_crsp_file(path: Path) -> pd.DataFrame:
     crsp = pd.read_parquet(get_latest_file(path / "crsp_daily.parquet"))
     crsp = crsp[crsp["date"] >= CRSP_START_DATE]  # filter for dates after 2007-01-01
     crsp["year_month"] = crsp["date"].dt.to_period("M")
+    crsp["year"] = crsp["date"].dt.year
     crsp = crsp.rename(columns={"ncusip": "cusip"})
 
     # merge on permno and select only the dates where the link is valid
@@ -56,10 +57,36 @@ def load_fama_french_me_breakpoints(df: pd.DataFrame, path: Path) -> pd.DataFram
         }
     )
 
-    ff_me["year_month"] = ff_me["date"].dt.to_period("M")
+    ff_me["year_month_merge"] = ff_me["date"].dt.to_period("M")
+    
+    df['year_month_merge'] = df['year_month']-pd.offsets.MonthEnd(1)
 
-    return df.merge(ff_me.drop(columns="date"), on=["year_month"], how="left")
+    return df.merge(ff_me.drop(columns="date"), on=["year_month_merge"], how="left")
 
+
+def load_fama_french_bm_breakpoints(df: pd.DataFrame, path: Path) -> pd.DataFrame:
+    ff_bm = pd.read_parquet(get_latest_file(path / "ff_bm_breakpoints.parquet"))
+    # keep only the 30th and 70th percentile cuts
+    ff_bm = ff_bm[["date", "bm_bp4", "bm_bp8", "bm_bp12", "bm_bp16"]].rename(
+        columns={
+            "bm_bp4": "ff_bm_20",
+            "bm_bp8": "ff_bm_40",
+            "bm_bp12": "ff_bm_60",
+            "bm_bp16": "ff_bm_80",
+        }
+    )
+
+    ff_bm["year"] = ff_bm["date"].dt.year
+    
+    ff_bm["year_merge"] = np.where(ff_bm["date"].dt.month < 7, ff_bm["year"] - 1, ff_bm["year"])
+
+    return df.merge(ff_bm.drop(columns="date"), on=["year_merge"], how="left")
+
+def load_fama_french_25_portfolios(df: pd.DataFrame, path: Path) -> pd.DataFrame:
+    ff_25 = pd.read_parquet(get_latest_file(path / "ff_25_size_bm_portfolios_daily.parquet"))
+    ff_25["date"] = pd.to_datetime(ff_25["date"])
+
+    return df.merge(ff_25, on="date", how="left")
 
 def load_ibes_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
     ibes = pd.read_parquet(get_latest_file(path / "ibes_sue.parquet"))
@@ -229,6 +256,8 @@ def build_panel(
     df = load_gic(df, download_dir)
     df = load_fama_french_returns_data(df, download_dir)
     df = load_fama_french_me_breakpoints(df, download_dir)
+    df = load_fama_french_bm_breakpoints(df, download_dir)
+    df = load_fama_french_25_portfolios(df, download_dir)
     df = load_ibes_data(df, preprocess_dir)
     df = load_ibes_analyst_coverage_data(df, preprocess_dir)
     df = load_vix_data(df, download_dir)
