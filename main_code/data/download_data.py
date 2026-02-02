@@ -18,6 +18,8 @@ from .download import (
     get_crsp_monthly,
     get_ff5_factors,
     get_ff5_factors_monthly,
+    get_ff_25_size_bm_portfolios_daily,
+    get_ff_bm_bp,
     get_ff_size_bp,
     get_ff_umd_factor_monthly,
     get_ibes_actuals,
@@ -92,6 +94,11 @@ def download_files(
             "download_func": get_ff_size_bp,
         },
         {
+            "file": cache_dir / "ff_bm_breakpoints.parquet",
+            "name": "Fama-French B/M Breakpoints",
+            "download_func": get_ff_bm_bp,
+        },
+        {
             "file": cache_dir / "ff5_daily.parquet",
             "name": "Fama-French 5 Factors Daily",
             "download_func": get_ff5_factors,
@@ -105,6 +112,11 @@ def download_files(
             "file": cache_dir / "ff_umd_monthly.parquet",
             "name": "Fama-French UMD Factor Monthly",
             "download_func": get_ff_umd_factor_monthly,
+        },
+        {
+            "file": cache_dir / "ff_25_size_bm_portfolios_daily.parquet",
+            "name": "Fama-French 25 Size/BM Portfolios Daily",
+            "download_func": get_ff_25_size_bm_portfolios_daily,
         },
         # Yahoo Finance tasks
         {

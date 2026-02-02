@@ -9,8 +9,17 @@ import pandas as pd
 from dotenv import load_dotenv
 from omegaconf import DictConfig
 
-from main_code.data import build_panel, compute_earning_surprises, download_files
-from main_code.figures import plot_event_study_earnings, plot_n_earnings_per_year, plot_n_stocks_per_year
+from main_code.data import (
+    build_event_earnings_data,
+    build_panel,
+    compute_earning_surprises,
+    download_files,
+)
+from main_code.figures import (
+    plot_event_study_earnings,
+    plot_n_earnings_per_year,
+    plot_n_stocks_per_year,
+)
 from main_code.tables import create_ea_regression_table, oos_regression_example
 from main_code.utils import configure_pyplot, get_latest_file, timestamp_file
 
@@ -90,6 +99,7 @@ def my_app(cfg: DictConfig):
     fred_api_key, wrds_username, wrds_password = get_credentials()
 
     panel_path = clean_dir / "panel_data.parquet"
+    event_path = clean_dir / "event_earnings_data.parquet"
 
     # download files
     if cfg.data.download:
@@ -132,6 +142,25 @@ def my_app(cfg: DictConfig):
     else:
         panel = None
 
+    if cfg.tasks.build_event_data:
+        if panel is None:
+            raise ValueError("Panel data is required to build event earnings data")
+
+        logging.info("Building event earnings data...")
+        event_data = build_event_earnings_data(panel)
+
+        if cfg.tasks.save_event_data:
+            # save event earnings data
+            event_data.to_parquet(
+                timestamp_file(event_path), index=False, engine="pyarrow"
+            )
+            logging.info(f"Event earnings data saved to {event_path}")
+
+    elif cfg.tasks.load_event_data:
+        # load existing event earnings data
+        event_data = pd.read_parquet(get_latest_file(event_path))
+        logging.info(f"Loaded existing event earnings data from {event_path}")
+
     # Figure (requires panel)
     if cfg.figures.n_stocks_per_year:
         if panel is None:
@@ -160,7 +189,9 @@ def my_app(cfg: DictConfig):
 
     # OOS regression (uses download_cache, no panel required)
     if cfg.tables.oos_exmkt_vrp:
-        logging.info("Creating OOS regression tables: Forecasting excess market returns using VRP...")
+        logging.info(
+            "Creating OOS regression tables: Forecasting excess market returns using VRP..."
+        )
         oos_regression_example(download_dir, tab_dir, fig_dir)
 
     logging.info(f"Complete. Total runtime: {time.time() - start_time:.2f} seconds")

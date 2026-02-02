@@ -10,7 +10,7 @@ from ..utils import get_latest_file
 load_dotenv()
 
 
-CRSP_START_DATE = "2008-01-01"
+CRSP_START_DATE = "2007-01-01"
 CRSP_END_DATE = "2024-12-31"
 
 
@@ -19,6 +19,7 @@ def load_crsp_file(path: Path) -> pd.DataFrame:
     crsp = pd.read_parquet(get_latest_file(path / "crsp_daily.parquet"))
     crsp = crsp[crsp["date"] >= CRSP_START_DATE]  # filter for dates after 2007-01-01
     crsp["year_month"] = crsp["date"].dt.to_period("M")
+    crsp["year"] = crsp["date"].dt.year
     crsp = crsp.rename(columns={"ncusip": "cusip"})
 
     # merge on permno and select only the dates where the link is valid
@@ -56,9 +57,46 @@ def load_fama_french_me_breakpoints(df: pd.DataFrame, path: Path) -> pd.DataFram
         }
     )
 
-    ff_me["year_month"] = ff_me["date"].dt.to_period("M")
+    ff_me["year_month_merge"] = ff_me["date"].dt.to_period("M")
 
-    return df.merge(ff_me.drop(columns="date"), on=["year_month"], how="left")
+    df["year_month_merge"] = df["year_month"] - pd.offsets.MonthEnd(1)
+
+    return df.merge(ff_me.drop(columns="date"), on=["year_month_merge"], how="left")
+
+
+def load_fama_french_bm_breakpoints(df: pd.DataFrame, path: Path) -> pd.DataFrame:
+    ff_bm = pd.read_parquet(get_latest_file(path / "ff_bm_breakpoints.parquet"))
+    # keep only the 30th and 70th percentile cuts
+    ff_bm = ff_bm[["date", "bm_bp4", "bm_bp8", "bm_bp12", "bm_bp16"]].rename(
+        columns={
+            "bm_bp4": "ff_bm_20",
+            "bm_bp8": "ff_bm_40",
+            "bm_bp12": "ff_bm_60",
+            "bm_bp16": "ff_bm_80",
+        }
+    )
+
+    ff_bm["year"] = ff_bm["date"].dt.year
+
+    ff_bm["year_merge"] = np.where(
+        ff_bm["date"].dt.month < 7, ff_bm["year"] - 1, ff_bm["year"]
+    )
+
+    return df.merge(
+        ff_bm.drop(columns=["date", "year"]),
+        left_on=["year"],
+        right_on=["year_merge"],
+        how="left",
+    )
+
+
+def load_fama_french_25_portfolios(df: pd.DataFrame, path: Path) -> pd.DataFrame:
+    ff_25 = pd.read_parquet(
+        get_latest_file(path / "ff_25_size_bm_portfolios_daily.parquet")
+    )
+    ff_25["date"] = pd.to_datetime(ff_25["date"])
+
+    return df.merge(ff_25, on="date", how="left")
 
 
 def load_ibes_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
@@ -145,6 +183,37 @@ def assign_mcap_breakpoints(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def assign_bm_breakpoints(df: pd.DataFrame) -> pd.DataFrame:
+    # assign the bm quintiles based on the ff_bm_20, ff_bm_40, ff_bm_60, ff_bm_80
+    df["bm_qnt"] = np.nan
+    df.loc[df["bm_ratio"] < df["ff_bm_20"], "bm_qnt"] = 0
+    df.loc[
+        (df["bm_ratio"] >= df["ff_bm_20"]) & (df["bm_ratio"] < df["ff_bm_40"]),
+        "bm_qnt",
+    ] = 1
+    df.loc[
+        (df["bm_ratio"] >= df["ff_bm_40"]) & (df["bm_ratio"] < df["ff_bm_60"]),
+        "bm_qnt",
+    ] = 2
+    df.loc[
+        (df["bm_ratio"] >= df["ff_bm_60"]) & (df["bm_ratio"] < df["ff_bm_80"]),
+        "bm_qnt",
+    ] = 3
+
+    df.loc[df["bm_ratio"] >= df["ff_bm_80"], "bm_qnt"] = 4
+    # drop the bm_bp columns
+    df = df.drop(
+        columns=[
+            "ff_bm_20",
+            "ff_bm_40",
+            "ff_bm_60",
+            "ff_bm_80",
+        ]
+    )
+
+    return df
+
+
 def load_gic(df, path: Path) -> pd.DataFrame:
     """
     Loads the GIC dataset from compustat.
@@ -157,6 +226,36 @@ def load_gic(df, path: Path) -> pd.DataFrame:
     df = df[df["date"].between(df["indfrom"], df["indthru"])]
 
     return df.drop(columns=["indfrom", "indthru"])
+
+
+def load_quarterly_compustat_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
+    compu = pd.read_parquet(get_latest_file(path / "compustat_quarterly.parquet"))
+    # compute book to market ratio
+    compu["market_value"] = (
+        compu["prccq"] * compu["cshprq"]
+        + compu["dlcq"]
+        + compu["dlttq"]
+        + compu["pstkq"]
+        - compu["txditcq"]
+    )
+    compu["bm_ratio"] = compu["atq"] / compu["market_value"]
+
+    compu["year_quarter"] = compu["datadate"].dt.to_period("Q")
+
+    df["year_quarter"] = df["date"].dt.to_period("Q")
+
+    compu = compu[["gvkey", "year_quarter", "bm_ratio"]]
+    compu = compu[compu["bm_ratio"].notna()]
+    compu = compu.drop_duplicates(subset=["gvkey", "year_quarter"])
+
+    # merge on gvkey and nearest date prior to crsp date
+    df = df.merge(
+        compu,
+        on=["gvkey", "year_quarter"],
+        how="left",
+    )
+
+    return df
 
 
 def load_vix_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
@@ -190,6 +289,7 @@ def clean_panel_data(df: pd.DataFrame, path: Path) -> None:
     df["mcap"] = df["prc"] * df["shrout"] * 1000
     df["ln_mcap"] = np.log(df["mcap"])
     df = assign_mcap_breakpoints(df)
+    df = assign_bm_breakpoints(df)
 
     # fillna for earnings announcement
     df["ea"] = df["ea"].fillna(0)
@@ -197,19 +297,25 @@ def clean_panel_data(df: pd.DataFrame, path: Path) -> None:
     # keep stocks with gsector
     df = df[df["gsector"].notna()]
 
-    # Add dummy for monday to friday
-    df["day_mon"] = (df["date"].dt.dayofweek == 0).astype(int)
-    df["day_tue"] = (df["date"].dt.dayofweek == 1).astype(int)
-    df["day_wed"] = (df["date"].dt.dayofweek == 2).astype(int)
-    df["day_thu"] = (df["date"].dt.dayofweek == 3).astype(int)
-    df["day_fri"] = (df["date"].dt.dayofweek == 4).astype(int)
-
     # remove weekends from df
     df = df[df["date"].dt.dayofweek < 5]
 
     # by permno, compute cumulative returns over the past 5 days
     df = df.sort_values(["permno", "date"])
     df["ln_ret"] = np.log(1 + df["ret"])
+
+    # using column bm_qnt and mcap_qnt, create a new column that retrieves the value from the columns ff_size_bm
+    df["ff_port"] = np.nan
+
+    for i in range(1, 6):
+        for j in range(1, 6):
+            col_name = f"ff_size{i}_bm{j}"
+            # minus 1 because the quintiles are from 0 to 4
+            df["ff_port"] = np.where(
+                (df["bm_qnt"] == j - 1) & (df["mcap_qnt"] == i - 1),
+                df[col_name],
+                df["ff_port"],
+            )
 
     return df
 
@@ -227,8 +333,11 @@ def build_panel(
 
     df = load_crsp_file(download_dir)
     df = load_gic(df, download_dir)
+    df = load_quarterly_compustat_data(df, download_dir)
     df = load_fama_french_returns_data(df, download_dir)
     df = load_fama_french_me_breakpoints(df, download_dir)
+    df = load_fama_french_bm_breakpoints(df, download_dir)
+    df = load_fama_french_25_portfolios(df, download_dir)
     df = load_ibes_data(df, preprocess_dir)
     df = load_ibes_analyst_coverage_data(df, preprocess_dir)
     df = load_vix_data(df, download_dir)
