@@ -199,14 +199,3 @@ def my_app(cfg: DictConfig):
 
 if __name__ == "__main__":
     my_app()
-    if cfg.tables.oos_exmkt_vrp:
-        logging.info(
-            "Creating OOS regression tables: Forecasting excess market returns using VRP..."
-        )
-        oos_regression_example(download_dir, tab_dir, fig_dir)
-
-    logging.info(f"Complete. Total runtime: {time.time() - start_time:.2f} seconds")
-
-
-if __name__ == "__main__":
-    my_app()
