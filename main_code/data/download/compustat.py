@@ -8,13 +8,13 @@ def get_compustat_quarterly(
     END_DATE: str = "12/31/2024",
 ):
     """
-    Retrieve quarterly data from Compustat.s
+    Retrieve quarterly data from Compustat
     """
 
     # retrieve data
     query = f"""
-                                select gvkey, fyearq, fqtr, conm, datadate, rdq, epsfxq, epspxq, cshoq, prccq, 
-                                ajexq, spiq, cshprq, cshfdq, saleq, atq, fyr, ffoq, fdateq, datafqtr, cshoq*prccq as mcap  
+                                select gvkey, fyearq, fqtr, conm, datadate, rdq, epsfxq, epspxq, cshoq, prccq, dlcq, dlttq, pstkq, txditcq,
+                                ajexq, spiq, cshprq, cshfdq, saleq, atq, fyr, ffoq, fdateq, datafqtr
                                 from comp.fundq 
                                 where consol='C' and popsrc='D' and indfmt='INDL' and datafmt='STD'
                                 and datadate between '{START_DATE}' and '{END_DATE}' 

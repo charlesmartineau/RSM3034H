@@ -6,7 +6,7 @@ import wrds
 def get_crsp_daily(
     wrds_username: str,
     wrds_password: str,
-    CRSP_START_DATE="20070101",
+    CRSP_START_DATE="20000101",
     CRSP_END_DATE="20241231",
 ) -> pd.DataFrame:
     """
@@ -49,7 +49,7 @@ def get_crsp_daily(
 def get_crsp_monthly(
     wrds_username: str,
     wrds_password: str,
-    CRSP_START_DATE="20070101",
+    CRSP_START_DATE="20000101",
     CRSP_END_DATE="20241231",
 ) -> pd.DataFrame:
     """

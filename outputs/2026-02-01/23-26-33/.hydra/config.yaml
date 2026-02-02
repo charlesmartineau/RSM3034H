@@ -3,31 +3,25 @@ matplotlib:
   font:
     family: serif
     sans_serif:
-      - Helvetica
+    - Helvetica
     serif:
-      - "Computer Modern Roman"
-
+    - Computer Modern Roman
 data:
   download: false
   ignore_download_cache: false
-
 preprocess:
   compute_earning_surprises: false
-
 tasks:
   build_panel: false
   save_panel: false
   load_panel: true
-  # earnings event file format panel
   build_event_data: true
   save_event_data: true
   load_event_data: false
-
 figures:
   n_stocks_per_year: false
   n_earnings_per_year: false
   event_study_earnings: false
-
 tables:
   ea_regression: false
   oos_exmkt_vrp: false
