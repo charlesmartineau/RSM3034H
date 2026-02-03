@@ -39,6 +39,7 @@ def build_event_earnings_data(panel: pd.DataFrame) -> None:
         permno = event["permno"]
         ea_row = event["ea_row"]
         sue_qnt = event["sue_qnt"]
+        sue = event["sue"]
         ea_date = event["ea_date"]
         mcap = event["mcap"]
         mcap_qnt = event["mcap_qnt"]
@@ -74,6 +75,7 @@ def build_event_earnings_data(panel: pd.DataFrame) -> None:
         window_data["mcap_qnt"] = mcap_qnt
         window_data["gsector"] = gsector
         window_data["mcap"] = mcap
+        window_data["sue"] = sue
 
         event_data.append(
             window_data[
@@ -92,6 +94,7 @@ def build_event_earnings_data(panel: pd.DataFrame) -> None:
                     "cma",
                     "rf",
                     "ff_port",
+                    "sue",
                     "sue_qnt",
                     "mcap",
                     "mcap_qnt",
