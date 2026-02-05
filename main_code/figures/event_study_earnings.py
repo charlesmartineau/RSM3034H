@@ -17,15 +17,19 @@ def plot_event_study_earnings(event_df: pd.DataFrame, fig_dir: Path) -> None:
     fig_dir : Path
         Directory to save the figures
     """
-    
-    event_df = event_df[event_df['date'].dt.year>=2020]
-    event_df['gret'] = 1 + event_df['ret']
-    event_df['gmkt'] = 1 + event_df['mkt']
-    event_df['gff_port'] = 1 + event_df['ff_port']
-    event_df['cumret'] = event_df.groupby(['permno', 'ea_date'])['gret'].cumprod()
-    event_df['cum_mkt'] = event_df.groupby(['permno', 'ea_date'])['gmkt'].cumprod()
-    event_df['cum_ff_port'] = event_df.groupby(['permno', 'ea_date'])['gff_port'].cumprod()
-    event_df['bhar'] = event_df['cumret'] - event_df['cum_ff_port']
+
+    event_df = event_df[event_df["date"].dt.year >= 2010]
+    # event_df = event_df[event_df["event_t"] >= 1]
+
+    event_df["gret"] = 1 + event_df["ret"]
+    event_df["gmkt"] = 1 + event_df["mkt"]
+    event_df["gff_port"] = 1 + event_df["ff_port"]
+    event_df["cumret"] = event_df.groupby(["permno", "ea_date"])["gret"].cumprod()
+    event_df["cum_mkt"] = event_df.groupby(["permno", "ea_date"])["gmkt"].cumprod()
+    event_df["cum_ff_port"] = event_df.groupby(["permno", "ea_date"])[
+        "gff_port"
+    ].cumprod()
+    event_df["bhar"] = event_df["cumret"] - event_df["cum_ff_port"]
 
     # Plot 1: Average BHAR for small cap (mcap_qnt == 0)
     avg_bhar_small = (
@@ -153,7 +157,6 @@ def plot_event_study_earnings(event_df: pd.DataFrame, fig_dir: Path) -> None:
     plt.close(fig3)
     print(f"Figure saved to {fig_dir / 'event_study_bhar_by_surprise_quintile.png'}")
 
-
     # Plot 3: BHAR by earnings surprise quintile with 95% CI (large cap)
 
     bhar_by_quintile = (
@@ -206,4 +209,6 @@ def plot_event_study_earnings(event_df: pd.DataFrame, fig_dir: Path) -> None:
         bbox_inches="tight",
     )
     plt.close(fig3)
-    print(f"Figure saved to {fig_dir / 'event_study_bhar_by_surprise_quintile_large.png'}")
+    print(
+        f"Figure saved to {fig_dir / 'event_study_bhar_by_surprise_quintile_large.png'}"
+    )
