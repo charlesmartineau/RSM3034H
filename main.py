@@ -160,6 +160,8 @@ def my_app(cfg: DictConfig):
         # load existing event earnings data
         event_data = pd.read_parquet(get_latest_file(event_path))
         logging.info(f"Loaded existing event earnings data from {event_path}")
+    else:
+        event_data = None
 
     # Figure (requires panel)
     if cfg.figures.n_stocks_per_year:
@@ -175,10 +177,10 @@ def my_app(cfg: DictConfig):
         plot_n_earnings_per_year(panel, fig_dir)
 
     if cfg.figures.event_study_earnings:
-        if panel is None:
-            raise ValueError("Panel data required for event_study_earnings figure")
+        if event_data is None:
+            raise ValueError("event data required for event_study_earnings figure")
         logging.info("Creating figure: Event study around earnings announcements...")
-        plot_event_study_earnings(panel, fig_dir)
+        plot_event_study_earnings(event_data, fig_dir)
 
     # Regression (requires panel)
     if cfg.tables.ea_regression:

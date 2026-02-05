@@ -302,17 +302,14 @@ See in Github, the function `plot_event_study_earnings.py` that I use to plot ev
 
 ---
 
-## Average returns around earnings - Full sample stocks 2020-2024
+## PEAD - Large sample stocks 2020-2024
 
-![](figures/avg_bhar_around_earnings.png){fig-align="center"}
+![](figures/event_study_bhar_by_surprise_quintile_large.png){fig-align="center"}
 
-## Average returns around earnings - Large sample stocks 2020-2024
+## PEAD - samll sample stocks 2020-2024
 
-![](figures/avg_bhar_around_earnings_large.png){fig-align="center"}
+![](figures/event_study_bhar_by_surprise_quintile.png){fig-align="center"}
 
-## Average returns around earnings - Small sample stocks 2020-2024
-
-![](figures/avg_bhar_around_earnings_small.png){fig-align="center"}
 
 ---
 
