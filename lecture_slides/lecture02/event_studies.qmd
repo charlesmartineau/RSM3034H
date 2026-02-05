@@ -304,11 +304,11 @@ See in Github, the function `plot_event_study_earnings.py` that I use to plot ev
 
 ## PEAD - Large sample stocks 2020-2024
 
-![](figures/event_study_bhar_by_surprise_quintile_large.png){fig-align="center"}
+![](Figures/event_study_bhar_by_surprise_quintile_large.png){fig-align="center"}
 
-## PEAD - samll sample stocks 2020-2024
+## PEAD - Small sample stocks 2020-2024
 
-![](figures/event_study_bhar_by_surprise_quintile.png){fig-align="center"}
+![](Figures/event_study_bhar_by_surprise_quintile.png){fig-align="center"}
 
 
 ---
