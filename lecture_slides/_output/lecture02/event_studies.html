@@ -702,7 +702,7 @@ Ret_{t\rightarrow T} = \alpha+\beta News_t + \varepsilon_t
 <h2>Replicating <span class="citation" data-cites="li2015analyst">Li et al. (<a href="#/reference" role="doc-biblioref" onclick="">2015</a>)</span></h2>
 
 <img data-src="Figures/martineau_analyst.png" class="quarto-figure quarto-figure-center r-stretch"><ul>
-<li>Minutes since announcement: Since anlayst coverage announcement.</li>
+<li>Minutes since announcement == Since analyst coverage announcement.</li>
 </ul>
 </section>
 <section class="slide level2">
@@ -717,7 +717,11 @@ Ret_{t\rightarrow T} = \alpha+\beta News_t + \varepsilon_t
 <li>Prices incorporate firm and macro news quickly.</li>
 <li>The mechanism: through adjustment in quotes and not through the arrival of trades.</li>
 <li>Caveat: so far, most studies focus on hard and not soft news.</li>
-<li>Type of soft news: Sentiment from press releases, conference calls, etc.</li>
+<li>Type of soft news: Sentiment from press releases, conference calls, etc.
+<ul>
+<li>Capture sentiment using Loughrnan and McDonald (2011) dictionary or ML techniques (e.g., BERT, MNIR).</li>
+<li>Always be careful with look-ahead bias when using ML techniques (or even changes in dictionaries over time).</li>
+</ul></li>
 </ul>
 </section>
 <section class="slide level2">
@@ -841,17 +845,28 @@ Ret_{t\rightarrow T} = \alpha+\beta News_t + \varepsilon_t
 <section id="characteristic-based-benchmark-returns-and-corporate-events" class="slide level2">
 <h2>Characteristic-Based Benchmark Returns and Corporate Events</h2>
 <p>In a recent paper, <a href="https://academic.oup.com/rfs/article-abstract/32/1/75/4962208">Bessembinder, Hao, and Zhang (2018)</a> show that using characteristic-based benchmark returns significantly reduces the magnitude and statistical significance of abnormal returns around corporate events.</p>
+<ul>
+<li>Dividend initiations, share repurchases, seasoned equity offerings, and mergers and acquisitions, stock splits, IPO, credit downgrades, and credit upgrades.</li>
+</ul>
 </section>
 <section id="characteristic-based-benchmark-returns-and-corporate-events-1" class="slide level2">
 <h2>Characteristic-Based Benchmark Returns and Corporate Events</h2>
 
-<img data-src="figures/hank1.png" class="quarto-figure quarto-figure-center r-stretch" width="200"></section>
+<img data-src="figures/hank_return.png" class="quarto-figure quarto-figure-center r-stretch" width="200"></section>
 <section id="characteristic-based-benchmark-returns-and-corporate-events-2" class="slide level2">
+<h2>Characteristic-Based Benchmark Returns and Corporate Events</h2>
+
+<img data-src="figures/hank_return2.png" class="quarto-figure quarto-figure-center r-stretch" width="200"></section>
+<section id="characteristic-based-benchmark-returns-and-corporate-events-3" class="slide level2">
+<h2>Characteristic-Based Benchmark Returns and Corporate Events</h2>
+
+<img data-src="figures/hank1.png" class="quarto-figure quarto-figure-center r-stretch" width="200"></section>
+<section id="characteristic-based-benchmark-returns-and-corporate-events-4" class="slide level2">
 <h2>Characteristic-Based Benchmark Returns and Corporate Events</h2>
 <p>What the authors suggest is that using characteristic-based benchmark returns helps better control for risk factors that are not captured by traditional factor models.</p>
 <p>Methodology:</p>
 <ol type="1">
-<li><p>Run the folloowing regression each month on all stocks:</p>
+<li><p>Run the following regression each month on all stocks:</p>
 <p><span class="math display">\begin{equation*}
 r_{i,t} = \alpha_t + \beta_{t} X_{i,t-1} + \varepsilon_{i,t}
 \end{equation*}</span></p></li>
@@ -863,7 +878,7 @@ E[R_{i,t}|I_{i,t-1}] = \frac{1}{12}\sum_{k=1}^{12} \hat{\alpha}_{t-k} + \sum_{j=
 <li><p>In the second stage, regress using all stocks, the difference between realized and predicted returns on event dummies.</p></li>
 </ol>
 </section>
-<section id="characteristic-based-benchmark-returns-and-corporate-events-3" class="slide level2">
+<section id="characteristic-based-benchmark-returns-and-corporate-events-5" class="slide level2">
 <h2>Characteristic-Based Benchmark Returns and Corporate Events</h2>
 
 <img data-src="figures/hank_result.png" class="quarto-figure quarto-figure-center r-stretch" width="200"></section>

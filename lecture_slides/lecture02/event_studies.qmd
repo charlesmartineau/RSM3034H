@@ -388,7 +388,7 @@ Because spreads narrow after news events, you can't compute returns for ask and 
 
 ![](Figures/martineau_analyst.png){fig-align="center"}
 
-- Minutes since announcement: Since anlayst coverage announcement.
+- Minutes since announcement == Since analyst coverage announcement.
 
 ---
 
@@ -405,6 +405,9 @@ Because spreads narrow after news events, you can't compute returns for ask and 
 - The mechanism: through adjustment in quotes and not through the arrival of trades.
 - Caveat: so far, most studies focus on hard and not soft news. 
 - Type of soft news: Sentiment from press releases, conference calls, etc.
+  - Capture sentiment using Loughrnan and McDonald (2011) dictionary or ML techniques (e.g., BERT, MNIR).
+  - Always be careful with look-ahead bias when using ML techniques (or even changes in dictionaries over time).
+  
   
 
 ---
@@ -554,6 +557,16 @@ BHAR for high vs low attention (matched) stocks (large vs small)
 
 In a recent paper, [Bessembinder, Hao, and Zhang (2018)](https://academic.oup.com/rfs/article-abstract/32/1/75/4962208) show that using characteristic-based benchmark returns significantly reduces the magnitude and statistical significance of abnormal returns around corporate events.
 
+- Dividend initiations, share repurchases, seasoned equity offerings, and mergers and acquisitions, stock splits, IPO, credit downgrades, and credit upgrades.
+
+## Characteristic-Based Benchmark Returns and Corporate Events
+
+![](figures/hank_return.png){width="200px" fig-align="center"}
+
+## Characteristic-Based Benchmark Returns and Corporate Events
+
+![](figures/hank_return2.png){width="200px" fig-align="center"}
+
 ## Characteristic-Based Benchmark Returns and Corporate Events
 
 ![](figures/hank1.png){width="200px" fig-align="center"}
@@ -564,7 +577,7 @@ What the authors suggest is that using characteristic-based benchmark returns he
 
 Methodology:
 
-1. Run the folloowing regression each month on all stocks:
+1. Run the following regression each month on all stocks:
    
    \begin{equation*}
    r_{i,t} = \alpha_t + \beta_{t} X_{i,t-1} + \varepsilon_{i,t}
