@@ -558,15 +558,15 @@ In a recent paper, [Bessembinder, Hao, and Zhang (2018)](https://academic.oup.co
 
 ## Characteristic-Based Benchmark Returns and Corporate Events
 
-![](figures/hank_return.png){width="200px" fig-align="center"}
+![](Figures/hank_return.png){width="200px" fig-align="center"}
 
 ## Characteristic-Based Benchmark Returns and Corporate Events
 
-![](figures/hank_return2.png){width="200px" fig-align="center"}
+![](Figures/hank_return2.png){width="200px" fig-align="center"}
 
 ## Characteristic-Based Benchmark Returns and Corporate Events
 
-![](figures/hank1.png){width="200px" fig-align="center"}
+![](Figures/hank1.png){width="200px" fig-align="center"}
 
 ## Characteristic-Based Benchmark Returns and Corporate Events
 
@@ -591,7 +591,7 @@ Methodology:
 
 ## Characteristic-Based Benchmark Returns and Corporate Events
 
-![](figures/hank_result.png){width="200px" fig-align="center"}
+![](Figures/hank_result.png){width="200px" fig-align="center"}
 
 
 ## Reference
