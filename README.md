@@ -65,25 +65,65 @@ uv run main.py
 
 Make sure to add this file [iclink](https://www.dropbox.com/scl/fi/katqy80qbake4rfohxv53/iclink.parquet?rlkey=21p75far2r27rz57gew5cuwx1&dl=0) to your `DATADIR/restricted/` directory before running the code.
 
-**Configuration Options** (edit [conf/config.yaml](conf/config.yaml)):
+## Configuration
 
-- **Data Download:**
-  - `data.download`: Download data from WRDS and FRED (default: `false`)
-  - `data.ignore_download_cache`: Force re-download even if cached (default: `false`)
+All pipeline behavior is controlled by [conf/config.yaml](conf/config.yaml). Each option is a boolean flag (`true`/`false`) unless noted otherwise.
 
-- **Preprocessing:**
-  - `preprocess.compute_earning_surprises`: Compute IBES earnings surprises (default: `false`)
+### `logging_level`
 
-- **Tasks:**
-  - `tasks.build_panel`: Build the panel dataset from raw data (default: `false`)
-  - `tasks.save_panel`: Save the built panel to disk (default: `false`)
-  - `tasks.load_panel`: Load existing panel data (default: `true`)
+Integer log level passed to Python's `logging` module (default: `20` = INFO). Set to `10` for DEBUG or `30` for WARNING.
 
-- **Figures:**
-  - `figures.n_stocks_per_year`: Generate plot showing number of stocks per year (default: `false`)
+### `matplotlib`
 
-- **Tables:**
-  - `tables.ea_regression`: Run earnings announcement regression analysis (default: `true`)
+Controls the default font used in all figures.
+
+- `font.family`: Font family (`serif` or `sans-serif`).
+- `font.serif`: List of serif fonts to try in order (default: `Computer Modern Roman`).
+- `font.sans_serif`: List of sans-serif fonts to try in order (default: `Helvetica`).
+
+### `data`
+
+Controls data downloading from external sources (WRDS, FRED).
+
+- `download`: Download raw data from WRDS and FRED into `DATADIR/download_cache/`. Set to `true` on first run or when refreshing data. (default: `false`)
+- `ignore_download_cache`: Force re-download even if cached files already exist. Useful when upstream data has been updated. (default: `false`)
+
+### `preprocess`
+
+Controls preprocessing steps that transform raw downloads into intermediate files.
+
+- `compute_earning_surprises`: Compute IBES earnings surprise (SUE) measure from raw IBES data and save to `DATADIR/preprocess_cache/ibes_sue.parquet`. Requires `data.download` to have run first. (default: `false`)
+
+### `tasks`
+
+Controls construction and loading of the main datasets. The pipeline supports two datasets: the **panel** (stock-month level) and the **event** dataset (earnings announcement windows).
+
+**Panel data:**
+
+- `build_panel`: Build the stock-month panel from downloaded and preprocessed files. (default: `false`)
+- `save_panel`: Save the built panel to `DATADIR/clean/panel_data.parquet`. Only takes effect when `build_panel` is `true`. (default: `false`)
+- `load_panel`: Load the most recent existing panel from disk instead of rebuilding it. Mutually exclusive with `build_panel`. (default: `false`)
+
+**Event data:**
+
+- `build_event_data`: Construct the earnings event dataset from the panel. Requires panel data to be available (either built or loaded). (default: `false`)
+- `save_event_data`: Save the built event dataset to `DATADIR/clean/event_earnings_data.parquet`. Only takes effect when `build_event_data` is `true`. (default: `false`)
+- `load_event_data`: Load the most recent existing event dataset from disk instead of rebuilding it. Mutually exclusive with `build_event_data`. (default: `true`)
+
+### `figures`
+
+Controls which figures are generated and saved to `FIGDIR`.
+
+- `n_stocks_per_year`: Plot the number of stocks in the panel per calendar year. Requires panel data. (default: `false`)
+- `n_earnings_per_year`: Plot the number of earnings announcements per calendar year. Requires panel data. (default: `false`)
+- `event_study_earnings`: Plot the cumulative abnormal returns around earnings announcement dates. Requires event data. (default: `true`)
+
+### `tables`
+
+Controls which regression tables are generated and saved to `TBLDIR`.
+
+- `ea_regression`: Run earnings announcement regressions (EA effect on excess returns) and export a LaTeX table. Requires panel data. (default: `false`)
+- `oos_exmkt_vrp`: Run out-of-sample regression tables forecasting excess market returns using the variance risk premium. Uses data from `download_cache/` directly; does not require panel data. (default: `false`)
 
 ## Directory Structure
 
@@ -100,14 +140,18 @@ Make sure to add this file [iclink](https://www.dropbox.com/scl/fi/katqy80qbake4
 
 - [main_code/](main_code/) - Main Python code directory
   - [data/](main_code/data/) - Data processing and loading utilities
-    - [download/](main_code/data/download/) - Data download modules (CRSP, Compustat, IBES, Fama-French, etc.)
+    - [download/](main_code/data/download/) - Data download modules (CRSP, Compustat, IBES, Fama-French, RavenPack, VRP, Yahoo Finance)
     - [earnings/](main_code/data/earnings/) - Earnings-related data processing (IBES surprises, ICLINK)
     - [panel_data.py](main_code/data/panel_data.py) - Panel dataset construction
+    - [event_data.py](main_code/data/event_data.py) - Earnings event dataset construction
     - [download_data.py](main_code/data/download_data.py) - Main data download orchestration
   - [figures/](main_code/figures/) - Figure generation code
     - [n_stocks_per_year.py](main_code/figures/n_stocks_per_year.py) - Plot number of stocks over time
+    - [n_ea_per_year.py](main_code/figures/n_ea_per_year.py) - Plot number of earnings announcements over time
+    - [event_study_earnings.py](main_code/figures/event_study_earnings.py) - Event study plot around earnings announcements
   - [tables/](main_code/tables/) - Table generation code
     - [ea_regression.py](main_code/tables/ea_regression.py) - Earnings announcement regression tables
+    - [oos_exmkt_vrp.py](main_code/tables/oos_exmkt_vrp.py) - Out-of-sample VRP forecasting regression tables
     - [format.py](main_code/tables/format.py) - Table formatting utilities
   - [utils/](main_code/utils/) - Utility functions
     - [panel_ols_reg.py](main_code/utils/panel_ols_reg.py) - Panel OLS regression utilities
@@ -130,12 +174,11 @@ The data directory (configured via `DATADIR` environment variable) should contai
 
 - `download_cache/` - Cached downloaded files from WRDS and FRED
 - `open/` - Open-access datasets
-- `clean/` - Cleaned and processed datasets (includes `panel_data.parquet`)
-- `restricted/` - Restricted-access datasets
-- `preprocess_cache/` - Preprocessed data files (e.g., earnings surprises)
+- `clean/` - Cleaned and processed datasets (includes `panel_data.parquet` and `event_earnings_data.parquet`)
+- `restricted/` - Restricted-access datasets (place `iclink.parquet` here)
+- `preprocess_cache/` - Preprocessed data files (e.g., `ibes_sue.parquet`)
 
 ### Other
 
 - [logos/](logos/) - University and course branding
 - [main.py](main.py) - Main execution script orchestrating the entire pipeline
-
