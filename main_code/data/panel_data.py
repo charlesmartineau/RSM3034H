@@ -240,18 +240,16 @@ def load_quarterly_compustat_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
     )
     compu["bm_ratio"] = compu["atq"] / compu["market_value"]
 
-    compu["year_quarter"] = compu["datadate"].dt.to_period("Q")
+    compu["year"] = compu["datadate"].dt.year+1
 
-    df["year_quarter"] = df["date"].dt.to_period("Q")
-
-    compu = compu[["gvkey", "year_quarter", "bm_ratio"]]
+    compu = compu[["gvkey", "year", "bm_ratio"]]
     compu = compu[compu["bm_ratio"].notna()]
-    compu = compu.drop_duplicates(subset=["gvkey", "year_quarter"])
+    compu = compu.groupby(['gvkey', 'year']).last().reset_index()
 
     # merge on gvkey and nearest date prior to crsp date
     df = df.merge(
         compu,
-        on=["gvkey", "year_quarter"],
+        on=["gvkey", "year"],
         how="left",
     )
 
