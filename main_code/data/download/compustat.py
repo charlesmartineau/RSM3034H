@@ -26,6 +26,31 @@ def get_compustat_quarterly(
     return fundq
 
 
+def get_compustat_annual(
+    wrds_username: str,
+    wrds_password: str,
+    START_DATE: str = "01/01/1999",
+    END_DATE: str = "12/31/2024",
+):
+    """
+    Retrieve annual data from Compustat
+    """
+
+    # retrieve data
+    query = f"""
+                                select gvkey, fyear, conm, datadate, epsfx, epspx, csho, prcc_c, prcc_f, dlc, dltt, pstk, txditc,
+                                ajex, spi, cshpri, cshfd, sale, at, fyr, ffo, fdate
+                                from comp.funda
+                                where consol='C' and popsrc='D' and indfmt='INDL' and datafmt='STD'
+                                and datadate between '{START_DATE}' and '{END_DATE}'
+                                """
+
+    conn = wrds.Connection(wrds_username=wrds_username, wrds_password=wrds_password)
+    funda = conn.raw_sql(query, date_cols=["datadate", "fdate"])
+    conn.close()
+    return funda
+
+
 def get_compustat_gic_codes(wrds_username: str, wrds_password: str):
     query = """
             select gvkey, gsector, ggroup, gind, gsubind, indfrom, indthru

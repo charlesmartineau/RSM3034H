@@ -11,6 +11,7 @@ from ..utils.files import get_latest_file, timestamp_file
 from .download import (
     get_compustat_gic_codes,
     get_compustat_quarterly,
+    get_compustat_annual,
     get_crsp_cfacshr,
     get_crsp_compu_link_table,
     get_crsp_daily,
@@ -136,6 +137,15 @@ def download_files(
             "name": "Compustat GIC Codes",
             "download_func": partial(
                 get_compustat_gic_codes,
+                wrds_username=wrds_username,
+                wrds_password=wrds_password,
+            ),
+        },
+        {
+            "file": cache_dir / "compustat_annual.parquet",
+            "name": "Compustat Annual data",
+            "download_func": partial(
+                get_compustat_annual,
                 wrds_username=wrds_username,
                 wrds_password=wrds_password,
             ),

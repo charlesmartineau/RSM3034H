@@ -1,4 +1,8 @@
-from .compustat import get_compustat_gic_codes, get_compustat_quarterly
+from .compustat import (
+    get_compustat_annual,
+    get_compustat_gic_codes,
+    get_compustat_quarterly,
+)
 from .crsp import (
     get_crsp_cfacshr,
     get_crsp_compu_link_table,

@@ -233,10 +233,10 @@ def load_quarterly_compustat_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
     # compute book to market ratio
     compu["market_value"] = (
         compu["prccq"] * compu["cshprq"]
-        + compu["dlcq"]
-        + compu["dlttq"]
-        + compu["pstkq"]
-        - compu["txditcq"]
+        + compu["dlcq"].fillna(0)
+        + compu["dlttq"].fillna(0)
+        + compu["pstkq"].fillna(0)
+        - compu["txditcq"].fillna(0)
     )
     compu["bm_ratio"] = compu["atq"] / compu["market_value"]
 
