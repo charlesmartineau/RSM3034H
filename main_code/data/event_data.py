@@ -25,10 +25,11 @@ def build_event_earnings_data(panel: pd.DataFrame) -> None:
 
     # Identify earnings announcement dates
     ea_events = df[df["ea"] == 1][
-        ["permno", "date", "row_num", "sue", "mcap", "mcap_qnt", "gsector"]
+        ["permno", "date", "row_num", "sue", "ret", "mcap", "mcap_qnt", "gsector"]
     ].copy()
     ea_events = ea_events.rename(columns={"date": "ea_date", "row_num": "ea_row"})
     ea_events["sue_qnt"] = pd.qcut(ea_events["sue"], 5, labels=False)
+    ea_events["ann_ret_qnt"] = pd.qcut(ea_events["ret"], 5, labels=False)
 
     ea_events = ea_events[ea_events["ea_date"].dt.year >= 2008]
 
@@ -44,6 +45,8 @@ def build_event_earnings_data(panel: pd.DataFrame) -> None:
         mcap = event["mcap"]
         mcap_qnt = event["mcap_qnt"]
         gsector = event["gsector"]
+        ann_ret = event["ret"]
+        ann_ret_qnt = event["ann_ret_qnt"]
 
         # Get the firm's data
         firm_data = df[df["permno"] == permno].copy()
@@ -76,7 +79,9 @@ def build_event_earnings_data(panel: pd.DataFrame) -> None:
         window_data["gsector"] = gsector
         window_data["mcap"] = mcap
         window_data["sue"] = sue
-
+        window_data["ann_ret"] = ann_ret
+        window_data["ann_ret_qnt"] = ann_ret_qnt
+        
         event_data.append(
             window_data[
                 [
@@ -101,6 +106,8 @@ def build_event_earnings_data(panel: pd.DataFrame) -> None:
                     "gsector",
                     "event_t",
                     "ea_date",
+                    "ann_ret",
+                    "ann_ret_qnt",
                 ]
             ]
         )
