@@ -154,13 +154,13 @@ Evidence that indeed risk and expectation drives announcement date returns.
 
 ### FOMC Press conferences (Boguth et al. (2019)
 
-![](Figures/bgm2.jpg){fig-align="center"}
+![](figures/bgm2.jpg){fig-align="center"}
 
 ---
 
 ### Hu, Pan, Wang, and Zhu (2022)
 
-![](Figures/hu_table.jpg){fig-align="center"}
+![](figures/hu_table.jpg){fig-align="center"}
 
 
 ---
