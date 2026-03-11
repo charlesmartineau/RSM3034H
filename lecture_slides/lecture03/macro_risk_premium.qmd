@@ -125,7 +125,7 @@ This pre-announcement drift is a unresolve puzzle:
 
 ### Also a disconnect with realized volatility
 
-![](Figures/ai_1.jpg){fig-align="center"}
+![](figures/ai_1.jpg){fig-align="center"}
 
 
 ---
@@ -148,7 +148,7 @@ Evidence that indeed risk and expectation drives announcement date returns.
 
 ### FOMC Press conferences
 
-![](Figures/bgm.jpg){fig-align="center"}
+![](figures/bgm.jpg){fig-align="center"}
 
 ---
 
@@ -167,13 +167,13 @@ Evidence that indeed risk and expectation drives announcement date returns.
 
 ### Hu, Pan, Wang, and Zhu (2022)
 
-![](Figures/hu_table2.jpg){fig-align="center"}
+![](figures/hu_table2.jpg){fig-align="center"}
 
 ---
 
 ### Leakage...?
 
-![](Figures/nick_wsj1.jpg){fig-align="center"}
+![](figures/nick_wsj1.jpg){fig-align="center"}
 
 
 ---
@@ -182,7 +182,7 @@ Evidence that indeed risk and expectation drives announcement date returns.
 
 - One central bank to rule them all [(Brusa et al., 2020)](https://academic.oup.com/rof/article/24/2/263/5540330)
 
-![](Figures/brusa.jpg){fig-align="center"}
+![](figures/brusa.jpg){fig-align="center"}
 
 
 ---
@@ -201,13 +201,13 @@ Can investor attention prior to unemployment and FOMC announcement predicts risk
 
 ### Macro announcement premium and attention
 
-![](Figures/fms1.jpg){fig-align="center"}
+![](figures/fms1.jpg){fig-align="center"}
 
 ---
 
 ### Macro announcement premium and attention
 
-![](Figures/fms2.jpg){fig-align="center"}
+![](figures/fms2.jpg){fig-align="center"}
 
 ---
 
@@ -232,7 +232,7 @@ been studied by Chari et al (1988), Ball and Kothari (1991), and Cohen et al (20
 
 ### Earnings premium (Lamont and Frazzini, 2007)
 
-![](Figures/lamont.jpg){fig-align="center"}
+![](figures/lamont.jpg){fig-align="center"}
 
 
 ---
@@ -241,7 +241,7 @@ been studied by Chari et al (1988), Ball and Kothari (1991), and Cohen et al (20
 
 Long-short strategy based on "expected" earnings announcement dates.
 
-![](Figures/barber.jpg){fig-align="center"}
+![](figures/barber.jpg){fig-align="center"}
 
 Argue that firm-specific uncertainty is a key driver of the earnings announcement premium.
 
@@ -258,7 +258,7 @@ Argue that firm-specific uncertainty is a key driver of the earnings announcemen
 
 ### Does beta move with news?: [Patton and Verardo (2012)](https://academic.oup.com/rfs/article-abstract/25/9/2789/1589913)
 
-![](Figures/patton.jpg){fig-align="center"}
+![](figures/patton.jpg){fig-align="center"}
 
 ---
 
@@ -275,17 +275,17 @@ Argue that firm-specific uncertainty is a key driver of the earnings announcemen
 
 - The authors argue that the 2004 Disclosure Regulation, which led to increasingly frequent and more comprehensive filings of material information (Form 8-K), played a role in the disappearance of the earnings premium.
 
-![](Figures/heitz.jpg){fig-align="center"}
+![](figures/heitz.jpg){fig-align="center"}
 
 ---
 
 ### It didn't disappear...
 
-![](Figures/heitz_replication1.jpg){fig-align="center"}
+![](figures/heitz_replication1.jpg){fig-align="center"}
 
 ---
 
 ### It didn't disappear...
 
-![](Figures/heitz_replication2.jpg){fig-align="center"}
+![](figures/heitz_replication2.jpg){fig-align="center"}
 
