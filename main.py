@@ -17,6 +17,7 @@ from main_code.data import (
 )
 from main_code.figures import (
     plot_event_study_earnings,
+    plot_event_study_earnings_ann_ret,
     plot_n_earnings_per_year,
     plot_n_stocks_per_year,
 )
@@ -181,6 +182,12 @@ def my_app(cfg: DictConfig):
             raise ValueError("event data required for event_study_earnings figure")
         logging.info("Creating figure: Event study around earnings announcements...")
         plot_event_study_earnings(event_data, fig_dir)
+        
+    if cfg.figures.event_study_ann_ret:
+        if event_data is None:
+            raise ValueError("event data required for event_study_ann_ret figure")
+        logging.info("Creating figure: Event study by earnings announcement return quintile...")
+        plot_event_study_earnings_ann_ret(event_data, fig_dir)
 
     # Regression (requires panel)
     if cfg.tables.ea_regression:
