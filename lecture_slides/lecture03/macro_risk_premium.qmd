@@ -35,9 +35,6 @@ announcements.
 
 - 1961-2023:  44 days/yr with macro announcements ~71% of the aggregate equity market risk compensation.
 
-- HF-data-based evidence shows that much of this premium is realized within
-hourly windows around announcements, or within a few trading hours prior to the announcements.
-
 
 ---
 
@@ -45,9 +42,12 @@ hourly windows around announcements, or within a few trading hours prior to the 
 
 Presents a challenge to standard asset pricing models. 
 
-- Breeden (1979) consumption AP model: Risk evolves slowly as Brownian motions, and as a result, the risk premium investors receive on the market portfolio will be proportional to the holding period of the asset. 
+- Breeden (1979) consumption AP model: 
+  - Risk evolves slowly as Brownian motions, and as a result, the risk premium investors receive on the market portfolio will be proportional to the holding period of the asset. 
 
-- The data on the macro announcement premium: the risk premium on most trading days is very small and even negligible. Most of the risk premium is realized on a small number of trading days where uncertainty about the macroeconomy is resolved.
+- The data on the macro announcement premium: 
+  - Risk premium on most trading days is very small and even negligible. 
+  - Most of the risk premium is realized on a small number of trading days where uncertainty about the macroeconomy is resolved.
 
 ---
 
@@ -73,7 +73,11 @@ See instead:
 
 ### Savor and Wilson (2013)
 
-Savor and Wilson (2013) examines the announcement premium for Announcements: PPI/CPI (whichever comes first in the month), FOMC, and Employment from 1958-2009.
+Savor and Wilson (2013) examines the announcement premium for Announcements: 
+
+- PPI/CPI (whichever comes first in the month), 
+- FOMC, and 
+- Employment from 1958-2009.
 
 ---
 
@@ -118,8 +122,8 @@ Pre-FOMC announcement drift
 This pre-announcement drift is an unresolved puzzle: 
 
 - There is a disconnect between the time when the returns are earned and when the news is revealed.
-
-- Investors may sell out of their positions ahead of the announcement. A larger share of the market risk would be borne by the specialists and would require a higher rate of return.
+- Investors may sell out of their positions ahead of the announcement. 
+- A larger share of the market risk would be borne by the specialists and would require a higher rate of return.
 
 
 ---
@@ -192,8 +196,10 @@ Evidence that indeed risk and expectation drives announcement date returns.
 Can investor attention prior to unemployment and FOMC announcements predict the risk premium?
 
 - We argue that attention prior to meetings proxy for investor risk aversion.
+  - Important to distinguish between news attention vs sentiment.
   
 - We measure attention using articles published in WSJ and NYT.
+  - We used Factiva but now we can use TDM Studio. 
 
 ---
 
@@ -209,15 +215,6 @@ Can investor attention prior to unemployment and FOMC announcements predict the 
 
 ---
 
-### Noisy FOMC returns
-
-If large premium is realized on FOMC dates, then FOMC returns should be informative about future prices?
-
-- Is this what we observe?
-
-See [Boguth et al 2023](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4131740)
-
---- 
 
 ### Earnings premium
 
