@@ -1,5 +1,5 @@
 ---
-title: "Lecture 2:<br><span style='color:#045282'>Announcement Risk Premium</span>"
+title: "Lecture 3:<br><span style='color:#045282'>Announcement Risk Premium</span>"
 subtitle: "PhD course in Empirical Asset Pricing"
 author: "Charles Martineau"
 institute: "Rotman | [www.charlesmartineau.com](https://www.charlesmartineau.com)"
@@ -8,7 +8,7 @@ bibliography: ../lit.bib
 
 ---
 
-## Announcement risk premium
+### Announcement risk premium
 
 ```{=tex}
 \begin{equation*}
@@ -18,7 +18,7 @@ Ret_{t\rightarrow T} = \alpha+\beta News_t + \varepsilon_t
 
 In event studies, we focus on the $\beta$ coefficient. 
 
-In the announcement premium like, we look at the $\alpha$. Premium type:
+In the announcement premium literature, we look at the $\alpha$. Premium type:
 
 - Macro announcement premium
 - Earnings announcement premium
@@ -64,7 +64,7 @@ See instead:
 
 ---
 
-## Announcement premium stats
+### Announcement premium stats
 
 ![](figures/premium_table.jpg){.absolute width="1000"}
 
@@ -105,6 +105,7 @@ ExRet_{t} = \alpha+\beta Ann_t + Day F.E. + \varepsilon_t
 
 
 ### Lucca and Moench (2015)
+
 Pre-FOMC announcement drift
 
 ![](figures/lm.jpg){.absolute width="800"}
@@ -114,7 +115,7 @@ Pre-FOMC announcement drift
 
 ### Lucca and Moench (2015)
 
-This pre-announcement drift is a unresolve puzzle: 
+This pre-announcement drift is an unresolved puzzle: 
 
 - There is a disconnect between the time when the returns are earned and when the news is revealed.
 
@@ -127,10 +128,7 @@ This pre-announcement drift is a unresolve puzzle:
 
 ![](figures/ai_1.jpg){fig-align="center"}
 
-
 ---
-
-
 
 ### FOMC Press conferences
 
@@ -152,7 +150,7 @@ Evidence that indeed risk and expectation drives announcement date returns.
 
 ---
 
-### FOMC Press conferences (Boguth et al. (2019)
+### FOMC Press conferences (Boguth et al., 2019)
 
 ![](figures/bgm2.jpg){fig-align="center"}
 
@@ -191,7 +189,7 @@ Evidence that indeed risk and expectation drives announcement date returns.
 
 [Fisher et al. (2022)](https://academic.oup.com/rfs/advance-article/doi/10.1093/rfs/hhac011/6535733)
 
-Can investor attention prior to unemployment and FOMC announcement predicts risk premium?
+Can investor attention prior to unemployment and FOMC announcements predict the risk premium?
 
 - We argue that attention prior to meetings proxy for investor risk aversion.
   
