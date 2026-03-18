@@ -1,10 +1,82 @@
 ---
-title: "Lecture 3:<br><span style='color:#045282'>Announcement Risk Premium</span>"
+title: "Lecture 3:<br><span style='color:#045282'>News, Sentiment, and Announcement Risk Premium</span>"
 subtitle: "PhD course in Empirical Asset Pricing"
 author: "Charles Martineau"
 institute: "Rotman | [www.charlesmartineau.com](https://www.charlesmartineau.com)"
 bibliography: ../lit.bib
 
+
+---
+
+### News & Social Media Databases
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**News**
+
+- **TDM Studio** — Newspaper/media archives (ProQuest). Available to all students.
+- **Bloomberg News Terminal** — Real-time and historical news articles. Available through FinHub.
+- **RavenPack** — Structured sentiment scores from news wires and press releases. Available through WRDS.
+:::
+
+::: {.column width="50%"}
+**Social Media**
+
+- **Reddit / Subreddits** — Retail investor discussions (e.g., r/wallstreetbets)
+- **Seeking Alpha** — Crowdsourced analyst articles and comments
+- **StockTwits** — Stock-specific microblogging platform
+- **Twitter Sentiment** — Aggregated tweet sentiment via Bloomberg
+:::
+
+::::
+
+---
+
+### Attention vs. Sentiment: Asset Pricing Implications
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Investor Attention** (news coverage)
+
+- Proxied by number of news articles, abnormal search volume (Google), or media mentions
+- Attention affects *when* prices incorporate information — limits to arbitrage, slow diffusion
+- Key predictions: post-announcement drift, return predictability from neglect
+- Relevant papers: Merton (1987), Barber & Odean (2008), Fang & Peress (2009)
+:::
+
+::: {.column width="50%"}
+**Investor Sentiment** (tone/opinion)
+
+- Proxied by positive/negative language in articles or social media posts
+- Sentiment affects *which direction* prices move — captures noise trader demand or belief disagreement
+- Key predictions: return reversals, mispricing, higher volatility around sentiment spikes
+- Relevant papers: Baker & Wurgler (2006), Tetlock (2007), Garcia (2013)
+:::
+
+::::
+
+Both coexist: a news event increases attention *and* carries a sentiment signal.
+
+---
+
+### Attention as a Proxy for Concern and Uncertainty
+
+News coverage also proxies for **investor concern** and **economic uncertainty** — not just information arrival.
+
+**Theories of endogenous attention** explain why investors rationally choose to pay a cost or exert effort to learn about fundamentals:
+
+- Bansal and Shaliastovich (2011): attention increases with macroeconomic uncertainty
+- Kacperczyk, Van Nieuwerburgh, and Veldkamp (2016): attention increases with (a) economic uncertainty and (b) risk aversion / the price of risk
+
+**Implications for asset pricing:**
+
+- Higher attention $\Rightarrow$ more information acquisition $\Rightarrow$ faster price discovery
+- But attention is *endogenous*: uncertainty drives attention, which in turn affects prices
+- News coverage thus captures both the signal (information) and the demand for that signal (concern)
+
+-> This has implications for the interpretation of announcement risk premia... let's review the evidence on announcement premia first.
 
 ---
 
@@ -283,4 +355,39 @@ Argue that firm-specific uncertainty is a key driver of the earnings announcemen
 ### It didn't disappear...
 
 ![](figures/heitz_replication2.jpg){fig-align="center"}
+
+---
+
+### Media Coverage and the Cross-Section of Returns: [Fang and Peress (2009)](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1540-6261.2009.01493.x)
+
+**Setup:** Do stocks with less media coverage earn lower returns?
+
+- Compare returns of no-coverage vs. high-coverage stocks (1993–2002) from NYT, WSJ, USATODAY, WP.
+
+**Main finding:** Stocks with *no media coverage* earn ~3% higher annual returns than heavily covered stocks, even after controlling for size, value, momentum, and liquidity.
+
+**Interpretation:** Consistent with Merton's (1987) investor recognition hypothesis:
+
+- Media coverage broadens the investor base $\Rightarrow$ more risk sharing $\Rightarrow$ lower required return
+- Neglected stocks must offer a premium to compensate for limited recognition
+
+**Cross-sectional heterogeneity:** The media premium is stronger for small stocks, stocks with high individual ownership, and low analyst following — exactly where investor recognition is most binding.
+
+---
+
+### Social Media and Asset Pricing
+
+**View 1: Wisdom of the crowd**
+
+- Aggregating dispersed opinions from many investors can improve price discovery
+- Social media democratizes information, allowing retail investors to surface fundamental value
+
+**View 2: Coordination of noise traders**
+
+- [Lopez, Martineau and Mondria (2024)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4439793) — *Social Media and the Distortion of Price Revelation*
+- Social media platforms coordinate noise traders, amplifying correlated sentiment shocks
+- This *pushes prices away from fundamentals* rather than toward them
+- Key mechanism: social media does not just aggregate beliefs — it *aligns* them, creating excess comovement and mispricing
+
+**Takeaway:** Whether social media improves or distorts price revelation depends on who is paying attention and whether the signal is fundamental or noise.
 
