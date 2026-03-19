@@ -31,6 +31,8 @@ bibliography: ../lit.bib
 
 ::::
 
+There also macroeconomic news... 
+
 ---
 
 ### Attention vs. Sentiment: Asset Pricing Implications
@@ -40,7 +42,7 @@ bibliography: ../lit.bib
 ::: {.column width="50%"}
 **Investor Attention** (news coverage)
 
-- Proxied by number of news articles, abnormal search volume (Google), or media mentions
+- Proxied by number of news articles, abnormal search volume (Google), Bloomberg attention, or media mentions
 - Attention affects *when* prices incorporate information — limits to arbitrage, slow diffusion
 - Key predictions: post-announcement drift, return predictability from neglect
 - Relevant papers: Merton (1987), Barber & Odean (2008), Fang & Peress (2009)
@@ -268,7 +270,7 @@ Evidence that indeed risk and expectation drives announcement date returns.
 Can investor attention prior to unemployment and FOMC announcements predict the risk premium?
 
 - We argue that attention prior to meetings proxy for investor risk aversion.
-  - Important to distinguish between news attention vs sentiment.
+  - Bansal and Shaliastovich (2011) and Kacperczyk, Van Nieuwerburgh, and Veldkamp (2016) show that attention increases with economic uncertainty and risk aversion.
   
 - We measure attention using articles published in WSJ and NYT.
   - We used Factiva but now we can use TDM Studio. 
@@ -338,31 +340,9 @@ Argue that firm-specific uncertainty is a key driver of the earnings announcemen
 
 ---
 
-### The Disappearing Earnings Announcement Premium: [Heitz et al. (2023)](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3296537)
-
-- The authors argue that the 2004 Disclosure Regulation, which led to increasingly frequent and more comprehensive filings of material information (Form 8-K), played a role in the disappearance of the earnings premium.
-
-![](figures/heitz.jpg){fig-align="center"}
-
----
-
-### It didn't disappear...
-
-![](figures/heitz_replication1.jpg){fig-align="center"}
-
----
-
-### It didn't disappear...
-
-![](figures/heitz_replication2.jpg){fig-align="center"}
-
----
-
 ### Media Coverage and the Cross-Section of Returns: [Fang and Peress (2009)](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1540-6261.2009.01493.x)
 
 **Setup:** Do stocks with less media coverage earn lower returns?
-
-- Compare returns of no-coverage vs. high-coverage stocks (1993–2002) from NYT, WSJ, USATODAY, WP.
 
 **Main finding:** Stocks with *no media coverage* earn ~3% higher annual returns than heavily covered stocks, even after controlling for size, value, momentum, and liquidity.
 
@@ -372,6 +352,8 @@ Argue that firm-specific uncertainty is a key driver of the earnings announcemen
 - Neglected stocks must offer a premium to compensate for limited recognition
 
 **Cross-sectional heterogeneity:** The media premium is stronger for small stocks, stocks with high individual ownership, and low analyst following — exactly where investor recognition is most binding.
+
+BUT news coverage is exogenous in this setting. In my paper with [Jordi Mondria](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4194851) we endogenize news coverage and examine the implications for asset pricing.
 
 ---
 

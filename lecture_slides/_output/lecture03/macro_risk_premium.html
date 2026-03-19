@@ -380,6 +380,7 @@ Charles Martineau
 <li><strong>Twitter Sentiment</strong> — Aggregated tweet sentiment via Bloomberg</li>
 </ul>
 </div></div>
+<p>There also macroeconomic news…</p>
 </section>
 <section class="slide level2">
 
@@ -388,7 +389,7 @@ Charles Martineau
 <div class="column" style="width:50%;">
 <p><strong>Investor Attention</strong> (news coverage)</p>
 <ul>
-<li>Proxied by number of news articles, abnormal search volume (Google), or media mentions</li>
+<li>Proxied by number of news articles, abnormal search volume (Google), Bloomberg attention, or media mentions</li>
 <li>Attention affects <em>when</em> prices incorporate information — limits to arbitrage, slow diffusion</li>
 <li>Key predictions: post-announcement drift, return predictability from neglect</li>
 <li>Relevant papers: Merton (1987), Barber &amp; Odean (2008), Fang &amp; Peress (2009)</li>
@@ -576,7 +577,7 @@ ExRet_{t} = \alpha+\beta Ann_t + Day F.E. + \varepsilon_t
 <ul>
 <li>We argue that attention prior to meetings proxy for investor risk aversion.
 <ul>
-<li>Important to distinguish between news attention vs sentiment.</li>
+<li>Bansal and Shaliastovich (2011) and Kacperczyk, Van Nieuwerburgh, and Veldkamp (2016) show that attention increases with economic uncertainty and risk aversion.</li>
 </ul></li>
 <li>We measure attention using articles published in WSJ and NYT.
 <ul>
@@ -641,29 +642,8 @@ ExRet_{t} = \alpha+\beta Ann_t + Day F.E. + \varepsilon_t
 </section>
 <section class="slide level2">
 
-<h3 id="the-disappearing-earnings-announcement-premium-heitz-et-al.-2023">The Disappearing Earnings Announcement Premium: <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3296537">Heitz et al.&nbsp;(2023)</a></h3>
-<ul>
-<li>The authors argue that the 2004 Disclosure Regulation, which led to increasingly frequent and more comprehensive filings of material information (Form 8-K), played a role in the disappearance of the earnings premium.</li>
-</ul>
-
-<img data-src="figures/heitz.jpg" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section class="slide level2">
-
-<h3 id="it-didnt-disappear">It didn’t disappear…</h3>
-
-<img data-src="figures/heitz_replication1.jpg" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section class="slide level2">
-
-<h3 id="it-didnt-disappear-1">It didn’t disappear…</h3>
-
-<img data-src="figures/heitz_replication2.jpg" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section class="slide level2">
-
 <h3 id="media-coverage-and-the-cross-section-of-returns-fang-and-peress-2009">Media Coverage and the Cross-Section of Returns: <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1540-6261.2009.01493.x">Fang and Peress (2009)</a></h3>
 <p><strong>Setup:</strong> Do stocks with less media coverage earn lower returns?</p>
-<ul>
-<li>Compare returns of no-coverage vs.&nbsp;high-coverage stocks (1993–2002) from NYT, WSJ, USATODAY, WP.</li>
-</ul>
 <p><strong>Main finding:</strong> Stocks with <em>no media coverage</em> earn ~3% higher annual returns than heavily covered stocks, even after controlling for size, value, momentum, and liquidity.</p>
 <p><strong>Interpretation:</strong> Consistent with Merton’s (1987) investor recognition hypothesis:</p>
 <ul>
@@ -671,6 +651,7 @@ ExRet_{t} = \alpha+\beta Ann_t + Day F.E. + \varepsilon_t
 <li>Neglected stocks must offer a premium to compensate for limited recognition</li>
 </ul>
 <p><strong>Cross-sectional heterogeneity:</strong> The media premium is stronger for small stocks, stocks with high individual ownership, and low analyst following — exactly where investor recognition is most binding.</p>
+<p>BUT news coverage is exogenous in this setting. In my paper with <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4194851">Jordi Mondria</a> we endogenize news coverage and examine the implications for asset pricing.</p>
 </section>
 <section class="slide level2">
 
