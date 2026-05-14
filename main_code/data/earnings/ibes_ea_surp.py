@@ -443,7 +443,6 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
             "medest",
             "numest",
             "prccq",
-            "mcap",
         ]
     ]
 
@@ -541,7 +540,6 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
             "datadate",
             "leadrdq1",
             "repdats",
-            "mcap",
             "medest",
             "act",
             "numest",
