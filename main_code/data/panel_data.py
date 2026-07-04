@@ -10,8 +10,8 @@ from ..utils import get_latest_file
 load_dotenv()
 
 
-CRSP_START_DATE = "2007-01-01"
-CRSP_END_DATE = "2024-12-31"
+CRSP_START_DATE = "1980-01-01"
+CRSP_END_DATE = "2025-12-31"
 
 
 # load crsp file
@@ -99,16 +99,21 @@ def load_fama_french_25_portfolios(df: pd.DataFrame, path: Path) -> pd.DataFrame
     return df.merge(ff_25, on="date", how="left")
 
 
-def load_ibes_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
+def load_ibes_data(
+    df: pd.DataFrame, path: Path, adjust_ibes_date_with_timestamp: bool = False
+) -> pd.DataFrame:
     ibes = pd.read_parquet(get_latest_file(path / "ibes_sue.parquet"))
-    ibes = ibes[ibes["datetime"] >= "2008-01-01"]  # filter for dates after 2007-01-01
-    ibes = ibes[ibes["datetime"] <= "2024-12-31"]  # filter for dates after 2007-01-01
+    ibes = ibes[ibes["datetime"] >= "1984-01-01"]  # filter for dates after 1984-01-01
+    ibes = ibes[ibes["datetime"] <= "2024-12-31"]  # filter for dates before 2025-12-31
     ibes["ea_date"] = pd.to_datetime(ibes["datetime"].dt.date)
 
-    # check if the time in ibes['datetime'] is after 4pm, if so, set it to the next day
-    ibes["ea_date_adj"] = ibes["datetime"].apply(
-        lambda x: x + pd.Timedelta(days=1) if x.hour >= 16 else x
-    )
+    if adjust_ibes_date_with_timestamp:
+        # check if the time in ibes['datetime'] is after 4pm, if so, set it to the next day
+        ibes["ea_date_adj"] = ibes["datetime"].apply(
+            lambda x: x + pd.Timedelta(days=1) if x.hour >= 16 else x
+        )
+    else:
+        ibes["ea_date_adj"] = ibes["ea_date"]
     # convert to date
     ibes["ea_date_adj"] = pd.to_datetime(ibes["ea_date_adj"].dt.date)
 
@@ -133,7 +138,7 @@ def load_ibes_analyst_coverage_data(df: pd.DataFrame, path: Path) -> pd.DataFram
     Loads the IBES analyst coverage data.
     """
     ibes = pd.read_parquet(get_latest_file(path / "ibes_sue.parquet"))
-    ibes = ibes[ibes["datetime"] >= "2008-01-01"]  # filter for dates after 2007-01-01
+    ibes = ibes[ibes["datetime"] >= "1984-01-01"]  # filter for dates after 1984-01-01
     ibes = ibes[["permno", "datetime", "numest"]]
     ibes = ibes.rename(columns={"numest": "n_analysts"})
     ibes["year_quarter"] = ibes["datetime"].dt.to_period("Q")
@@ -240,11 +245,11 @@ def load_quarterly_compustat_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
     )
     compu["bm_ratio"] = compu["atq"] / compu["market_value"]
 
-    compu["year"] = compu["datadate"].dt.year+1
+    compu["year"] = compu["datadate"].dt.year + 1
 
     compu = compu[["gvkey", "year", "bm_ratio"]]
     compu = compu[compu["bm_ratio"].notna()]
-    compu = compu.groupby(['gvkey', 'year']).last().reset_index()
+    compu = compu.groupby(["gvkey", "year"]).last().reset_index()
 
     # merge on gvkey and nearest date prior to crsp date
     df = df.merge(
@@ -262,10 +267,14 @@ def load_vix_data(df: pd.DataFrame, path: Path) -> pd.DataFrame:
     return df.merge(vix, on="date", how="left")
 
 
-def clean_panel_data(df: pd.DataFrame, path: Path) -> None:
+def clean_panel_data(df: pd.DataFrame, path: Path, add_gic: bool = False) -> None:
     # additional year, month, day columns
     df["year"] = df["date"].dt.year
     df["month"] = df["date"].dt.month
+
+    df = df[
+        (df["date"] >= "1983-12-01") & (df["date"] <= "2024-12-31")
+    ]  # filter for dates after 1980-01-01
 
     # Convert date to end of month
     df["year_month"] = df["date"] + pd.offsets.MonthEnd(0)
@@ -293,7 +302,8 @@ def clean_panel_data(df: pd.DataFrame, path: Path) -> None:
     df["ea"] = df["ea"].fillna(0)
 
     # keep stocks with gsector
-    df = df[df["gsector"].notna()]
+    if add_gic:
+        df = df[df["gsector"].notna()]
 
     # remove weekends from df
     df = df[df["date"].dt.dayofweek < 5]
@@ -324,20 +334,27 @@ def build_panel(
     restricted_dir: Path,
     clean_dir: Path,
     preprocess_dir: Path,
+    add_gic: bool = False,
 ) -> None:
     """
     Main function to process the panel data.
     """
-
+    print("Loading CRSP data...")
     df = load_crsp_file(download_dir)
-    df = load_gic(df, download_dir)
+    if add_gic:
+        print("Loading GIC data...")
+        df = load_gic(df, download_dir)
+    print("Loading Compustat quarterly data...")
     df = load_quarterly_compustat_data(df, download_dir)
+    print("Loading Fama-French data...")
     df = load_fama_french_returns_data(df, download_dir)
     df = load_fama_french_me_breakpoints(df, download_dir)
     df = load_fama_french_bm_breakpoints(df, download_dir)
     df = load_fama_french_25_portfolios(df, download_dir)
-    df = load_ibes_data(df, preprocess_dir)
+    print("Loading IBES data...")
+    df = load_ibes_data(df, preprocess_dir, adjust_ibes_date_with_timestamp=False)
+    print("Loading IBES analyst coverage data...")
     df = load_ibes_analyst_coverage_data(df, preprocess_dir)
-    df = load_vix_data(df, download_dir)
+    # df = load_vix_data(df, download_dir)
 
-    return clean_panel_data(df, clean_dir)
+    return clean_panel_data(df, clean_dir, add_gic=add_gic)

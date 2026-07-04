@@ -131,9 +131,14 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
 
     # Getting actual piece of data
     ibes_act = pd.read_parquet(get_latest_file(download_dir / "ibes_actuals.parquet"))
+    # If repdats is missing, drop
+    ibes_act = ibes_act.loc[ibes_act["repdats"].notna()]
     # Create datetime columns
+    # we use [:10] to extract the date part of the repdats column and combine it with the repdats_time column to create a datetime object. This allows us to work with both the date and time of the earnings announcement in a single column. If time is missing, we replace it with "00:00:00" to ensure that the datetime object is valid. The errors="coerce" argument ensures that any invalid date or time formats are converted to NaT (Not a Time) instead of raising an error. This is important for data integrity and allows us to handle missing or malformed data gracefully.
     ibes_act["datetime"] = pd.to_datetime(
-        ibes_act["repdats"].astype(str) + " " + ibes_act["repdats_time"].astype(str)
+        ibes_act["repdats"].astype(str).str[:10]
+        + " "
+        + ibes_act["repdats_time"].astype(str)
     )
     ibes_act = ibes_act.drop(columns=["repdats_time"])
 
@@ -364,22 +369,22 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
     # handling same qtr previous year
 
     cond_year = (sue["dif_fyearq"] == 1).fillna(False)  # year increment is 1
-    sue["lagadj"] = np.where(cond_year, sue["ajexq"].shift(1), None)
-    sue["lageps_p"] = np.where(cond_year, sue["epspxq"].shift(1), None)
-    sue["lageps_d"] = np.where(cond_year, sue["epsfxq"].shift(1), None)
-    sue["lagshr_p"] = np.where(cond_year, sue["cshprq"].shift(1), None)
-    sue["lagshr_d"] = np.where(cond_year, sue["cshfdq"].shift(1), None)
-    sue["lagspiq"] = np.where(cond_year, sue["spiq"].shift(1), None)
+    sue["lagadj"] = np.where(cond_year, sue["ajexq"].shift(1), np.nan)
+    sue["lageps_p"] = np.where(cond_year, sue["epspxq"].shift(1), np.nan)
+    sue["lageps_d"] = np.where(cond_year, sue["epsfxq"].shift(1), np.nan)
+    sue["lagshr_p"] = np.where(cond_year, sue["cshprq"].shift(1), np.nan)
+    sue["lagshr_d"] = np.where(cond_year, sue["cshfdq"].shift(1), np.nan)
+    sue["lagspiq"] = np.where(cond_year, sue["spiq"].shift(1), np.nan)
 
     # handling first gvkey
     cond_gvkey = (sue["gvkey"] != sue["laggvkey"]).fillna(False)  # first.gvkey
 
-    sue["lagadj"] = np.where(cond_gvkey, None, sue["lagadj"])
-    sue["lageps_p"] = np.where(cond_gvkey, None, sue["lageps_p"])
-    sue["lageps_d"] = np.where(cond_gvkey, None, sue["lageps_d"])
-    sue["lagshr_p"] = np.where(cond_gvkey, None, sue["lagshr_p"])
-    sue["lagshr_d"] = np.where(cond_gvkey, None, sue["lagshr_d"])
-    sue["lagspiq"] = np.where(cond_gvkey, None, sue["lagspiq"])
+    sue["lagadj"] = np.where(cond_gvkey, np.nan, sue["lagadj"])
+    sue["lageps_p"] = np.where(cond_gvkey, np.nan, sue["lageps_p"])
+    sue["lageps_d"] = np.where(cond_gvkey, np.nan, sue["lageps_d"])
+    sue["lagshr_p"] = np.where(cond_gvkey, np.nan, sue["lagshr_p"])
+    sue["lagshr_d"] = np.where(cond_gvkey, np.nan, sue["lagshr_d"])
+    sue["lagspiq"] = np.where(cond_gvkey, np.nan, sue["lagspiq"])
 
     # handling reporting basis
     # Basis = P and missing are treated the same
@@ -402,21 +407,13 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
     )
     sue["expected2"] = np.where(
         sue["basis"] == "D",
-        (
-            sue["lageps_d"].fillna(0)
-            - (0.65 * sue["lagspiq"] / sue["lagshr_d"]).fillna(0)
-        )
-        / sue["lagadj"],
-        (
-            sue["lageps_p"].fillna(0)
-            - (0.65 * sue["lagspiq"] / sue["lagshr_p"]).fillna(0)
-        )
-        / sue["lagadj"],
+        (sue["lageps_d"] - (0.65 * sue["lagspiq"] / sue["lagshr_d"])) / sue["lagadj"],
+        (sue["lageps_p"] - (0.65 * sue["lagspiq"] / sue["lagshr_p"])) / sue["lagadj"],
     )
 
     # SUE calculations
-    # sue["sue1"] = (sue["actual1"] - sue["expected1"]) / (sue["prccq"] / sue["ajexq"])
-    # sue["sue2"] = (sue["actual2"] - sue["expected2"]) / (sue["prccq"] / sue["ajexq"])
+    sue["sue1"] = (sue["actual1"] - sue["expected1"]) / (sue["prccq"] / sue["ajexq"])
+    sue["sue2"] = (sue["actual2"] - sue["expected2"]) / (sue["prccq"] / sue["ajexq"])
     sue["sue3"] = (sue["act"] - sue["medest"]) / sue["prccq"]
 
     sue = sue[
@@ -433,8 +430,8 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
             "datetime",
             "repdats",
             "rdq",
-            #        "sue1",
-            #        "sue2",
+            "sue1",
+            "sue2",
             "sue3",
             "forecast_disp_std",
             "forecast_disp_max_min",
@@ -543,8 +540,8 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
             "medest",
             "act",
             "numest",
-            #        "sue1",
-            #        "sue2",
+            "sue1",
+            "sue2",
             "sue3",
             "forecast_disp_std",
             "forecast_disp_max_min",

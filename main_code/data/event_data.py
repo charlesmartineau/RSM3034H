@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def build_event_earnings_data(panel: pd.DataFrame) -> None:
+def build_event_earnings_data(panel: pd.DataFrame, add_gic: bool = False) -> None:
     """
     Create event study plots for earnings announcements showing BHAR.
 
@@ -24,14 +24,17 @@ def build_event_earnings_data(panel: pd.DataFrame) -> None:
     df["row_num"] = df.groupby("permno").cumcount()
 
     # Identify earnings announcement dates
-    ea_events = df[df["ea"] == 1][
-        ["permno", "date", "row_num", "sue", "ret", "mcap", "mcap_qnt", "gsector"]
-    ].copy()
+    col_names_to_keep = ["permno", "date", "row_num", "sue", "ret", "mcap", "mcap_qnt"]
+    if add_gic:
+        col_names_to_keep.append("gsector")
+
+    ea_events = df[df["ea"] == 1][col_names_to_keep].copy()
+
     ea_events = ea_events.rename(columns={"date": "ea_date", "row_num": "ea_row"})
     ea_events["sue_qnt"] = pd.qcut(ea_events["sue"], 5, labels=False)
     ea_events["ann_ret_qnt"] = pd.qcut(ea_events["ret"], 5, labels=False)
 
-    ea_events = ea_events[ea_events["ea_date"].dt.year >= 2008]
+    ea_events = ea_events[ea_events["ea_date"].dt.year >= 1984]
 
     # Build the event window data
     event_data = []
@@ -44,7 +47,8 @@ def build_event_earnings_data(panel: pd.DataFrame) -> None:
         ea_date = event["ea_date"]
         mcap = event["mcap"]
         mcap_qnt = event["mcap_qnt"]
-        gsector = event["gsector"]
+        if add_gic:
+            gsector = event["gsector"]
         ann_ret = event["ret"]
         ann_ret_qnt = event["ann_ret_qnt"]
 
@@ -76,41 +80,42 @@ def build_event_earnings_data(panel: pd.DataFrame) -> None:
         window_data["sue_qnt"] = sue_qnt
         window_data["ea_date"] = ea_date
         window_data["mcap_qnt"] = mcap_qnt
-        window_data["gsector"] = gsector
+        if add_gic:
+            window_data["gsector"] = gsector
         window_data["mcap"] = mcap
         window_data["sue"] = sue
         window_data["ann_ret"] = ann_ret
         window_data["ann_ret_qnt"] = ann_ret_qnt
-        
-        event_data.append(
-            window_data[
-                [
-                    "date",
-                    "permno",
-                    "gvkey",
-                    "prc",
-                    "openprc",
-                    "ret",
-                    "mkt",
-                    "mkt_rf",
-                    "smb",
-                    "hml",
-                    "rmw",
-                    "cma",
-                    "rf",
-                    "ff_port",
-                    "sue",
-                    "sue_qnt",
-                    "mcap",
-                    "mcap_qnt",
-                    "gsector",
-                    "event_t",
-                    "ea_date",
-                    "ann_ret",
-                    "ann_ret_qnt",
-                ]
-            ]
-        )
+
+        cols_to_keep = [
+            "date",
+            "permno",
+            "gvkey",
+            "prc",
+            "openprc",
+            "ret",
+            "mkt",
+            "mkt_rf",
+            "smb",
+            "hml",
+            "rmw",
+            "cma",
+            "rf",
+            "ff_port",
+            "sue",
+            "sue_qnt",
+            "mcap",
+            "mcap_qnt",
+            "event_t",
+            "ea_date",
+            "ann_ret",
+            "ann_ret_qnt",
+        ]
+
+        if add_gic:
+            cols_to_keep.append("gsector")
+
+        event_data.append(window_data[cols_to_keep])
 
     # Combine all events
     return pd.concat(event_data, ignore_index=True)
