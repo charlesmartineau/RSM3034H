@@ -4,8 +4,8 @@ import wrds
 def get_compustat_quarterly(
     wrds_username: str,
     wrds_password: str,
-    START_DATE: str = "01/01/1999",
-    END_DATE: str = "12/31/2024",
+    START_DATE: str = "01/01/1980",
+    END_DATE: str = "12/31/2025",
 ):
     """
     Retrieve quarterly data from Compustat
@@ -29,8 +29,8 @@ def get_compustat_quarterly(
 def get_compustat_annual(
     wrds_username: str,
     wrds_password: str,
-    START_DATE: str = "01/01/1999",
-    END_DATE: str = "12/31/2024",
+    START_DATE: str = "01/01/1980",
+    END_DATE: str = "12/31/2025",
 ):
     """
     Retrieve annual data from Compustat

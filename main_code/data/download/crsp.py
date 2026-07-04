@@ -6,8 +6,8 @@ import wrds
 def get_crsp_daily(
     wrds_username: str,
     wrds_password: str,
-    CRSP_START_DATE="20000101",
-    CRSP_END_DATE="20241231",
+    CRSP_START_DATE="19800101",
+    CRSP_END_DATE="20251231",
 ) -> pd.DataFrame:
     """
     Download CRSP daily stock file data and return a DataFrame.
@@ -49,8 +49,8 @@ def get_crsp_daily(
 def get_crsp_monthly(
     wrds_username: str,
     wrds_password: str,
-    CRSP_START_DATE="20000101",
-    CRSP_END_DATE="20241231",
+    CRSP_START_DATE="19800101",
+    CRSP_END_DATE="20251231",
 ) -> pd.DataFrame:
     """
     Download CRSP monthly stock file data and return a DataFrame.
@@ -88,9 +88,7 @@ def get_crsp_monthly(
     return df
 
 
-def get_crsp_compu_link_table(
-    wrds_username: str, wrds_password: str
-) -> pd.DataFrame:
+def get_crsp_compu_link_table(wrds_username: str, wrds_password: str) -> pd.DataFrame:
     """
     Download CRSP-Compustat link table and return a DataFrame.
 
@@ -121,8 +119,8 @@ def get_crsp_compu_link_table(
 def get_crsp_cfacshr(
     wrds_username: str,
     wrds_password: str,
-    CRSP_START_DATE="01/01/1999",
-    CRSP_END_DATE="12/31/2024",
+    CRSP_START_DATE="01/01/1980",
+    CRSP_END_DATE="12/31/2025",
 ) -> pd.DataFrame:
     """
     Retrieve CRSP adjustment factors for shares outstanding.

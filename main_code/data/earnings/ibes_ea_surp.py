@@ -61,7 +61,7 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
     Code is adapted https://www.fredasongdrechsler.com/data-crunching/pead
     """
 
-    end_date = "12/31/2024"
+    end_date = "12/31/2025"
 
     # retrieve link  table
     link = merge_link_tables(restricted_dir, download_dir, end_date)

@@ -1,15 +1,15 @@
 import pandas as pd
 import wrds
 
-start_date = "01/01/2000"
-end_date = "12/31/2024"
+start_date = "01/01/1980"
+end_date = "12/31/2025"
 
 
 def get_ibes_estimates(
     wrds_username: str,
     wrds_password: str,
-    start_date: str = "01/01/2000",
-    end_date: str = "12/31/2024",
+    start_date: str = "01/01/1980",
+    end_date: str = "12/31/2025",
 ) -> pd.DataFrame:
     """
     Retrieve IBES unadjusted estimates from WRDS. Estimates consists of analyst forecasts of quarterly EPS.
@@ -43,8 +43,8 @@ def get_ibes_estimates(
 def get_ibes_actuals(
     wrds_username: str,
     wrds_password: str,
-    start_date: str = "01/01/2000",
-    end_date: str = "12/31/2024",
+    start_date: str = "01/01/1980",
+    end_date: str = "12/31/2025",
 ) -> pd.DataFrame:
     """
     Get IBES actuals from WRDS. Actuals consists of actual EPS reported by companies.

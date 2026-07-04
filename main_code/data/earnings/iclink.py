@@ -325,4 +325,4 @@ def get_iclink(conn, path: Path):
 
 conn = wrds.Connection(wrds_username=WRDS_USERNAME, wrds_password=WRDS_PASSWORD)
 
-get_iclink(conn, restricted_dir / "ibes/")
+get_iclink(conn, restricted_dir)
