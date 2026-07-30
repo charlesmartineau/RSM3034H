@@ -1,20 +1,21 @@
-import datetime
-from pathlib import Path
-
-import numpy as np
 import pandas as pd
+import numpy as np
+import datetime
+from typing import Iterable, OrderedDict
+from pathlib import Path
+from database.ibes import get_ibes_estimates, get_ibes_actuals
+from database.crsp import get_crsp_cfacshr, get_crsp_dates
+from utils.analysis_config import *
+from utils.wrds_login import wrds_login
 
-from main_code.utils import get_latest_file
 
-
-def load_compustat_fundq(path: Path, constraint: bool = True) -> pd.DataFrame:
+def load_compustat_fundq(restricted_dir: Path, constraint: bool = True) -> pd.DataFrame:
     """
     Retrieve Compustat quarterly fundamental data.
     """
 
-    fundq = pd.read_parquet(get_latest_file(path / "compustat_quarterly.parquet"))
-    fundq['mcap'] = fundq['prccq'] * fundq['cshoq']
-    # impose total assets >0, no missing sales and datafqtr
+    fundq = pd.read_parquet(restricted_dir / "compustat/compustat_quarterly.parquet")
+    # impove total assets >0, no missing sales and datafqtr
     if constraint:
         return fundq.loc[
             ((fundq.atq > 0) | (fundq.saleq.notna())) & (fundq.datafqtr.notna())
@@ -24,7 +25,7 @@ def load_compustat_fundq(path: Path, constraint: bool = True) -> pd.DataFrame:
 
 
 def merge_link_tables(
-    restricted_dir: Path, download_dir: Path, end_date: str, score_mapping: int = 1
+    restricted_dir: Path, end_date: str, score_mapping: int = 1
 ) -> pd.DataFrame:
     """
     Retrieve the CRSP-Compustat link table and merge it with the IBES link table.
@@ -39,13 +40,11 @@ def merge_link_tables(
     """
 
     # Load the iclink data
-    iclink = pd.read_parquet(restricted_dir / "iclink.parquet")
+    iclink = pd.read_parquet(restricted_dir / "ibes/iclink.parquet")
     iclink = iclink[iclink["score"] <= score_mapping]
 
     # load crsp-gvkey link
-    gvkey_link = pd.read_parquet(
-        get_latest_file(download_dir / "crsp_compu_link_table.parquet")
-    )
+    gvkey_link = pd.read_parquet(restricted_dir / "crsp/crsp_compu_link_table.parquet")
     gvkey_link = gvkey_link.rename(columns={"lpermno": "permno"})
     gvkey_link = gvkey_link[["gvkey", "permno", "linkdt", "linkenddt"]]
     gvkey_link["linkenddt"] = gvkey_link["linkenddt"].fillna(
@@ -56,19 +55,29 @@ def merge_link_tables(
     return pd.merge(iclink, gvkey_link, how="left", on="permno")
 
 
-def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.DataFrame:
+def get_ibes_surprises(
+    restricted_dir: Path,
+    start_date: str = "01/01/2010",
+    end_date: str = "12/31/2022",
+):
     """
     Get IBES surprises and earnings announcement dates.
     Code is adapted https://www.fredasongdrechsler.com/data-crunching/pead
+
+    Args:
+        restricted_dir (Path): _description_
+        start_date (str, optional): _description_. Defaults to "01/01/2010".
+        end_date (str, optional): _description_. Defaults to "12/31/2022".
     """
 
-    end_date = "12/31/2025"
+    # set wrds connection
+    conn = wrds_login()
 
     # retrieve link  table
-    link = merge_link_tables(restricted_dir, download_dir, end_date)
+    link = merge_link_tables(restricted_dir, end_date)
     # load analyst estimates
     ibes_ana_est = pd.read_parquet(
-        get_latest_file(download_dir / "ibes_estimates.parquet")
+        restricted_dir / "ibes/ibes_analysts_estimates_unadjusted.parquet"
     )
 
     # Merge the iclink data
@@ -121,6 +130,12 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
 
     # Keep the latest observation for a given analyst
     # Group by company fpedats estimator analys then pick the last record in the group
+    ibes_1 = (
+        ibes.groupby(["ticker", "fpedats", "estimator", "analys"])
+        .apply(lambda x: x.index[-1])
+        .to_frame()
+        .reset_index()
+    )
 
     ibes = (
         ibes.groupby(["ticker", "fpedats", "estimator", "analys"]).last().reset_index()
@@ -131,15 +146,10 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
     # Keep only the estimates issued within 90 days before the report date
 
     # Getting actual piece of data
-    ibes_act = pd.read_parquet(get_latest_file(download_dir / "ibes_actuals.parquet"))
-    # If repdats is missing, drop
-    ibes_act = ibes_act.loc[ibes_act["repdats"].notna()]
+    ibes_act = pd.read_parquet(restricted_dir / "ibes/ibes_actuals.parquet")
     # Create datetime columns
-    # we use [:10] to extract the date part of the repdats column and combine it with the repdats_time column to create a datetime object. This allows us to work with both the date and time of the earnings announcement in a single column. If time is missing, we replace it with "00:00:00" to ensure that the datetime object is valid. The errors="coerce" argument ensures that any invalid date or time formats are converted to NaT (Not a Time) instead of raising an error. This is important for data integrity and allows us to handle missing or malformed data gracefully.
     ibes_act["datetime"] = pd.to_datetime(
-        ibes_act["repdats"].astype(str).str[:10]
-        + " "
-        + ibes_act["repdats_time"].astype(str)
+        ibes_act["repdats"].astype(str) + " " + ibes_act["repdats_time"].astype(str)
     )
     ibes_act = ibes_act.drop(columns=["repdats_time"])
 
@@ -175,7 +185,7 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
     uniq_anndats = ibes_anndats[["anndats"]].drop_duplicates()
 
     # unique trade dates from crsp.dsi
-    crsp_dats = pd.read_parquet(get_latest_file(download_dir / "crsp_dates.parquet"))
+    crsp_dats = get_crsp_dates(conn)
 
     # Create up to 5 days prior dates relative to anndats
 
@@ -207,8 +217,7 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
 
     # merge the CRSP adjustment factors for all estimate and report dates
     # extract CRSP adjustment factors
-    cfacshr = pd.read_parquet(get_latest_file(download_dir / "crsp_cfacshr.parquet"))
-    # Keep only the relevant columns
+    cfacshr = get_crsp_cfacshr(conn, restricted_dir)
 
     ibes_anndats = pd.merge(ibes_anndats, tradedates, how="left", on=["anndats"])
     ibes_anndats = pd.merge(ibes_anndats, cfacshr, how="left", on=["permno", "date"])
@@ -243,6 +252,7 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
     ).drop_duplicates()
 
     # Compute the median forecast based on estimates in the 90 days prior to the EAD
+
     grp_permno = (
         ibes1.groupby(["ticker", "fpedats", "basis", "repdats", "datetime", "act"])[
             "permno"
@@ -251,50 +261,9 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
         .reset_index()
     )
 
-    # compute analyst dispersion using std of the forecast
-    disp = ibes1.copy()
-    disp["forecast_disp"] = disp["act"] - disp["new_value"]
-    disp = (
-        disp.groupby(["ticker", "fpedats", "basis", "repdats", "datetime", "act"])[
-            "forecast_disp"
-        ]
-        .agg(["std"])
-        .reset_index()
-        .rename(columns={"std": "forecast_disp_std"})
-    )
-
-    disp2 = ibes1.groupby(["ticker", "fpedats", "basis", "repdats", "datetime", "act"])[
-        "new_value"
-    ].agg(["max", "min", "mean"])
-    disp2["forecast_disp_max_min"] = (disp2["max"] - disp2["min"]) / disp2["mean"]
-
-    # merge the dispersion with the median estimates
-    disp = pd.merge(
-        disp,
-        disp2,
-        how="inner",
-        on=["ticker", "fpedats", "basis", "repdats", "datetime"],
-    )
-
-    disp = disp[
-        [
-            "ticker",
-            "fpedats",
-            "basis",
-            "repdats",
-            "datetime",
-            "act",
-            "forecast_disp_std",
-            "forecast_disp_max_min",
-        ]
-    ].drop_duplicates()
-
-    # new_value is the estimate adjusted to be on the same basis with reported earnings by analyst
     medest = (
-        ibes1.groupby(["ticker", "fpedats", "basis", "repdats", "datetime", "act"])[
-            "new_value"
-        ]
-        .agg(["median", "count"])
+        ibes1.groupby(["ticker", "fpedats", "basis", "repdats", "datetime", "act"])
+        .new_value.agg(["median", "count"])
         .reset_index()
     )
     medest = pd.merge(
@@ -307,9 +276,7 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
 
     # Merge with Compustat Data  #
     # get items from fundq
-    
-    fundq = load_compustat_fundq(download_dir, constraint=True)
-    # Keep only
+    fundq = load_compustat_fundq(restricted_dir)
 
     # Calculate link date ranges for givken gvkey and ticker combination
     gvkey_mindt1 = (
@@ -336,23 +303,13 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
         & (comp["datadate"] >= comp["mindate"])
     ]
 
-    # Merge with the median estimates
+    # Merge with the median esitmates
     comp = pd.merge(
         comp,
         medest,
         how="left",
         left_on=["ticker", "datadate"],
         right_on=["ticker", "fpedats"],
-    )
-
-    # merge comp with the dispersion
-    comp = pd.merge(
-        comp,
-        disp[
-            ["ticker", "fpedats", "basis", "forecast_disp_std", "forecast_disp_max_min"]
-        ],
-        how="left",
-        on=["ticker", "fpedats", "basis"],
     )
 
     # Sort data and drop duplicates
@@ -368,23 +325,23 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
 
     # handling same qtr previous year
 
-    cond_year = (sue["dif_fyearq"] == 1).fillna(False)  # year increment is 1
-    sue["lagadj"] = np.where(cond_year, sue["ajexq"].shift(1), np.nan)
-    sue["lageps_p"] = np.where(cond_year, sue["epspxq"].shift(1), np.nan)
-    sue["lageps_d"] = np.where(cond_year, sue["epsfxq"].shift(1), np.nan)
-    sue["lagshr_p"] = np.where(cond_year, sue["cshprq"].shift(1), np.nan)
-    sue["lagshr_d"] = np.where(cond_year, sue["cshfdq"].shift(1), np.nan)
-    sue["lagspiq"] = np.where(cond_year, sue["spiq"].shift(1), np.nan)
+    cond_year = sue.dif_fyearq == 1  # year increment is 1
+    sue["lagadj"] = np.where(cond_year, sue["ajexq"].shift(1), None)
+    sue["lageps_p"] = np.where(cond_year, sue["epspxq"].shift(1), None)
+    sue["lageps_d"] = np.where(cond_year, sue["epsfxq"].shift(1), None)
+    sue["lagshr_p"] = np.where(cond_year, sue["cshprq"].shift(1), None)
+    sue["lagshr_d"] = np.where(cond_year, sue["cshfdq"].shift(1), None)
+    sue["lagspiq"] = np.where(cond_year, sue["spiq"].shift(1), None)
 
     # handling first gvkey
-    cond_gvkey = (sue["gvkey"] != sue["laggvkey"]).fillna(False)  # first.gvkey
+    cond_gvkey = sue["gvkey"] != sue["laggvkey"]  # first.gvkey
 
-    sue["lagadj"] = np.where(cond_gvkey, np.nan, sue["lagadj"])
-    sue["lageps_p"] = np.where(cond_gvkey, np.nan, sue["lageps_p"])
-    sue["lageps_d"] = np.where(cond_gvkey, np.nan, sue["lageps_d"])
-    sue["lagshr_p"] = np.where(cond_gvkey, np.nan, sue["lagshr_p"])
-    sue["lagshr_d"] = np.where(cond_gvkey, np.nan, sue["lagshr_d"])
-    sue["lagspiq"] = np.where(cond_gvkey, np.nan, sue["lagspiq"])
+    sue["lagadj"] = np.where(cond_gvkey, None, sue["lagadj"])
+    sue["lageps_p"] = np.where(cond_gvkey, None, sue["lageps_p"])
+    sue["lageps_d"] = np.where(cond_gvkey, None, sue["lageps_d"])
+    sue["lagshr_p"] = np.where(cond_gvkey, None, sue["lagshr_p"])
+    sue["lagshr_d"] = np.where(cond_gvkey, None, sue["lagshr_d"])
+    sue["lagspiq"] = np.where(cond_gvkey, None, sue["lagspiq"])
 
     # handling reporting basis
     # Basis = P and missing are treated the same
@@ -407,8 +364,16 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
     )
     sue["expected2"] = np.where(
         sue["basis"] == "D",
-        (sue["lageps_d"] - (0.65 * sue["lagspiq"] / sue["lagshr_d"])) / sue["lagadj"],
-        (sue["lageps_p"] - (0.65 * sue["lagspiq"] / sue["lagshr_p"])) / sue["lagadj"],
+        (
+            sue["lageps_d"].fillna(0)
+            - (0.65 * sue["lagspiq"] / sue["lagshr_d"]).fillna(0)
+        )
+        / sue["lagadj"],
+        (
+            sue["lageps_p"].fillna(0)
+            - (0.65 * sue["lagspiq"] / sue["lagshr_p"]).fillna(0)
+        )
+        / sue["lagadj"],
     )
 
     # SUE calculations
@@ -433,8 +398,6 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
             "sue1",
             "sue2",
             "sue3",
-            "forecast_disp_std",
-            "forecast_disp_max_min",
             "basis",
             "act",
             "medest",
@@ -494,9 +457,8 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
 
     # If first gvkey then leadrdq1 = rdq1+3 months
     # Else leadrdq1 = previous rdq1
-    cond = (sue_final["gvkey"] == sue_final["leadgvkey"]).fillna(False)  # first gvkey
     sue_final["leadrdq1"] = np.where(
-        cond,
+        sue_final["gvkey"] == sue_final["leadgvkey"],
         sue_final["rdq1"].shift(1),
         sue_final["rdq1"] + pd.DateOffset(months=3),
     )
@@ -507,21 +469,20 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
     sue_final = sue_final.loc[(sue_final["rdq1"] != sue_final["leadrdq1"])]
 
     # Various conditioning for filtering
-    #cond1 = (
-    #    (sue_final["sue1"].notna())
-    #    & (sue_final["sue2"].notna())
-    #    & (sue_final["repdats"].isna())
-    #)
+    cond1 = (
+        (sue_final["sue1"].notna())
+        & (sue_final["sue2"].notna())
+        & (sue_final["repdats"].isna())
+    )
     cond2 = (
         (sue_final["repdats"].notna())
         & (sue_final["dgap"] <= datetime.timedelta(days=1))
         & (sue_final["dgap"] >= datetime.timedelta(days=-1))
     )
-    #sue_final = sue_final.loc[cond1]
-    sue_final = sue_final.loc[cond2]
+    sue_final = sue_final.loc[cond1 | cond2]
 
     # Impose restriction on price and marketcap
-    sue_final = sue_final.loc[(sue_final['rdq'].notna()) & (sue_final['prccq']>1) & (sue_final['mcap']>5)]
+    # sue_final = sue_final.loc[(sue_final.rdq.notna()) & (sue_final.prccq>1) & (sue_final.mcap>5)]
     sue_final = sue_final.loc[(sue_final.rdq.notna())]
 
     # Keep relevant columns
@@ -538,14 +499,13 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
             "datadate",
             "leadrdq1",
             "repdats",
+            "mcap",
             "medest",
             "act",
             "numest",
             "sue1",
             "sue2",
             "sue3",
-            "forecast_disp_std",
-            "forecast_disp_max_min",
         ]
     ]
 
@@ -554,4 +514,4 @@ def compute_earning_surprises(download_dir: Path, restricted_dir: Path) -> pd.Da
         columns={"sue1": "sue_rw1", "sue2": "sue_rw2", "sue3": "sue"}
     )
 
-    return sue_final
+    sue_final.to_parquet(restricted_dir / "ibes/ibes_sue.parquet", index=False)

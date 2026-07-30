@@ -105,6 +105,10 @@ def load_ibes_data(
     ibes = pd.read_parquet(get_latest_file(path / "ibes_sue.parquet"))
     ibes = ibes[ibes["datetime"] >= "1984-01-01"]  # filter for dates after 1984-01-01
     ibes = ibes[ibes["datetime"] <= "2024-12-31"]  # filter for dates before 2025-12-31
+    # exclude observations without sue_rw1, sue_rw2, and sue
+    ibes = ibes[
+        (ibes["sue_rw1"].notna()) | (ibes["sue_rw2"].notna()) | (ibes["sue"].notna())
+    ]
     ibes["ea_date"] = pd.to_datetime(ibes["datetime"].dt.date)
 
     if adjust_ibes_date_with_timestamp:
@@ -113,14 +117,14 @@ def load_ibes_data(
             lambda x: x + pd.Timedelta(days=1) if x.hour >= 16 else x
         )
     else:
-        ibes["ea_date_adj"] = ibes["ea_date"]
+        ibes["ea_date_adj"] = ibes["ea_date"].copy()
     # convert to date
     ibes["ea_date_adj"] = pd.to_datetime(ibes["ea_date_adj"].dt.date)
 
     # check if the column "date" in ibes is in crsp_dates, it not, take the next date in crsp_dates
     crsp_dates = df[df["date"].dt.dayofweek < 5]["date"].unique()
     # remove weekends from crsp_dates
-    crsp_dates = pd.to_datetime(crsp_dates)
+    crsp_dates = pd.to_datetime(np.sort(crsp_dates))
     ibes["ea_date_adj"] = ibes["ea_date_adj"].apply(
         lambda x: crsp_dates[crsp_dates >= x][0]
     )
