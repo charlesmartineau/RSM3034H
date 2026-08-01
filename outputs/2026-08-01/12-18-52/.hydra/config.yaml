@@ -1,0 +1,6 @@
+logging_level: 20
+data:
+  download: false
+  ignore_download_cache: false
+figures:
+  sml: false
