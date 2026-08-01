@@ -2,10 +2,12 @@
 
 This repository contains course materials for RSM3034H - PhD Empirical Asset Pricing.
 
-> **Note on this branch:** this version of the repository only downloads data that is
+> **Note on this branch:** this version of the repository only uses data that is
 > freely available online (Fama-French, Yahoo Finance, VRP). All code that requires a
-> WRDS subscription (CRSP, Compustat, IBES), as well as the panel/event dataset
-> construction, figures, and regression tables built on top of it, has been removed.
+> WRDS subscription (CRSP, Compustat, IBES), along with the panel/event dataset
+> construction and the figures and regression tables built on top of it, has been
+> removed. Analysis that runs on the free data only, such as the Security Market Line
+> figure, lives in `main_code/figures/`.
 
 ## Getting Started
 
@@ -49,6 +51,7 @@ This repository contains course materials for RSM3034H - PhD Empirical Asset Pri
    - `DATADIR`: Path to your data directory (must exist)
 
    **Optional (auto-created if not specified):**
+   - `FIGDIR`: Directory for output figures (default: `./results_figures/`)
    - `TMP_DIR`: Temporary files directory (default: `./tmp/`)
 
    No API credentials or subscriptions are needed: every file downloaded here is
@@ -82,6 +85,10 @@ Downloads are cached: a file that is already present is skipped unless
 `ignore_download_cache` is set to `true`. A source that is temporarily unreachable is
 logged as a warning and skipped, so one failure does not stop the rest.
 
+It then produces any figure switched on under `figures:` in the config, saving it to
+`FIGDIR`. Each step is a separate flag, so once the data is cached you can rerun just
+the figures with `data.download=false`.
+
 Hydra writes a log of each run to a timestamped folder under [outputs/](outputs/).
 
 ## Configuration
@@ -96,6 +103,12 @@ Integer log level passed to Python's `logging` module (default: `20` = INFO). Se
 
 - `download`: Download the raw data files into `DATADIR/download_cache/`. (default: `true`)
 - `ignore_download_cache`: Force re-download even if cached files already exist. Useful when upstream data has been updated. (default: `false`)
+
+### `figures`
+
+Controls which figures are generated and saved to `FIGDIR`.
+
+- `sml`: Plot the Security Market Line using the 25 size/BM portfolios as test assets. Average daily excess returns on the y-axis against CAPM betas on the x-axis, with both the SML implied by the CAPM and the line fitted across the 25 portfolios. Needs `ff_25_size_bm_portfolios_daily.parquet` and `ff5_daily.parquet` in the download cache. (default: `true`)
 
 Any option can also be overridden on the command line, for example:
 
@@ -123,6 +136,8 @@ uv run main.py data.ignore_download_cache=true
       - [yahoo.py](main_code/data/download/yahoo.py) - Yahoo Finance (VIX)
       - [vrp.py](main_code/data/download/vrp.py) - Variance risk premium
     - [download_data.py](main_code/data/download_data.py) - Download orchestration and caching
+  - [figures/](main_code/figures/) - Figure generation code
+    - [sml.py](main_code/figures/sml.py) - Security Market Line using the 25 size/BM portfolios
   - [utils/](main_code/utils/) - Utility functions
     - [files.py](main_code/utils/files.py) - File handling utilities (timestamping, latest-file lookup)
 
@@ -132,6 +147,7 @@ uv run main.py data.ignore_download_cache=true
   - [config.yaml](conf/config.yaml) - Main configuration file for pipeline control
 - [latex/](latex/) - LaTeX templates and styling
 - [outputs/](outputs/) - Timestamped execution logs (organized by date and time)
+- [results_figures/](results_figures/) - Output figures (configured via `FIGDIR` environment variable)
 - [tmp/](tmp/) - Temporary files directory
 
 ### Data Directory Structure

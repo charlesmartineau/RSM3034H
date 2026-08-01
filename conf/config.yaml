@@ -3,3 +3,7 @@ logging_level: 20
 data:
   download: true
   ignore_download_cache: false
+
+figures:
+  # Security Market Line using the 25 size/BM portfolios as test assets
+  sml: true
