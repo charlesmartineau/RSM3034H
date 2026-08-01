@@ -1,6 +1,5 @@
 import logging
 import shutil
-from functools import partial
 from pathlib import Path
 from typing import Callable, Optional
 
@@ -9,22 +8,12 @@ from tqdm import tqdm
 
 from ..utils.files import get_latest_file, timestamp_file
 from .download import (
-    get_compustat_gic_codes,
-    get_compustat_quarterly,
-    get_compustat_annual,
-    get_crsp_cfacshr,
-    get_crsp_compu_link_table,
-    get_crsp_daily,
-    get_crsp_dates,
-    get_crsp_monthly,
     get_ff5_factors,
     get_ff5_factors_monthly,
     get_ff_25_size_bm_portfolios_daily,
     get_ff_bm_bp,
     get_ff_size_bp,
     get_ff_umd_factor_monthly,
-    get_ibes_actuals,
-    get_ibes_estimates,
     get_vix_daily,
     get_vrp_monthly,
 )
@@ -67,18 +56,14 @@ def download_files(
     cache_dir: Path,
     tmp_dir: Optional[Path] = None,
     ignore_cache: bool = False,
-    fred_api_key: Optional[str] = None,
-    wrds_username: Optional[str] = None,
-    wrds_password: Optional[str] = None,
 ) -> None:
     """
-    Downloads all necessary data files.
+    Downloads all freely available data files (Fama-French, Yahoo Finance, VRP).
 
     Args:
         cache_dir (Path): The path to the cache directory.
         tmp_dir (Optional[Path], optional): The path to the temporary directory. Defaults to None.
         ignore_cache (bool, optional): Whether to ignore the cache and download the data again. Defaults to False.
-        wrds_username (str, optional): The WRDS username to use for downloading CRSP data. Defaults to None.
     """
     cache_dir.mkdir(parents=True, exist_ok=True)
     if tmp_dir is None:
@@ -130,99 +115,6 @@ def download_files(
             "file": cache_dir / "vrp_monthly.parquet",
             "name": "VRP Monthly Data",
             "download_func": get_vrp_monthly,
-        },
-        # Compustat tasks
-        {
-            "file": cache_dir / "compustat_gic_codes.parquet",
-            "name": "Compustat GIC Codes",
-            "download_func": partial(
-                get_compustat_gic_codes,
-                wrds_username=wrds_username,
-                wrds_password=wrds_password,
-            ),
-        },
-        {
-            "file": cache_dir / "compustat_annual.parquet",
-            "name": "Compustat Annual data",
-            "download_func": partial(
-                get_compustat_annual,
-                wrds_username=wrds_username,
-                wrds_password=wrds_password,
-            ),
-        },
-        {
-            "file": cache_dir / "compustat_quarterly.parquet",
-            "name": "Compustat Quarterly Data",
-            "download_func": partial(
-                get_compustat_quarterly,
-                wrds_username=wrds_username,
-                wrds_password=wrds_password,
-            ),
-        },
-        # CRSP tasks
-        {
-            "file": cache_dir / "crsp_daily.parquet",
-            "name": "CRSP Daily Stock File",
-            "download_func": partial(
-                get_crsp_daily,
-                wrds_username=wrds_username,
-                wrds_password=wrds_password,
-            ),
-        },
-        {
-            "file": cache_dir / "crsp_monthly.parquet",
-            "name": "CRSP Monthly Stock File",
-            "download_func": partial(
-                get_crsp_monthly,
-                wrds_username=wrds_username,
-                wrds_password=wrds_password,
-            ),
-        },
-        {
-            "file": cache_dir / "crsp_compu_link_table.parquet",
-            "name": "CRSP-Compustat Link Table",
-            "download_func": partial(
-                get_crsp_compu_link_table,
-                wrds_username=wrds_username,
-                wrds_password=wrds_password,
-            ),
-        },
-        {
-            "file": cache_dir / "crsp_cfacshr.parquet",
-            "name": "CRSP Adjustment Factors",
-            "download_func": partial(
-                get_crsp_cfacshr,
-                wrds_username=wrds_username,
-                wrds_password=wrds_password,
-            ),
-        },
-        {
-            "file": cache_dir / "crsp_dates.parquet",
-            "name": "CRSP Trading Dates",
-            "download_func": partial(
-                get_crsp_dates,
-                wrds_username=wrds_username,
-                wrds_password=wrds_password,
-            ),
-        },
-        # IBES tasks
-        {
-            "file": cache_dir / "ibes_estimates.parquet",
-            "name": "IBES Analyst Estimates",
-            "download_func": partial(
-                get_ibes_estimates,
-                wrds_username=wrds_username,
-                wrds_password=wrds_password,
-            ),
-        },
-        {
-            "file": cache_dir / "ibes_actuals.parquet",
-            "name": "IBES Actuals",
-            "download_func": partial(
-                get_ibes_actuals,
-                wrds_username=wrds_username,
-                wrds_password=wrds_password,
-            ),
         },
     ]
 
