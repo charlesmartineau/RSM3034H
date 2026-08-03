@@ -151,10 +151,20 @@ def compute_mean_car(abnormal_returns: pd.DataFrame) -> pd.DataFrame:
     """
     Cumulate the abnormal returns within each event, then average across events.
 
-    The standard error is the cross-sectional standard deviation of the CAR on
-    that event day divided by the square root of the number of events. It
-    ignores the fact that firms added on the same day share market movements,
-    so it understates the true sampling uncertainty.
+    S&P adds several firms on the same effective date, so those firms share the
+    same calendar days and their abnormal returns are cross-sectionally
+    correlated. Treating each event as an independent draw would understate the
+    sampling uncertainty, so the reported standard error clusters on the
+    effective date.
+
+    The mean CAR on a given event day is the OLS coefficient from a regression
+    on a constant, so its cluster-robust variance is
+
+        Var(mean) = [G / (G - 1)] * sum_g (sum_{i in g} (CAR_i - mean))^2 / N^2,
+
+    where g indexes effective dates, G is the number of them and N is the number
+    of events. The unclustered standard error is returned alongside it as
+    ``se_iid`` for comparison.
 
     Parameters
     ----------
@@ -164,16 +174,32 @@ def compute_mean_car(abnormal_returns: pd.DataFrame) -> pd.DataFrame:
     Returns
     -------
     pd.DataFrame
-        One row per event day with columns ``tau``, ``mean_car``, ``se``, ``n``
+        One row per event day with columns ``tau``, ``mean_car``, ``se``,
+        ``se_iid``, ``n`` and ``n_clusters``
     """
     ar = abnormal_returns.sort_values(["event_id", "tau"]).copy()
     ar["car"] = ar.groupby("event_id")["ar"].cumsum()
 
     stats = ar.groupby("tau")["car"].agg(["mean", "std", "count"])
     stats.columns = ["mean_car", "std", "n"]
-    stats["se"] = stats["std"] / np.sqrt(stats["n"])
+    stats["se_iid"] = stats["std"] / np.sqrt(stats["n"])
+    stats["n_clusters"] = ar.groupby("tau")["event_date"].nunique()
 
-    return stats.reset_index()[["tau", "mean_car", "se", "n"]]
+    # the residual from a regression on a constant is the demeaned CAR
+    ar["resid"] = ar["car"] - ar.groupby("tau")["car"].transform("mean")
+
+    # sum the residuals within each (event day, effective date) cluster, square
+    # the cluster totals and add them up: the meat of the sandwich
+    cluster_sums = ar.groupby(["tau", "event_date"])["resid"].sum()
+    meat = cluster_sums.pow(2).groupby("tau").sum()
+
+    # the usual small-sample correction, G/(G-1) * (N-1)/(N-K) with K = 1
+    correction = stats["n_clusters"] / (stats["n_clusters"] - 1)
+    stats["se"] = np.sqrt(correction * meat / stats["n"] ** 2)
+
+    return stats.reset_index()[
+        ["tau", "mean_car", "se", "se_iid", "n", "n_clusters"]
+    ]
 
 
 def plot_index_inclusion(download_dir: Path, fig_dir: Path) -> None:
@@ -186,6 +212,9 @@ def plot_index_inclusion(download_dir: Path, fig_dir: Path) -> None:
     carries no cash-flow news. Bennett, Stulz and Wang (JFE 2023) show the
     effect has essentially vanished since 2010, which is what this figure of the
     post-2010 additions should show.
+
+    The confidence band uses standard errors clustered on the effective date,
+    since S&P adds several firms at once and those events share calendar days.
 
     Two caveats to raise in class. Wikipedia records the *effective* date, not
     the announcement date, and S&P pre-announces roughly five business days
@@ -230,11 +259,13 @@ def plot_index_inclusion(download_dir: Path, fig_dir: Path) -> None:
     ax.axvline(-5, color="gray", linewidth=0.9, linestyle=":")
     ax.axhline(0, color="black", linewidth=0.8, alpha=0.5)
 
+    # a little below the top of the axes, to stay clear of the legend
+    top = ax.get_ylim()[1]
     ax.annotate(
         "Effective date",
-        (0, ax.get_ylim()[1]),
+        (0, top - 0.12 * (top - ax.get_ylim()[0])),
         textcoords="offset points",
-        xytext=(4, -12),
+        xytext=(4, 0),
         fontsize=8,
         color="dimgray",
     )
@@ -253,7 +284,9 @@ def plot_index_inclusion(download_dir: Path, fig_dir: Path) -> None:
     ax.set_title(
         f"S&P 500 index inclusion: mean CAR around additions\n"
         f"{n_events:,} additions, {first:%b %Y} to {last:%b %Y}, "
-        f"market model estimated on [{EST_START}, {EST_END}]",
+        f"market model estimated on [{EST_START}, {EST_END}]\n"
+        f"standard errors clustered by effective date "
+        f"({int(car['n_clusters'].max()):,} clusters)",
         fontsize=11,
     )
     ax.grid(True, alpha=0.3)
@@ -264,11 +297,18 @@ def plot_index_inclusion(download_dir: Path, fig_dir: Path) -> None:
     plt.savefig(fig_path, bbox_inches="tight")
     plt.close()
 
+    n_clusters = int(car["n_clusters"].max())
+    logging.info(
+        f"Standard errors clustered on the effective date: "
+        f"{n_events:,} events fall on {n_clusters:,} distinct dates"
+    )
     for day in [-5, 0, 1, 5, 20]:
         row = car.loc[car["tau"] == day].squeeze()
         logging.info(
             f"CAR[{EVENT_START}, {day:+d}]: {row['mean_car'] * 100:+.2f}% "
-            f"(t = {row['mean_car'] / row['se']:.2f}, n = {int(row['n'])})"
+            f"(t = {row['mean_car'] / row['se']:.2f} clustered, "
+            f"{row['mean_car'] / row['se_iid']:.2f} unclustered, "
+            f"n = {int(row['n'])})"
         )
     logging.info(f"Sample restricted to additions from {SAMPLE_START} on")
     logging.info(f"Figure saved to {fig_path}")

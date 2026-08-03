@@ -111,7 +111,7 @@ Integer log level passed to Python's `logging` module (default: `20` = INFO). Se
 Controls which figures are generated and saved to `FIGDIR`.
 
 - `sml`: Plot the Security Market Line using the 25 size/BM portfolios as test assets. Average daily excess returns on the y-axis against CAPM betas on the x-axis, with both the SML implied by the CAPM and the line fitted across the 25 portfolios. Needs `ff_25_size_bm_portfolios_daily.parquet` and `ff5_daily.parquet` in the download cache. (default: `true`)
-- `index_inclusion`: Plot the mean cumulative abnormal return around additions to the S&P 500 since 2010, over a `[-10, +20]` trading-day window with a 95% confidence band. Abnormal returns come from a market model estimated on the `[-250, -30]` window. Needs `sp500_changes.parquet`, `sp500_addition_returns.parquet` and `ff5_daily.parquet` in the download cache. (default: `true`)
+- `index_inclusion`: Plot the mean cumulative abnormal return around additions to the S&P 500 since 2010, over a `[-10, +20]` trading-day window with a 95% confidence band. Abnormal returns come from a market model estimated on the `[-250, -30]` window, and the standard errors are clustered by effective date, since S&P adds several firms at once. Needs `sp500_changes.parquet`, `sp500_addition_returns.parquet` and `ff5_daily.parquet` in the download cache. (default: `true`)
 
 Any option can also be overridden on the command line, for example:
 

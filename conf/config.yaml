@@ -1,11 +1,11 @@
 logging_level: 20
 
 data:
-  download: true
+  download: false
   ignore_download_cache: false
 
 figures:
   # Security Market Line using the 25 size/BM portfolios as test assets
-  sml: true
+  sml: false
   # Mean CAR around additions to the S&P 500 since 2010
   index_inclusion: true
