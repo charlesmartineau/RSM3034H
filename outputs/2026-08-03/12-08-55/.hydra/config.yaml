@@ -1,0 +1,7 @@
+logging_level: 20
+data:
+  download: true
+  ignore_download_cache: false
+figures:
+  sml: true
+  index_inclusion: true

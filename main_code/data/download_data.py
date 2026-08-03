@@ -1,5 +1,6 @@
 import logging
 import shutil
+from functools import partial
 from pathlib import Path
 from typing import Callable, Optional
 
@@ -14,6 +15,8 @@ from .download import (
     get_ff_bm_bp,
     get_ff_size_bp,
     get_ff_umd_factor_monthly,
+    get_sp500_addition_returns,
+    get_sp500_changes,
     get_vix_daily,
     get_vrp_monthly,
 )
@@ -115,6 +118,18 @@ def download_files(
             "file": cache_dir / "vrp_monthly.parquet",
             "name": "VRP Monthly Data",
             "download_func": get_vrp_monthly,
+        },
+        # S&P 500 index-inclusion event study: the returns task reads the
+        # changes file, so it has to come after it
+        {
+            "file": cache_dir / "sp500_changes.parquet",
+            "name": "S&P 500 Index Changes (Wikipedia)",
+            "download_func": get_sp500_changes,
+        },
+        {
+            "file": cache_dir / "sp500_addition_returns.parquet",
+            "name": "S&P 500 Addition Event-Window Returns",
+            "download_func": partial(get_sp500_addition_returns, cache_dir=cache_dir),
         },
     ]
 

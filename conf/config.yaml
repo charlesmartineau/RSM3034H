@@ -7,3 +7,5 @@ data:
 figures:
   # Security Market Line using the 25 size/BM portfolios as test assets
   sml: true
+  # Mean CAR around additions to the S&P 500 since 2010
+  index_inclusion: true

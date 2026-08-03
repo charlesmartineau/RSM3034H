@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from omegaconf import DictConfig
 
 from main_code.data import download_files
-from main_code.figures import plot_sml
+from main_code.figures import plot_index_inclusion, plot_sml
 
 load_dotenv()
 
@@ -50,6 +50,10 @@ def my_app(cfg: DictConfig):
     if cfg.figures.sml:
         logging.info("Creating figure: Security Market Line...")
         plot_sml(download_dir, fig_dir)
+
+    if cfg.figures.index_inclusion:
+        logging.info("Creating figure: S&P 500 index inclusion CARs...")
+        plot_index_inclusion(download_dir, fig_dir)
 
     logging.info(f"Complete. Total runtime: {time.time() - start_time:.2f} seconds")
 
