@@ -18,6 +18,7 @@ from .famafrench import (
     get_ff_size_bp,
     get_ff_umd_factor_monthly,
 )
+from .fomc import get_fomc_meetings
 from .ibes import get_ibes_actuals, get_ibes_estimates
 from .vrp import get_vrp_monthly
 from .yahoo import get_vix_daily

@@ -61,6 +61,7 @@ def regression_table_header(
     header_title: Optional[str] = "Dependent variable",
     header_subtitle: Optional[str] = None,
     skip_cols: Iterable[str] = (),
+    column_subheader: Optional[str] = None,
 ) -> str:
     header = "\\begin{tabular}{r" + ("c" * n_cols) + "}\n" if include_tabular else ""
     if header_title is not None:
@@ -94,6 +95,10 @@ def regression_table_header(
             )
             + "\\\\\n"
         )
+    # An extra row between the column names and the column numbers, e.g. to
+    # label the estimation sample of each column.
+    if column_subheader is not None:
+        header += column_subheader + "\n"
     header += (
         " & ".join(
             (
@@ -231,9 +236,9 @@ def regression_table(
     header_title: Optional[str] = "Dependent variable",
     header_subtitle: Optional[str] = None,
     skip_cols: Iterable[str] = (),
+    column_subheader: Optional[str] = None,
 ) -> str:
     n_cols = reg.shape[1]
-    print(include_tabular)
     return (
         regression_table_header(
             reg,
@@ -243,6 +248,7 @@ def regression_table(
             header_title,
             header_subtitle,
             skip_cols,
+            column_subheader,
         )
         + regression_table_body(reg, rows, skip_cols)
         + regression_table_footer(

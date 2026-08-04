@@ -1,0 +1,5 @@
+- tables.fomc_premium=true
+- figures.fomc_premium=true
+- tasks.load_panel=false
+- tasks.build_event_data=false
+- tasks.load_event_data=false

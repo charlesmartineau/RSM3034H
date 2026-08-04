@@ -36,13 +36,41 @@
 
 \end{figure}
 
+\begin{figure}[H]
+    \label{fig:fomc_premium}
+    \caption{The FOMC announcement premium}
+
+    \begin{center}
+    Cumulative market excess return, scheduled FOMC announcement days vs.\ all other days
+    \includegraphics[width=0.8\textwidth]{../results_figures/fomc_premium.pdf}
+    \end{center}
+
+\end{figure}
+
 \newpage
+
+\section{Tables}
 
 \begin{table}[H]
 \label{tab}
 \resizebox{1\textwidth}{!}{%
 \input{../results_tables/ea_regression.tex}
-} 
+}
+\end{table}
+
+\begin{table}[H]
+\caption{The FOMC announcement premium}
+\label{tab:fomc_premium}
+\centering
+\footnotesize
+\input{../results_tables/fomc_premium.tex}
+\end{table}
+
+\begin{table}[H]
+\caption{The FOMC announcement premium: summary statistics}
+\label{tab:fomc_premium_summary}
+\centering
+\input{../results_tables/fomc_premium_summary.tex}
 \end{table}
 
 \end{document}

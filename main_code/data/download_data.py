@@ -23,6 +23,7 @@ from .download import (
     get_ff_bm_bp,
     get_ff_size_bp,
     get_ff_umd_factor_monthly,
+    get_fomc_meetings,
     get_ibes_actuals,
     get_ibes_estimates,
     get_vix_daily,
@@ -124,6 +125,12 @@ def download_files(
             "file": cache_dir / "vix_daily.parquet",
             "name": "VIX Daily Data",
             "download_func": get_vix_daily,
+        },
+        # FOMC tasks
+        {
+            "file": cache_dir / "fomc_meetings.parquet",
+            "name": "FOMC Meeting Dates",
+            "download_func": get_fomc_meetings,
         },
         # VRP tasks
         {

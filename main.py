@@ -18,10 +18,16 @@ from main_code.data import (
 from main_code.figures import (
     plot_event_study_earnings,
     plot_event_study_earnings_ann_ret,
+    plot_fomc_premium,
     plot_n_earnings_per_year,
     plot_n_stocks_per_year,
 )
-from main_code.tables import create_ea_regression_table, oos_regression_example
+from main_code.tables import (
+    build_fomc_daily_panel,
+    create_ea_regression_table,
+    oos_regression_example,
+    run_fomc_premium,
+)
 from main_code.utils import configure_pyplot, get_latest_file, timestamp_file
 
 load_dotenv()
@@ -202,6 +208,20 @@ def my_app(cfg: DictConfig):
             "Creating OOS regression tables: Forecasting excess market returns using VRP..."
         )
         oos_regression_example(download_dir, tab_dir, fig_dir)
+
+    # FOMC announcement premium (uses download_cache, no panel required).
+    # The table and the figure share one daily panel, so it is built once.
+    if cfg.tables.fomc_premium or cfg.figures.fomc_premium:
+        logging.info("Building the daily FOMC announcement panel...")
+        fomc_panel = build_fomc_daily_panel(download_dir)
+
+        if cfg.tables.fomc_premium:
+            logging.info("Creating regression table: FOMC announcement premium...")
+            run_fomc_premium(download_dir, tab_dir, df=fomc_panel)
+
+        if cfg.figures.fomc_premium:
+            logging.info("Creating figure: FOMC announcement premium...")
+            plot_fomc_premium(fomc_panel, fig_dir)
 
     logging.info(f"Complete. Total runtime: {time.time() - start_time:.2f} seconds")
 

@@ -1,4 +1,5 @@
 from .ea_regression import create_ea_regression_table
+from .fomc_premium import build_fomc_daily_panel, run_fomc_premium
 from .format import regression_table, reorder_reg_output
 from .oos_exmkt_vrp import oos_regression_example
 
@@ -7,4 +8,6 @@ __all__ = [
     "reorder_reg_output",
     "create_ea_regression_table",
     "oos_regression_example",
+    "run_fomc_premium",
+    "build_fomc_daily_panel",
 ]
